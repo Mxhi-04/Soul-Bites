@@ -3,6 +3,7 @@ import { Navbar } from './components/layout/Navbar/Navbar';
 import { Footer } from './components/layout/Footer/Footer';
 import { MenuCategoryFilter } from './features/menu/components/MenuCategoryFilter';
 import { MenuItemCard } from './features/menu/components/MenuItemCard';
+import { BestsellersCarousel } from './features/menu/components/BestsellersCarousel';
 import { CartDrawer } from './features/cart/components/CartDrawer';
 import { CheckoutModal } from './features/checkout/components/CheckoutModal';
 import { OrderTracker } from './features/tracking/components/OrderTracker';
@@ -20,9 +21,14 @@ const MainContent: React.FC = () => {
 
   // Menu State
   const [items, setItems] = useState<MenuItem[]>([]);
+  const [bestsellers, setBestsellers] = useState<MenuItem[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<MenuCategory>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    menuService.getMenuItems().then(setBestsellers);
+  }, []);
 
   // Checkout & Order Tracking State
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
@@ -113,6 +119,9 @@ const MainContent: React.FC = () => {
             </div>
           </section>
         )}
+
+        {/* Bestseller Items Showcase with Swipe & Pop Animation Scroll */}
+        <BestsellersCarousel items={bestsellers} onAddToCart={handleAddToCart} />
 
         {/* Menu Section */}
         <section className={styles.menuSection}>

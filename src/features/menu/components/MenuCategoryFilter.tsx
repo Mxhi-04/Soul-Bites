@@ -11,6 +11,7 @@ export interface MenuCategoryFilterProps {
 
 const CATEGORIES: { id: MenuCategory; label: string; icon: string }[] = [
   { id: 'all', label: 'All Items', icon: '✨' },
+  { id: 'pizzas', label: 'Woodfired Pizzas', icon: '🍕' },
   { id: 'burgers', label: 'Soul Burgers', icon: '🍔' },
   { id: 'bowls', label: 'Harvest Bowls', icon: '🥗' },
   { id: 'fries', label: 'Loaded Fries', icon: '🍟' },

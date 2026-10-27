@@ -5,7 +5,8 @@
 import { APP_CONFIG } from '../constants/config';
 
 export function formatCurrency(amount: number): string {
-  return `${APP_CONFIG.delivery.currencySymbol}${amount.toFixed(2)}`;
+  const formatted = Number.isInteger(amount) ? amount.toString() : amount.toFixed(2);
+  return `${APP_CONFIG.delivery.currencySymbol}${formatted}`;
 }
 
 export function formatTimeEstimate(minutes: number): string {

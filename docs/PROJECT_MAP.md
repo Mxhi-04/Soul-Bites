@@ -20,6 +20,8 @@ This project map links every business feature directly to its responsible files,
 - **App Shell & Hero**: [App.tsx](file:///Users/mahipatni/Antigravity/soul%20bites%20website/src/App.tsx), [App.module.css](file:///Users/mahipatni/Antigravity/soul%20bites%20website/src/App.module.css)
 
 ### 3. Menu Browsing, Filtering & Dish Details
+- **Bestsellers Carousel**: [BestsellersCarousel.tsx](file:///Users/mahipatni/Antigravity/soul%20bites%20website/src/features/menu/components/BestsellersCarousel.tsx)
+- **Carousel Styling & Pop Animations**: [BestsellersCarousel.module.css](file:///Users/mahipatni/Antigravity/soul%20bites%20website/src/features/menu/components/BestsellersCarousel.module.css)
 - **Menu Items Card**: [MenuItemCard.tsx](file:///Users/mahipatni/Antigravity/soul%20bites%20website/src/features/menu/components/MenuItemCard.tsx)
 - **Card Styling**: [MenuItemCard.module.css](file:///Users/mahipatni/Antigravity/soul%20bites%20website/src/features/menu/components/MenuItemCard.module.css)
 - **Category & Search Filter**: [MenuCategoryFilter.tsx](file:///Users/mahipatni/Antigravity/soul%20bites%20website/src/features/menu/components/MenuCategoryFilter.tsx)

@@ -1,6 +1,6 @@
 import { DietaryTag, SpiceLevel } from '../../../types';
 
-export type MenuCategory = 'all' | 'burgers' | 'bowls' | 'fries' | 'drinks' | 'desserts';
+export type MenuCategory = 'all' | 'pizzas' | 'burgers' | 'bowls' | 'fries' | 'drinks' | 'desserts';
 
 export interface MenuItemCustomization {
   id: string;

@@ -13,12 +13,12 @@ export const APP_CONFIG = {
   delivery: {
     averagePrepTimeMinutes: 20,
     averageDeliveryTimeMinutes: 15,
-    minimumOrderAmount: 15,
-    deliveryFee: 3.5,
-    freeDeliveryThreshold: 45,
-    taxRatePercentage: 8.5,
-    currencySymbol: '$',
-    currencyCode: 'USD',
+    minimumOrderAmount: 149,
+    deliveryFee: 35,
+    freeDeliveryThreshold: 499,
+    taxRatePercentage: 5.0,
+    currencySymbol: '₹',
+    currencyCode: 'INR',
   },
   kitchenInfo: {
     hygieneRating: '5-Star FSSAI Certified',
