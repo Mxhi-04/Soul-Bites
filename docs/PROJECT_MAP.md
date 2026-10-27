@@ -48,6 +48,7 @@ This project map links every business feature directly to its responsible files,
 - **Button Primitives**: [Button.tsx](file:///Users/mahipatni/Antigravity/soul%20bites%20website/src/components/ui/Button/Button.tsx), [Button.module.css](file:///Users/mahipatni/Antigravity/soul%20bites%20website/src/components/ui/Button/Button.module.css)
 - **Dietary Badges**: [Badge.tsx](file:///Users/mahipatni/Antigravity/soul%20bites%20website/src/components/ui/Badge/Badge.tsx), [Badge.module.css](file:///Users/mahipatni/Antigravity/soul%20bites%20website/src/components/ui/Badge/Badge.module.css)
 - **Accessible Modal**: [Modal.tsx](file:///Users/mahipatni/Antigravity/soul%20bites%20website/src/components/ui/Modal/Modal.tsx), [Modal.module.css](file:///Users/mahipatni/Antigravity/soul%20bites%20website/src/components/ui/Modal/Modal.module.css)
+- **Brand SVG Icons**: [ShoppingCartIcon.tsx](file:///Users/mahipatni/Antigravity/soul%20bites%20website/src/components/ui/Icons/ShoppingCartIcon.tsx)
 
 ### 8. Shared Helpers & Core Models
 - **Formatters (Currency, ETA)**: [formatters.ts](file:///Users/mahipatni/Antigravity/soul%20bites%20website/src/utils/formatters.ts)

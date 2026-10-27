@@ -1,5 +1,6 @@
 import React from 'react';
 import { APP_CONFIG } from '../../../constants/config';
+import { ShoppingCartIcon } from '../../ui/Icons/ShoppingCartIcon';
 import styles from './Navbar.module.css';
 
 export interface NavbarProps {
@@ -43,7 +44,10 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={onOpenCart}
             aria-label={`Open shopping cart with ${cartItemCount} items`}
           >
-            <span>🛍 Cart</span>
+            <span className={styles.cartIconWrapper}>
+              <ShoppingCartIcon size={20} color="var(--color-golden-yellow)" glow={cartItemCount > 0} />
+            </span>
+            <span className={styles.cartLabel}>Cart</span>
             {cartItemCount > 0 && (
               <span className={styles.cartCount}>{cartItemCount}</span>
             )}

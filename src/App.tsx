@@ -6,6 +6,7 @@ import { MenuItemCard } from './features/menu/components/MenuItemCard';
 import { CartDrawer } from './features/cart/components/CartDrawer';
 import { CheckoutModal } from './features/checkout/components/CheckoutModal';
 import { OrderTracker } from './features/tracking/components/OrderTracker';
+import { ShoppingCartIcon } from './components/ui/Icons/ShoppingCartIcon';
 import { CartProvider, useCart } from './features/cart/context/CartContext';
 import { menuService } from './features/menu/services/menuService';
 import { MenuItem, MenuCategory } from './features/menu/types/menuTypes';
@@ -168,7 +169,7 @@ const MainContent: React.FC = () => {
       {/* Toast Alert */}
       {toastMessage && (
         <div className={styles.toast}>
-          <span>🛍</span>
+          <ShoppingCartIcon size={18} color="var(--color-golden-yellow)" glow />
           <span>{toastMessage}</span>
         </div>
       )}
