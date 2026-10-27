@@ -1,0 +1,88 @@
+.footer {
+  background-color: var(--color-charcoal-pure);
+  border-top: 1px solid var(--color-charcoal-border);
+  padding: var(--space-3xl) 0 var(--space-xl);
+  margin-top: var(--space-3xl);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-2xl);
+}
+
+.brandColumn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.brandName {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--color-cream-white);
+}
+
+.brandTagline {
+  color: var(--color-golden-yellow);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.description {
+  color: var(--color-cream-muted);
+  font-size: 0.875rem;
+  max-width: 360px;
+  line-height: 1.6;
+}
+
+.columnTitle {
+  font-size: 0.9375rem;
+  color: var(--color-cream-white);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-md);
+}
+
+.list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  color: var(--color-cream-muted);
+  font-size: 0.875rem;
+}
+
+.listItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.badgeHighlight {
+  color: var(--color-golden-yellow);
+  font-weight: 600;
+}
+
+.bottomBar {
+  margin-top: var(--space-2xl);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--color-charcoal-border);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  color: var(--color-cream-dim);
+  font-size: 0.8125rem;
+  align-items: center;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: 2fr 1fr 1fr;
+  }
+  .bottomBar {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
