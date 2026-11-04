@@ -7,6 +7,7 @@ This project map links every business feature directly to its responsible files,
 ## 1. Feature Map
 
 ### 1. Brand Identity, Styling & Tokens
+- **Brand Logo Asset**: [soul_bites_logo.png](file:///Users/mahipatni/Antigravity/soul%20bites%20website/public/images/soul_bites_logo.png) (Official Soul Bites mascot & typography logo)
 - **Tokens & Palette**: [tokens.css](file:///Users/mahipatni/Antigravity/soul%20bites%20website/src/styles/tokens.css) (Charcoal Black `#1C1C1C`, Golden Yellow `#F5B700`, Cream White `#FFF8E6`, Background Pattern tokens)
 - **Background Pattern Asset**: [pattern.png](file:///Users/mahipatni/Antigravity/soul%20bites%20website/public/images/pattern.png) (Seamless transparent food doodle overlay)
 - **Global Reset & Base**: [globals.css](file:///Users/mahipatni/Antigravity/soul%20bites%20website/src/styles/globals.css)

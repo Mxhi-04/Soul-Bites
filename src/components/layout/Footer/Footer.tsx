@@ -7,7 +7,11 @@ export const Footer: React.FC = () => {
     <footer className={styles.footer}>
       <div className={`container ${styles.grid}`}>
         <div className={styles.brandColumn}>
-          <div className={styles.brandName}>{APP_CONFIG.brandName}</div>
+          <img
+            src="/images/soul_bites_logo.png"
+            alt={APP_CONFIG.brandName}
+            className={styles.brandLogo}
+          />
           <div className={styles.brandTagline}>{APP_CONFIG.tagline}</div>
           <p className={styles.description}>
             Crafted in our certified culinary hub, packaged in eco-insulated boxes, and delivered

@@ -19,13 +19,18 @@ export const Navbar: React.FC<NavbarProps> = ({
   return (
     <header className={styles.header}>
       <div className={`container ${styles.inner}`}>
-        <div className={styles.brand}>
-          <div className={styles.logoBadge}>SB</div>
-          <div className={styles.brandText}>
-            <span className={styles.brandName}>{APP_CONFIG.brandName}</span>
-            <span className={styles.brandTagline}>Cloud Kitchen</span>
-          </div>
-        </div>
+        <button
+          type="button"
+          className={styles.brand}
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          aria-label={`${APP_CONFIG.brandName} - Return to top`}
+        >
+          <img
+            src="/images/soul_bites_logo.png"
+            alt={APP_CONFIG.brandName}
+            className={styles.brandLogo}
+          />
+        </button>
 
         <div className={styles.kitchenStatus}>
           <span className={styles.statusIndicator} />
