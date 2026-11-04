@@ -26,6 +26,11 @@
   --color-cream-muted: rgba(255, 248, 230, 0.65);
   --color-cream-dim: rgba(255, 248, 230, 0.35);
 
+  /* Background Pattern Tokens */
+  --bg-pattern-image: url('/images/pattern.png');
+  --bg-pattern-size: 380px 380px;
+  --bg-pattern-opacity: 0.18;
+
   /* Semantic Feedback */
   --color-success: #34D399;
   --color-error: #EF4444;

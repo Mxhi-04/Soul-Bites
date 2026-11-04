@@ -1,4 +1,5 @@
 import { MenuItem, MenuFilterOptions } from '../types/menuTypes';
+import { DietaryTag } from '../../../types';
 
 export const INITIAL_MENU_ITEMS: MenuItem[] = [
   {
@@ -124,7 +125,7 @@ export const menuService = {
       }
 
       if (filters?.dietaryTag && filters.dietaryTag !== 'all') {
-        items = items.filter((item) => item.dietaryTags.includes(filters.dietaryTag as any));
+        items = items.filter((item) => item.dietaryTags.includes(filters.dietaryTag as DietaryTag));
       }
 
       if (filters?.searchQuery && filters.searchQuery.trim() !== '') {

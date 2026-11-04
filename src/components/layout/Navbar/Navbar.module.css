@@ -151,3 +151,34 @@
     display: flex;
   }
 }
+
+@media (max-width: 640px) {
+  .inner {
+    height: 60px;
+  }
+
+  .logoBadge {
+    width: 34px;
+    height: 34px;
+    font-size: 1.05rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .brandName {
+    font-size: 1.05rem;
+  }
+
+  .brandTagline {
+    font-size: 0.65rem;
+  }
+
+  .actions {
+    gap: var(--space-xs);
+  }
+
+  .cartButton {
+    padding: 7px 14px;
+    font-size: 0.8125rem;
+    gap: 7px;
+  }
+}

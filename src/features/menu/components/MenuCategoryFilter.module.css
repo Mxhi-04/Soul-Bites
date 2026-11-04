@@ -40,6 +40,7 @@
   overflow-x: auto;
   padding-bottom: 6px;
   scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
 }
 
 .categoryList::-webkit-scrollbar {
@@ -56,11 +57,16 @@
   font-weight: 600;
   transition: all var(--transition-fast);
   white-space: nowrap;
+  touch-action: pan-x;
 }
 
 .categoryChip:hover {
   background-color: var(--color-charcoal-hover);
   color: var(--color-cream-white);
+}
+
+.categoryChip:active {
+  transform: scale(0.96);
 }
 
 .activeChip {
@@ -73,4 +79,16 @@
 .activeChip:hover {
   background-color: var(--color-golden-hover);
   color: var(--color-charcoal-pure);
+}
+
+@media (max-width: 640px) {
+  .categoryList {
+    margin: 0 calc(-1 * var(--space-md));
+    padding: 0 var(--space-md) 6px;
+  }
+
+  .categoryChip {
+    padding: 7px 14px;
+    font-size: 0.8125rem;
+  }
 }

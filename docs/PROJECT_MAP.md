@@ -7,7 +7,8 @@ This project map links every business feature directly to its responsible files,
 ## 1. Feature Map
 
 ### 1. Brand Identity, Styling & Tokens
-- **Tokens & Palette**: [tokens.css](file:///Users/mahipatni/Antigravity/soul%20bites%20website/src/styles/tokens.css) (Charcoal Black `#1C1C1C`, Golden Yellow `#F5B700`, Cream White `#FFF8E6`)
+- **Tokens & Palette**: [tokens.css](file:///Users/mahipatni/Antigravity/soul%20bites%20website/src/styles/tokens.css) (Charcoal Black `#1C1C1C`, Golden Yellow `#F5B700`, Cream White `#FFF8E6`, Background Pattern tokens)
+- **Background Pattern Asset**: [pattern.png](file:///Users/mahipatni/Antigravity/soul%20bites%20website/public/images/pattern.png) (Seamless transparent food doodle overlay)
 - **Global Reset & Base**: [globals.css](file:///Users/mahipatni/Antigravity/soul%20bites%20website/src/styles/globals.css)
 - **Palette Constants**: [theme.ts](file:///Users/mahipatni/Antigravity/soul%20bites%20website/src/constants/theme.ts)
 - **Business Constants & Hours**: [config.ts](file:///Users/mahipatni/Antigravity/soul%20bites%20website/src/constants/config.ts)
@@ -20,6 +21,8 @@ This project map links every business feature directly to its responsible files,
 - **App Shell & Hero**: [App.tsx](file:///Users/mahipatni/Antigravity/soul%20bites%20website/src/App.tsx), [App.module.css](file:///Users/mahipatni/Antigravity/soul%20bites%20website/src/App.module.css)
 
 ### 3. Menu Browsing, Filtering & Dish Details
+- **Hero Bestsellers Infinite Window**: [HeroBestsellersInfinite.tsx](file:///Users/mahipatni/Antigravity/soul%20bites%20website/src/features/menu/components/HeroBestsellersInfinite.tsx)
+- **Hero Bestsellers Styling**: [HeroBestsellersInfinite.module.css](file:///Users/mahipatni/Antigravity/soul%20bites%20website/src/features/menu/components/HeroBestsellersInfinite.module.css)
 - **Bestsellers Carousel**: [BestsellersCarousel.tsx](file:///Users/mahipatni/Antigravity/soul%20bites%20website/src/features/menu/components/BestsellersCarousel.tsx)
 - **Carousel Styling & Pop Animations**: [BestsellersCarousel.module.css](file:///Users/mahipatni/Antigravity/soul%20bites%20website/src/features/menu/components/BestsellersCarousel.module.css)
 - **Menu Items Card**: [MenuItemCard.tsx](file:///Users/mahipatni/Antigravity/soul%20bites%20website/src/features/menu/components/MenuItemCard.tsx)

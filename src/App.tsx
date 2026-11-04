@@ -3,7 +3,7 @@ import { Navbar } from './components/layout/Navbar/Navbar';
 import { Footer } from './components/layout/Footer/Footer';
 import { MenuCategoryFilter } from './features/menu/components/MenuCategoryFilter';
 import { MenuItemCard } from './features/menu/components/MenuItemCard';
-import { BestsellersCarousel } from './features/menu/components/BestsellersCarousel';
+import { HeroBestsellersInfinite } from './features/menu/components/HeroBestsellersInfinite';
 import { CartDrawer } from './features/cart/components/CartDrawer';
 import { CheckoutModal } from './features/checkout/components/CheckoutModal';
 import { OrderTracker } from './features/tracking/components/OrderTracker';
@@ -13,7 +13,6 @@ import { menuService } from './features/menu/services/menuService';
 import { MenuItem, MenuCategory } from './features/menu/types/menuTypes';
 import { PlacedOrder } from './features/checkout/types/checkoutTypes';
 import { OrderTrackingState } from './features/tracking/types/trackingTypes';
-import { APP_CONFIG } from './constants/config';
 import styles from './App.module.css';
 
 const MainContent: React.FC = () => {
@@ -87,26 +86,6 @@ const MainContent: React.FC = () => {
       />
 
       <main className={styles.main}>
-        {/* Brand Hero */}
-        <section className={styles.hero}>
-          <div className="container">
-            <div className={styles.heroTag}>🔥 Cloud Kitchen • Fresh To Door</div>
-            <h1 className={styles.heroTitle}>
-              Real Comfort Food, <span className={styles.heroHighlight}>Soulfully Crafted.</span>
-            </h1>
-            <p className={styles.heroSubtitle}>
-              Gourmet smash burgers, loaded truffle fries, vibrant harvest bowls, and fresh sips.
-              Directly prepared in our high-precision cloud kitchen and dispatched hot.
-            </p>
-
-            <div className={styles.heroBadges}>
-              <span className={styles.heroPill}>⚡ Average Delivery 25–35 Mins</span>
-              <span className={styles.heroPill}>🛡 {APP_CONFIG.kitchenInfo.hygieneRating}</span>
-              <span className={styles.heroPill}>📦 Thermal Sealed Eco-Boxes</span>
-            </div>
-          </div>
-        </section>
-
         {/* Live Order Tracker Modal / Section */}
         {activeOrder && isTrackerOpen && (
           <section style={{ padding: 'var(--space-xl) 0', backgroundColor: 'var(--color-charcoal-pure)' }}>
@@ -120,8 +99,8 @@ const MainContent: React.FC = () => {
           </section>
         )}
 
-        {/* Bestseller Items Showcase with Swipe & Pop Animation Scroll */}
-        <BestsellersCarousel items={bestsellers} onAddToCart={handleAddToCart} />
+        {/* Hero Window: Best Selling Items with Infinite Swiping */}
+        <HeroBestsellersInfinite items={bestsellers} onAddToCart={handleAddToCart} />
 
         {/* Menu Section */}
         <section className={styles.menuSection}>

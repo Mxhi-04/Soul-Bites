@@ -11,10 +11,10 @@
 /* Hero Section */
 .hero {
   padding: var(--space-3xl) 0 var(--space-2xl);
-  background: radial-gradient(circle at 50% 0%, rgba(245, 183, 0, 0.08) 0%, transparent 60%),
-              var(--color-charcoal-black);
+  background: radial-gradient(circle at 50% 0%, rgba(245, 183, 0, 0.12) 0%, transparent 65%);
   border-bottom: 1px solid var(--color-charcoal-border);
   text-align: center;
+  position: relative;
 }
 
 .heroTag {
@@ -148,5 +148,40 @@
 @media (min-width: 1024px) {
   .menuGrid {
     grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .menuSection {
+    padding: var(--space-lg) 0 var(--space-2xl);
+  }
+
+  .sectionHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    margin-bottom: var(--space-md);
+  }
+
+  .sectionTitle {
+    font-size: 1.45rem;
+  }
+
+  .sectionDesc {
+    font-size: 0.8125rem;
+  }
+
+  .menuGrid {
+    gap: var(--space-md);
+  }
+
+  .toast {
+    bottom: max(16px, env(safe-area-inset-bottom));
+    left: 16px;
+    right: 16px;
+    justify-content: center;
+    text-align: center;
+    font-size: 0.875rem;
+    padding: 10px 16px;
   }
 }

@@ -15,6 +15,10 @@
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55), 0 0 16px rgba(245, 183, 0, 0.12);
 }
 
+.card:active {
+  transform: scale(0.99);
+}
+
 .imageWrapper {
   position: relative;
   width: 100%;
@@ -104,4 +108,31 @@
   display: flex;
   align-items: center;
   gap: 4px;
+}
+
+@media (max-width: 640px) {
+  .imageWrapper {
+    height: clamp(160px, 46vw, 190px);
+  }
+
+  .content {
+    padding: var(--space-sm) var(--space-md) var(--space-md);
+    gap: 8px;
+  }
+
+  .title {
+    font-size: 1.05rem;
+  }
+
+  .price {
+    font-size: 1.05rem;
+  }
+
+  .description {
+    font-size: 0.8125rem;
+    -webkit-line-clamp: 2;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 }
