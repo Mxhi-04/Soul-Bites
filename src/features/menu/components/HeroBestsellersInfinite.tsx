@@ -164,15 +164,20 @@ export const HeroBestsellersInfinite: React.FC<HeroBestsellersInfiniteProps> = (
 
   // 3D Spherical Rotation State
   const [currentAngle, setCurrentAngle] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [lastInteractionTime, setLastInteractionTime] = useState(() => Date.now());
+
+  // Reset 30-second countdown on user interaction
+  const resetTimer = useCallback(() => {
+    setLastInteractionTime(Date.now());
+  }, []);
 
   // Drag tracking refs
+  const isPointerDownRef = useRef(false);
   const dragStartXRef = useRef(0);
   const dragStartYRef = useRef(0);
-  const dragStartAngleRef = useRef(0);
+  const dragStartTimeRef = useRef(0);
   const hasDraggedRef = useRef(false);
-  const isLockedAxisRef = useRef<'horizontal' | 'vertical' | null>(null);
 
   // Stage measurement
   const stageRef = useRef<HTMLDivElement>(null);
@@ -213,118 +218,94 @@ export const HeroBestsellersInfinite: React.FC<HeroBestsellersInfiniteProps> = (
 
   // Navigation handlers
   const rotateNext = useCallback(() => {
+    resetTimer();
     setCurrentAngle((prev) => {
       const nearest = Math.round(prev / anglePerItem);
       return (nearest - 1) * anglePerItem;
     });
-  }, [anglePerItem]);
+  }, [anglePerItem, resetTimer]);
 
   const rotatePrev = useCallback(() => {
+    resetTimer();
     setCurrentAngle((prev) => {
       const nearest = Math.round(prev / anglePerItem);
       return (nearest + 1) * anglePerItem;
     });
-  }, [anglePerItem]);
+  }, [anglePerItem, resetTimer]);
 
-  const rotateToItem = (itemIndex: number) => {
-    const currentSlot = Math.round(currentAngle / anglePerItem);
-    const activeIndex = ((-currentSlot % itemCount) + itemCount) % itemCount;
-    let diff = itemIndex - activeIndex;
-    if (diff > 2) diff -= 5;
-    if (diff < -2) diff += 5;
-    setCurrentAngle((currentSlot - diff) * anglePerItem);
-  };
+  const rotateToItem = useCallback(
+    (itemIndex: number) => {
+      resetTimer();
+      const currentSlot = Math.round(currentAngle / anglePerItem);
+      const activeIndex = ((-currentSlot % itemCount) + itemCount) % itemCount;
+      let diff = itemIndex - activeIndex;
+      if (diff > 2) diff -= 5;
+      if (diff < -2) diff += 5;
+      setCurrentAngle((currentSlot - diff) * anglePerItem);
+    },
+    [anglePerItem, currentAngle, itemCount, resetTimer]
+  );
 
-  // Auto-rotation (pauses on hover or drag)
+  // Auto-rotation: ONLY moves automatically after every 30 seconds (pauses on hover)
   useEffect(() => {
-    if (isHovered || isDragging) return;
+    if (isHovered) return;
+    const AUTO_ROTATE_INTERVAL_MS = 30000; // 30 seconds
     const timer = setInterval(() => {
-      rotateNext();
-    }, 4500);
+      setCurrentAngle((prev) => {
+        const nearest = Math.round(prev / anglePerItem);
+        return (nearest - 1) * anglePerItem;
+      });
+    }, AUTO_ROTATE_INTERVAL_MS);
     return () => clearInterval(timer);
-  }, [isHovered, isDragging, rotateNext]);
+  }, [isHovered, anglePerItem, lastInteractionTime]);
 
-  // Pointer Drag handlers with smart vertical scroll pass-through for phone touchscreens
+  // Pointer / Touch handlers: NO rotation with cursor during hover
+  // Cards only move on click/tap, intentional swipe release, or the 30s timer
   const handlePointerDown = (e: React.PointerEvent) => {
     if (e.button !== 0) return;
+    isPointerDownRef.current = true;
     dragStartXRef.current = e.clientX;
     dragStartYRef.current = e.clientY;
-    dragStartAngleRef.current = currentAngle;
+    dragStartTimeRef.current = Date.now();
     hasDraggedRef.current = false;
-    isLockedAxisRef.current = null;
   };
 
   const handlePointerMove = (e: React.PointerEvent) => {
+    // Only track if pointer is actively held down (avoids any hover rotation)
+    if (!isPointerDownRef.current) return;
+
     const deltaX = e.clientX - dragStartXRef.current;
     const deltaY = e.clientY - dragStartYRef.current;
-    const absX = Math.abs(deltaX);
-    const absY = Math.abs(deltaY);
-
-    // Determine intent on first movement: vertical scroll or horizontal card swipe
-    if (isLockedAxisRef.current === null) {
-      if (absY > 8 && absY > absX) {
-        // Vertical page scroll gesture -> do not capture pointer, allow native browser scroll
-        isLockedAxisRef.current = 'vertical';
-        return;
-      }
-      if (absX > 8 && absX >= absY) {
-        // Horizontal carousel gesture -> lock axis and capture pointer
-        isLockedAxisRef.current = 'horizontal';
-        setIsDragging(true);
-        try {
-          (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
-        } catch {
-          // Ignored
-        }
-      }
-    }
-
-    if (isLockedAxisRef.current !== 'horizontal') return;
-
-    if (absX > 6) {
+    if (Math.abs(deltaX) > 20 && Math.abs(deltaX) > Math.abs(deltaY)) {
       hasDraggedRef.current = true;
     }
-
-    // Adaptive rotation speed: responsive thumb flick on mobile
-    const sensitivity = isMobile ? 0.44 : 0.30;
-    const angleDelta = deltaX * sensitivity;
-    setCurrentAngle(dragStartAngleRef.current + angleDelta);
+    // Note: We deliberately do NOT update currentAngle here
+    // Cards do NOT rotate with cursor movement!
   };
 
   const handlePointerUp = (e: React.PointerEvent) => {
-    const wasDragging = isLockedAxisRef.current === 'horizontal';
-    setIsDragging(false);
-    isLockedAxisRef.current = null;
+    if (!isPointerDownRef.current) return;
+    isPointerDownRef.current = false;
 
-    try {
-      (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId);
-    } catch {
-      // Ignored
-    }
+    const deltaX = e.clientX - dragStartXRef.current;
+    const deltaY = e.clientY - dragStartYRef.current;
+    const elapsed = Date.now() - dragStartTimeRef.current;
 
-    // Flick swipe detection on phones
-    if (wasDragging && hasDraggedRef.current) {
-      const deltaX = e.clientX - dragStartXRef.current;
-      if (deltaX < -35) {
-        // Swiped left -> advance to next
-        setCurrentAngle((prev) => {
-          const slot = Math.floor(prev / anglePerItem);
-          return slot * anglePerItem;
-        });
-        return;
-      } else if (deltaX > 35) {
-        // Swiped right -> go to previous
-        setCurrentAngle((prev) => {
-          const slot = Math.ceil(prev / anglePerItem);
-          return slot * anglePerItem;
-        });
-        return;
+    // Trigger swipe advance ONLY upon releasing a deliberate gesture (> 40px in < 800ms)
+    if (hasDraggedRef.current && Math.abs(deltaX) > 40 && elapsed < 800) {
+      resetTimer();
+      if (deltaX < 0) {
+        rotateNext();
+      } else {
+        rotatePrev();
       }
+      return;
     }
 
-    // Snap to nearest slot
-    const nearestSlot = Math.round(currentAngle / anglePerItem);
-    setCurrentAngle(nearestSlot * anglePerItem);
+    // Small movement is considered a tap
+    if (Math.hypot(deltaX, deltaY) < 15) {
+      hasDraggedRef.current = false;
+    }
   };
 
   // Active item index for indicator dots
@@ -443,16 +424,28 @@ export const HeroBestsellersInfinite: React.FC<HeroBestsellersInfiniteProps> = (
                   zIndex,
                   pointerEvents: isVisible ? 'auto' : 'none',
                   visibility: isVisible ? 'visible' : 'hidden',
-                  transition: isDragging
-                    ? 'none'
-                    : 'transform 0.55s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.4s ease, filter 0.4s ease',
+                  transition: 'transform 0.55s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.4s ease, filter 0.4s ease',
                 }}
                 onClick={() => {
                   if (hasDraggedRef.current) return;
+                  resetTimer();
                   if (!isCenter) {
                     rotateToItem(index);
+                  } else {
+                    rotateNext();
                   }
                 }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    resetTimer();
+                    if (!isCenter) {
+                      rotateToItem(index);
+                    } else {
+                      rotateNext();
+                    }
+                  }
+                }}
+                tabIndex={isVisible ? 0 : -1}
                 role="group"
                 aria-label={`${item.name} - ${formatCurrency(item.price)}`}
               >
@@ -494,7 +487,7 @@ export const HeroBestsellersInfinite: React.FC<HeroBestsellersInfiniteProps> = (
                       <span className={styles.ctaPromoTag}>{meta.promoTag}</span>
                     </button>
                   ) : (
-                    <span className={styles.focusHint}>Click to View</span>
+                    <span className={styles.focusHint}>Tap to Center</span>
                   )}
                 </div>
 
@@ -540,7 +533,7 @@ export const HeroBestsellersInfinite: React.FC<HeroBestsellersInfiniteProps> = (
           ))}
         </div>
         <span className={styles.swipeHint}>
-          ✨ Drag horizontally to rotate in 3D • Tap side bites to center
+          ✨ Tap any card to rotate • Auto-rotates every 30s
         </span>
       </div>
     </section>

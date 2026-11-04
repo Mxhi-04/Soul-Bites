@@ -19,14 +19,10 @@
   align-items: center;
   perspective: 1400px;
   perspective-origin: 50% 48%;
-  cursor: grab;
+  cursor: default;
   touch-action: pan-y;
   margin: 0 auto;
   overflow: visible;
-}
-
-.stageWrapper:active {
-  cursor: grabbing;
 }
 
 /* Ambient Spherical Lighting */
@@ -94,7 +90,7 @@
 .cardActive {
   border: 1px solid rgba(245, 183, 0, 0.3);
   box-shadow: 0 45px 110px rgba(0, 0, 0, 0.9), 0 0 65px rgba(245, 183, 0, 0.28);
-  cursor: default;
+  cursor: pointer;
 }
 
 /* Side Card */
