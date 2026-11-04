@@ -11,8 +11,10 @@ export interface MenuItemCustomization {
 export interface MenuItem {
   id: string;
   name: string;
+  subtitle?: string;
   description: string;
   price: number;
+  rating?: number;
   category: MenuCategory;
   dietaryTags: DietaryTag[];
   spiceLevel?: SpiceLevel;
