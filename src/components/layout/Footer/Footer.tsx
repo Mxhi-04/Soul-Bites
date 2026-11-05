@@ -1,6 +1,6 @@
-import React from 'react';
-import { APP_CONFIG } from '../../../constants/config';
-import styles from './Footer.module.css';
+import React from "react";
+import { APP_CONFIG } from "../../../constants/config";
+import styles from "./Footer.module.css";
 
 export const Footer: React.FC = () => {
   return (
@@ -8,48 +8,52 @@ export const Footer: React.FC = () => {
       <div className={`container ${styles.grid}`}>
         <div className={styles.brandColumn}>
           <img
-            src="/images/soul_bites_logo.png"
+            src="/images/soul_bites_logo_small.png"
+            width={192}
+            height={138}
+            loading="lazy"
             alt={APP_CONFIG.brandName}
             className={styles.brandLogo}
           />
           <div className={styles.brandTagline}>{APP_CONFIG.tagline}</div>
           <p className={styles.description}>
-            Crafted in our certified culinary hub, packaged in eco-insulated boxes, and delivered
-            steaming hot straight to your doorstep.
+            Browse our sample menu and explore your order. Live ordering and
+            delivery are coming soon.
           </p>
         </div>
 
         <div>
-          <h4 className={styles.columnTitle}>Kitchen Standards</h4>
+          <h2 className={styles.columnTitle}>Before you order</h2>
           <ul className={styles.list}>
-            <li className={styles.listItem}>
-              <span className={styles.badgeHighlight}>✓</span> {APP_CONFIG.kitchenInfo.hygieneRating}
+            <li>Menu items and photography are illustrative.</li>
+            <li>
+              Ingredients and allergen information must be confirmed with the
+              kitchen before live ordering.
             </li>
-            <li className={styles.listItem}>
-              <span className={styles.badgeHighlight}>✓</span> 100% Contactless Preparation
-            </li>
-            <li className={styles.listItem}>
-              <span className={styles.badgeHighlight}>✓</span> Daily Sanitized Workstations
-            </li>
-            <li className={styles.listItem}>
-              <span className={styles.badgeHighlight}>✓</span> Fresh Daily Local Sourcing
-            </li>
+            <li>No payment is collected in this demo.</li>
           </ul>
         </div>
 
         <div>
-          <h4 className={styles.columnTitle}>Operating Hours</h4>
+          <h2 className={styles.columnTitle}>Explore Soul Bites</h2>
           <ul className={styles.list}>
-            <li>Monday – Sunday: {APP_CONFIG.operatingHours.open} – {APP_CONFIG.operatingHours.close}</li>
-            <li>Direct Hub: {APP_CONFIG.kitchenInfo.kitchenHub}</li>
-            <li>Support: {APP_CONFIG.kitchenInfo.contactPhone}</li>
-            <li>Email: {APP_CONFIG.kitchenInfo.contactEmail}</li>
+            <li>
+              <a href="#menu">Browse the menu</a>
+            </li>
+            <li>
+              Delivery locations and opening hours will be published before
+              launch.
+            </li>
+            <li>Support and business details are being confirmed.</li>
           </ul>
         </div>
       </div>
 
       <div className={`container ${styles.bottomBar}`}>
-        <span>© {new Date().getFullYear()} {APP_CONFIG.brandName}. All rights reserved.</span>
+        <span>
+          © {new Date().getFullYear()} {APP_CONFIG.brandName}. All rights
+          reserved.
+        </span>
         <span>Premium Cloud Kitchen Experience</span>
       </div>
     </footer>

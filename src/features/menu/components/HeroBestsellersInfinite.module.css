@@ -2,8 +2,17 @@
   position: relative;
   width: 100%;
   padding: var(--space-md) 0 var(--space-xl);
-  background: radial-gradient(circle at 50% 45%, rgba(245, 183, 0, 0.14) 0%, rgba(28, 28, 28, 0) 65%),
-              linear-gradient(180deg, rgba(28, 28, 28, 0.45) 0%, rgba(18, 18, 18, 0.85) 100%);
+  background:
+    radial-gradient(
+      circle at 50% 45%,
+      rgba(245, 183, 0, 0.14) 0%,
+      rgba(28, 28, 28, 0) 65%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(28, 28, 28, 0.45) 0%,
+      rgba(18, 18, 18, 0.85) 100%
+    );
   border-bottom: 1px solid var(--color-charcoal-border);
   overflow: hidden;
   user-select: none;
@@ -33,7 +42,12 @@
   width: 1000px;
   height: 680px;
   transform: translate(-50%, -50%);
-  background: radial-gradient(ellipse at center, rgba(245, 183, 0, 0.22) 0%, rgba(245, 183, 0, 0.05) 55%, transparent 75%);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(245, 183, 0, 0.22) 0%,
+    rgba(245, 183, 0, 0.05) 55%,
+    transparent 75%
+  );
   pointer-events: none;
   z-index: 1;
 }
@@ -45,7 +59,12 @@
   width: 1100px;
   height: 75px;
   transform: translateX(-50%);
-  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.4) 55%, transparent 75%);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0.9) 0%,
+    rgba(0, 0, 0, 0.4) 55%,
+    transparent 75%
+  );
   border-radius: 50%;
   pointer-events: none;
   z-index: 1;
@@ -70,7 +89,12 @@
   width: clamp(520px, 64vw, 920px);
   min-height: clamp(440px, 50vh, 520px);
   /* Blended seamless dark backdrop without thick box boundaries */
-  background: radial-gradient(circle at 75% 50%, rgba(245, 183, 0, 0.16) 0%, rgba(34, 34, 34, 0.88) 50%, rgba(18, 18, 18, 0.96) 100%);
+  background: radial-gradient(
+    circle at 75% 50%,
+    rgba(245, 183, 0, 0.16) 0%,
+    rgba(34, 34, 34, 0.88) 50%,
+    rgba(18, 18, 18, 0.96) 100%
+  );
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 40px;
   display: flex;
@@ -81,7 +105,9 @@
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   will-change: transform, opacity;
-  box-shadow: 0 35px 85px rgba(0, 0, 0, 0.8), 0 0 40px rgba(245, 183, 0, 0.1);
+  box-shadow:
+    0 35px 85px rgba(0, 0, 0, 0.8),
+    0 0 40px rgba(245, 183, 0, 0.1);
   user-select: none;
   overflow: visible; /* Lets huge 3D product burst out */
 }
@@ -89,7 +115,9 @@
 /* Center Active Card: Soft subtle ambient aura instead of a rigid yellow rectangle */
 .cardActive {
   border: 1px solid rgba(245, 183, 0, 0.3);
-  box-shadow: 0 45px 110px rgba(0, 0, 0, 0.9), 0 0 65px rgba(245, 183, 0, 0.28);
+  box-shadow:
+    0 45px 110px rgba(0, 0, 0, 0.9),
+    0 0 65px rgba(245, 183, 0, 0.28);
   cursor: pointer;
 }
 
@@ -109,7 +137,11 @@
 .cardSideOverlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(18, 18, 18, 0.3) 0%, rgba(18, 18, 18, 0.65) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(18, 18, 18, 0.3) 0%,
+    rgba(18, 18, 18, 0.65) 100%
+  );
   pointer-events: none;
   z-index: 15;
   border-radius: 40px;
@@ -173,7 +205,7 @@
 }
 
 .titleScriptLine {
-  font-family: 'Caveat', 'Dancing Script', 'Brush Script MT', cursive;
+  font-family: "Caveat", "Dancing Script", "Brush Script MT", cursive;
   font-size: clamp(3rem, 5.5vw, 5rem);
   font-weight: 700;
   color: var(--color-golden-yellow);
@@ -222,7 +254,8 @@
   align-items: center;
   background: var(--color-golden-yellow);
   border-radius: var(--radius-full);
-  padding: 6px 6px 6px 24px;
+  padding: 10px 22px;
+  min-height: 44px;
   box-shadow: 0 8px 24px rgba(245, 183, 0, 0.35);
   cursor: pointer;
   border: none;
@@ -243,17 +276,6 @@
   color: var(--color-charcoal-pure);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-}
-
-.ctaPromoTag {
-  background: rgba(28, 28, 28, 0.2);
-  color: var(--color-charcoal-pure);
-  font-size: 0.75rem;
-  font-weight: 800;
-  padding: 6px 14px;
-  border-radius: var(--radius-full);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
 }
 
 .focusHint {
@@ -283,8 +305,9 @@
   height: 100%;
   border-radius: 50%;
   border: 5px solid #282828;
-  box-shadow: 0 35px 80px rgba(0, 0, 0, 0.95),
-              0 0 50px rgba(245, 183, 0, 0.28);
+  box-shadow:
+    0 35px 80px rgba(0, 0, 0, 0.95),
+    0 0 50px rgba(245, 183, 0, 0.28);
   overflow: hidden;
   background-color: var(--color-charcoal-pure);
   transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
@@ -312,7 +335,7 @@
   position: absolute;
   bottom: -4px;
   right: -10px;
-  background: linear-gradient(135deg, #F5B700 0%, #E65100 100%);
+  background: linear-gradient(135deg, #f5b700 0%, #e65100 100%);
   color: var(--color-charcoal-pure);
   padding: 12px 24px;
   border-radius: 22px 22px 4px 22px;
@@ -357,7 +380,8 @@
 }
 
 @keyframes floatLeaf {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0px) rotate(0deg);
   }
   50% {
@@ -423,24 +447,53 @@
 }
 
 .dot {
-  width: 12px;
-  height: 12px;
+  position: relative;
+  width: 28px;
+  height: 28px;
   border-radius: var(--radius-full);
-  background-color: var(--color-charcoal-border);
+  background-color: transparent;
   border: none;
   padding: 0;
   cursor: pointer;
   transition: all var(--transition-fast);
 }
 
+.pauseButton {
+  color: var(--color-cream-subtle);
+  font-size: 0.875rem;
+  min-height: 44px;
+  padding: 8px 14px;
+  border: 1px solid var(--color-charcoal-border);
+  border-radius: var(--radius-full);
+}
+.pauseButton:disabled {
+  cursor: default;
+}
+
 .dot:hover {
-  background-color: var(--color-cream-muted);
+  background-color: transparent;
+}
+
+.dot::after {
+  content: "";
+  display: block;
+  width: 12px;
+  height: 12px;
+  margin: auto;
+  border-radius: var(--radius-full);
+  background: var(--color-cream-dim);
+}
+.dot:hover::after {
+  background: var(--color-cream-subtle);
+}
+.activeDot::after {
+  width: 28px;
+  background: var(--color-golden-yellow);
 }
 
 .activeDot {
   width: 34px;
-  background-color: var(--color-golden-yellow);
-  box-shadow: 0 0 12px rgba(245, 183, 0, 0.5);
+  background-color: transparent;
 }
 
 .swipeHint {
@@ -492,11 +545,15 @@
     padding: var(--space-sm) var(--space-md) var(--space-md);
     border-radius: 28px;
     gap: 4px;
-    box-shadow: 0 16px 44px rgba(0, 0, 0, 0.85), 0 0 24px rgba(245, 183, 0, 0.12);
+    box-shadow:
+      0 16px 44px rgba(0, 0, 0, 0.85),
+      0 0 24px rgba(245, 183, 0, 0.12);
   }
 
   .cardActive {
-    box-shadow: 0 24px 55px rgba(0, 0, 0, 0.95), 0 0 38px rgba(245, 183, 0, 0.22);
+    box-shadow:
+      0 24px 55px rgba(0, 0, 0, 0.95),
+      0 0 38px rgba(245, 183, 0, 0.22);
   }
 
   .contentArea {
@@ -539,18 +596,13 @@
   }
 
   .ctaWrapper {
-    padding: 6px 8px 6px 18px;
+    padding: 10px 20px;
     gap: 8px;
     margin-top: 2px;
   }
 
   .ctaText {
     font-size: 0.8125rem;
-  }
-
-  .ctaPromoTag {
-    font-size: 0.6875rem;
-    padding: 3px 8px;
   }
 
   .productArea {

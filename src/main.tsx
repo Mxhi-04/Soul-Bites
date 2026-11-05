@@ -1,14 +1,17 @@
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import './styles/tokens.css';
-import './styles/globals.css';
-import App from './App';
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "./styles/tokens.css";
+import "./styles/globals.css";
+import App from "./App";
+import { ErrorBoundary } from "./components/ui/ErrorBoundary/ErrorBoundary";
 
-const rootElement = document.getElementById('root');
+const rootElement = document.getElementById("root");
 if (rootElement) {
   createRoot(rootElement).render(
     <StrictMode>
-      <App />
-    </StrictMode>
+      <ErrorBoundary>
+        <App />
+      </ErrorBoundary>
+    </StrictMode>,
   );
 }

@@ -1,29 +1,22 @@
-export type PaymentMethod = 'card' | 'apple-pay' | 'cash-on-delivery';
+import { CartItem, CartPricingSummary } from "../../cart/types/cartTypes";
 
 export interface DeliveryDetails {
   fullName: string;
   phone: string;
   address: string;
-  unitApt?: string;
+  unitApt: string;
   city: string;
   postalCode: string;
-  deliveryNotes?: string;
-  paymentMethod: PaymentMethod;
+  deliveryNotes: string;
 }
+export type CheckoutFormErrors = Partial<Record<keyof DeliveryDetails, string>>;
 
-export interface CheckoutFormErrors {
-  fullName?: string;
-  phone?: string;
-  address?: string;
-  city?: string;
-  postalCode?: string;
-}
-
-export interface PlacedOrder {
+/** A local preview is never evidence of payment or kitchen acceptance. */
+export interface OrderPreview {
+  kind: "preview";
   orderId: string;
-  itemsCount: number;
-  total: number;
-  deliveryAddress: string;
-  estimatedArrivalMinutes: number;
+  items: CartItem[];
+  pricing: CartPricingSummary;
+  deliveryDetails: DeliveryDetails;
   placedAt: string;
 }

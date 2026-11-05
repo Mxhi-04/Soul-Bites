@@ -1,0 +1,16 @@
+[
+  {
+    "name": "desktop",
+    "width": 1440,
+    "height": 1000,
+    "errors": [],
+    "scrollWidth": 1440
+  },
+  {
+    "name": "mobile",
+    "width": 390,
+    "height": 844,
+    "errors": [],
+    "scrollWidth": 390
+  }
+]

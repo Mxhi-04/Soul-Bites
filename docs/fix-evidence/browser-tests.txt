@@ -1,0 +1,25 @@
+
+Running 20 tests using 2 workers
+
+  ✓   2 [desktop] › tests/ordering.spec.ts:67:1 › hero purchases work with Enter and Space without rotating (910ms)
+  ✓   1 [desktop] › tests/ordering.spec.ts:34:1 › corrupt cart recovers and forged stored prices are ignored (1.4s)
+  ✓   3 [desktop] › tests/ordering.spec.ts:86:1 › cart and review have named modal dialogs, trapped focus and Escape support (926ms)
+  ✓   5 [desktop] › tests/ordering.spec.ts:161:1 › Back cancels a pending preview without clearing the cart or saving an order (1.4s)
+  ✓   4 [desktop] › tests/ordering.spec.ts:117:1 › validation associates errors and saving a preview clears its cart and survives refresh (2.9s)
+  ✓   6 [desktop] › tests/ordering.spec.ts:182:1 › cart syncs across tabs and retains additions made while preview is saving (1.6s)
+  ✓   7 [desktop] › tests/ordering.spec.ts:214:1 › simultaneous additions in two tabs are both retained (959ms)
+  ✓   8 [desktop] › tests/ordering.spec.ts:228:1 › dietary filtering includes vegan items in vegetarian results (972ms)
+  ✓  10 [desktop] › tests/ordering.spec.ts:271:1 › reduced motion disables automatic carousel changes (691ms)
+  ✓   9 [desktop] › tests/ordering.spec.ts:246:1 › home, cart and review pass automated accessibility checks (2.6s)
+  ✓  11 [mobile] › tests/ordering.spec.ts:34:1 › corrupt cart recovers and forged stored prices are ignored (1.2s)
+  ✓  12 [mobile] › tests/ordering.spec.ts:67:1 › hero purchases work with Enter and Space without rotating (741ms)
+  ✓  13 [mobile] › tests/ordering.spec.ts:86:1 › cart and review have named modal dialogs, trapped focus and Escape support (937ms)
+  ✓  14 [mobile] › tests/ordering.spec.ts:117:1 › validation associates errors and saving a preview clears its cart and survives refresh (1.5s)
+  ✓  15 [mobile] › tests/ordering.spec.ts:161:1 › Back cancels a pending preview without clearing the cart or saving an order (1.4s)
+  ✓  17 [mobile] › tests/ordering.spec.ts:214:1 › simultaneous additions in two tabs are both retained (908ms)
+  ✓  18 [mobile] › tests/ordering.spec.ts:228:1 › dietary filtering includes vegan items in vegetarian results (1.6s)
+  ✓  16 [mobile] › tests/ordering.spec.ts:182:1 › cart syncs across tabs and retains additions made while preview is saving (2.8s)
+  ✓  20 [mobile] › tests/ordering.spec.ts:271:1 › reduced motion disables automatic carousel changes (671ms)
+  ✓  19 [mobile] › tests/ordering.spec.ts:246:1 › home, cart and review pass automated accessibility checks (2.0s)
+
+  20 passed (16.8s)

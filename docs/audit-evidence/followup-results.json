@@ -1,0 +1,123 @@
+{
+  "modal": [
+    {
+      "tag": "DIV",
+      "cls": "_backdrop_1yx4y_1",
+      "opacity": "1",
+      "filter": "none",
+      "animation": "0.2s ease-out _fadeIn_1yx4y_1",
+      "background": "rgba(10, 10, 10, 0.75)",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 844,
+        "top": 0,
+        "right": 390,
+        "bottom": 844,
+        "left": 0
+      }
+    },
+    {
+      "tag": "DIV",
+      "cls": "_app_wmgc8_1",
+      "opacity": "1",
+      "filter": "none",
+      "animation": "none",
+      "background": "rgba(0, 0, 0, 0)",
+      "rect": {
+        "x": 0,
+        "y": -3296,
+        "width": 390,
+        "height": 5033.84375,
+        "top": -3296,
+        "right": 390,
+        "bottom": 1737.84375,
+        "left": 0
+      }
+    },
+    {
+      "tag": "DIV",
+      "cls": "",
+      "opacity": "1",
+      "filter": "none",
+      "animation": "none",
+      "background": "rgba(0, 0, 0, 0)",
+      "rect": {
+        "x": 0,
+        "y": -3296,
+        "width": 390,
+        "height": 5033.84375,
+        "top": -3296,
+        "right": 390,
+        "bottom": 1737.84375,
+        "left": 0
+      }
+    },
+    {
+      "tag": "BODY",
+      "cls": "",
+      "opacity": "1",
+      "filter": "none",
+      "animation": "none",
+      "background": "rgb(28, 28, 28)",
+      "rect": {
+        "x": 0,
+        "y": -3296,
+        "width": 390,
+        "height": 5033.84375,
+        "top": -3296,
+        "right": 390,
+        "bottom": 1737.84375,
+        "left": 0
+      }
+    },
+    {
+      "tag": "HTML",
+      "cls": "",
+      "opacity": "1",
+      "filter": "none",
+      "animation": "none",
+      "background": "rgba(0, 0, 0, 0)",
+      "rect": {
+        "x": 0,
+        "y": -3296,
+        "width": 390,
+        "height": 5033.84375,
+        "top": -3296,
+        "right": 390,
+        "bottom": 1737.84375,
+        "left": 0
+      }
+    }
+  ],
+  "axe": [
+    {
+      "id": "aria-dialog-name",
+      "nodes": [
+        {
+          "html": "<div class=\"_backdrop_1yx4y_1\" role=\"dialog\" aria-modal=\"true\">",
+          "summary": "Fix any of the following:\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute"
+        }
+      ]
+    },
+    {
+      "id": "color-contrast",
+      "nodes": [
+        {
+          "html": "<span>© 2026 Soul Bites. All rights reserved.</span>",
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.11 (foreground color: #65635c, background color: #121212, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "html": "<span>Premium Cloud Kitchen Experience</span>",
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.11 (foreground color: #65635c, background color: #121212, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+        }
+      ]
+    }
+  ],
+  "focus": {
+    "html": "<button class=\"_closeButton_1yx4y_42\" aria-label=\"Close dialog\">✕</button>",
+    "inside": true
+  },
+  "promo": "Your Order (2)\n✕\nArtisan Golden Mango Passion Elixir\n₹119\n-\n1\n+\nArtisanal Woodfired Paneer Tikka Pizza\n₹269\n-\n1\n+\nSubtotal\n₹388\nDelivery Fee\n₹35\nEstimated Tax\n₹19.40\nTotal Amount\n₹442.40\nCheckout Now • ₹442.40"
+}

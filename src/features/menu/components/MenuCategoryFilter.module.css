@@ -22,12 +22,30 @@
 }
 
 .searchInput {
+  min-height: 28px;
   background: transparent;
   border: none;
   outline: none;
   color: var(--color-cream-white);
   font-size: 0.9375rem;
   width: 100%;
+}
+
+.dietaryLabel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: 0.875rem;
+  color: var(--color-cream-subtle);
+}
+.dietaryLabel select {
+  min-height: 44px;
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  background: var(--color-charcoal-surface);
+  border: 1px solid var(--color-charcoal-border);
+  max-width: 100%;
 }
 
 .searchInput::placeholder {

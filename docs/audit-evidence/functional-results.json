@@ -1,0 +1,15 @@
+{
+  "initialItems": 9,
+  "burgerItems": 3,
+  "emptySearch": 1,
+  "pizzaItems": 1,
+  "quantityTwo": "Your Order (2)\n✕\nArtisan Golden Mango Passion Elixir\n₹238\n-\n2\n+\nSubtotal\n₹238\nDelivery Fee\n₹35\nEstimated Tax\n₹11.90\nTotal Amount\n₹284.90\nCheckout Now • ₹284.90",
+  "freeDeliveryAt595": "Your Order (5)\n✕\nArtisan Golden Mango Passion Elixir\n₹595\n-\n5\n+\nSubtotal\n₹595\nDelivery Fee\nFREE\nEstimated Tax\n₹29.75\nTotal Amount\n₹624.75\nCheckout Now • ₹624.75",
+  "tab2Initial": "Open shopping cart with 5 items",
+  "tab2AfterTab1Change": "Open shopping cart with 5 items",
+  "lastFieldTab": "<button class=\"_button_11ofw_1 _primary_11ofw_23 _md_11ofw_81 _fullWidth_11ofw_92\" type=\"submit\">Pay ₹749.70</button>",
+  "nextTabOutsideDialog": {
+    "outside": true,
+    "focus": "BODY"
+  }
+}

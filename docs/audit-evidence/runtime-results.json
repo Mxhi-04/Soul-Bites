@@ -1,0 +1,1132 @@
+{
+  "homeAxe": [
+    {
+      "id": "color-contrast",
+      "impact": "serious",
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=playwright",
+      "nodes": [
+        {
+          "html": "<span>© 2026 Soul Bites. All rights reserved.</span>",
+          "target": [
+            "._bottomBar_1osga_77 > span:nth-child(1)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.11 (foreground color: #65635c, background color: #121212, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "html": "<span>Premium Cloud Kitchen Experience</span>",
+          "target": [
+            "._bottomBar_1osga_77 > span:nth-child(2)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.11 (foreground color: #65635c, background color: #121212, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+        }
+      ]
+    },
+    {
+      "id": "page-has-heading-one",
+      "impact": "moderate",
+      "description": "Ensure that the page, or at least one of its frames contains a level-one heading",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/page-has-heading-one?application=playwright",
+      "nodes": [
+        {
+          "html": "<html lang=\"en\">",
+          "target": [
+            "html"
+          ],
+          "summary": "Fix all of the following:\n  Page must have a level-one heading"
+        }
+      ]
+    }
+  ],
+  "home": {
+    "h1": 0,
+    "links": [],
+    "images": [
+      {
+        "src": "http://127.0.0.1:4173/images/soul_bites_logo.png",
+        "complete": true,
+        "width": 1014,
+        "displayWidth": 72
+      },
+      {
+        "src": "http://127.0.0.1:4173/images/tandoori_paneer_pizza.jpg",
+        "complete": true,
+        "width": 1024,
+        "displayWidth": 410
+      },
+      {
+        "src": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80",
+        "complete": true,
+        "width": 600,
+        "displayWidth": 410
+      },
+      {
+        "src": "https://images.unsplash.com/photo-1625813506062-0aeb1d7a094b?auto=format&fit=crop&w=600&q=80",
+        "complete": true,
+        "width": 600,
+        "displayWidth": 410
+      },
+      {
+        "src": "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=600&q=80",
+        "complete": true,
+        "width": 600,
+        "displayWidth": 410
+      },
+      {
+        "src": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=600&q=80",
+        "complete": true,
+        "width": 600,
+        "displayWidth": 410
+      },
+      {
+        "src": "http://127.0.0.1:4173/images/tandoori_paneer_pizza.jpg",
+        "complete": true,
+        "width": 1024,
+        "displayWidth": 366
+      },
+      {
+        "src": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80",
+        "complete": true,
+        "width": 600,
+        "displayWidth": 366
+      },
+      {
+        "src": "https://images.unsplash.com/photo-1625813506062-0aeb1d7a094b?auto=format&fit=crop&w=600&q=80",
+        "complete": true,
+        "width": 600,
+        "displayWidth": 366
+      },
+      {
+        "src": "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=600&q=80",
+        "complete": true,
+        "width": 600,
+        "displayWidth": 366
+      },
+      {
+        "src": "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+        "complete": true,
+        "width": 600,
+        "displayWidth": 366
+      },
+      {
+        "src": "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=600&q=80",
+        "complete": true,
+        "width": 600,
+        "displayWidth": 366
+      },
+      {
+        "src": "https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?auto=format&fit=crop&w=600&q=80",
+        "complete": true,
+        "width": 600,
+        "displayWidth": 366
+      },
+      {
+        "src": "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=600&q=80",
+        "complete": true,
+        "width": 600,
+        "displayWidth": 366
+      },
+      {
+        "src": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=600&q=80",
+        "complete": true,
+        "width": 600,
+        "displayWidth": 366
+      },
+      {
+        "src": "http://127.0.0.1:4173/images/soul_bites_logo.png",
+        "complete": true,
+        "width": 1014,
+        "displayWidth": 80
+      }
+    ],
+    "fonts": [
+      "https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap",
+      "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap",
+      "https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap",
+      "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    ]
+  },
+  "viewports": [
+    {
+      "width": 320,
+      "scrollWidth": 320,
+      "menuTop": 620,
+      "smallButtons": [
+        {
+          "label": "Rotate to item 1",
+          "width": 34,
+          "height": 12
+        },
+        {
+          "label": "Rotate to item 2",
+          "width": 12,
+          "height": 12
+        },
+        {
+          "label": "Rotate to item 3",
+          "width": 12,
+          "height": 12
+        },
+        {
+          "label": "Rotate to item 4",
+          "width": 12,
+          "height": 12
+        },
+        {
+          "label": "Rotate to item 5",
+          "width": 12,
+          "height": 12
+        }
+      ]
+    },
+    {
+      "width": 375,
+      "scrollWidth": 375,
+      "menuTop": 602,
+      "smallButtons": [
+        {
+          "label": "Rotate to item 1",
+          "width": 34,
+          "height": 12
+        },
+        {
+          "label": "Rotate to item 2",
+          "width": 12,
+          "height": 12
+        },
+        {
+          "label": "Rotate to item 3",
+          "width": 12,
+          "height": 12
+        },
+        {
+          "label": "Rotate to item 4",
+          "width": 12,
+          "height": 12
+        },
+        {
+          "label": "Rotate to item 5",
+          "width": 12,
+          "height": 12
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "scrollWidth": 390,
+      "menuTop": 602,
+      "smallButtons": [
+        {
+          "label": "Rotate to item 1",
+          "width": 34,
+          "height": 12
+        },
+        {
+          "label": "Rotate to item 2",
+          "width": 12,
+          "height": 12
+        },
+        {
+          "label": "Rotate to item 3",
+          "width": 12,
+          "height": 12
+        },
+        {
+          "label": "Rotate to item 4",
+          "width": 12,
+          "height": 12
+        },
+        {
+          "label": "Rotate to item 5",
+          "width": 12,
+          "height": 12
+        }
+      ]
+    },
+    {
+      "width": 768,
+      "scrollWidth": 768,
+      "menuTop": 733.5,
+      "smallButtons": [
+        {
+          "label": "Rotate to item 1",
+          "width": 34,
+          "height": 12
+        },
+        {
+          "label": "Rotate to item 2",
+          "width": 12,
+          "height": 12
+        },
+        {
+          "label": "Rotate to item 3",
+          "width": 12,
+          "height": 12
+        },
+        {
+          "label": "Rotate to item 4",
+          "width": 12,
+          "height": 12
+        },
+        {
+          "label": "Rotate to item 5",
+          "width": 12,
+          "height": 12
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "scrollWidth": 1440,
+      "menuTop": 793.5,
+      "smallButtons": [
+        {
+          "label": "Rotate to item 1",
+          "width": 34,
+          "height": 12
+        },
+        {
+          "label": "Rotate to item 2",
+          "width": 12,
+          "height": 12
+        },
+        {
+          "label": "Rotate to item 3",
+          "width": 12,
+          "height": 12
+        },
+        {
+          "label": "Rotate to item 4",
+          "width": 12,
+          "height": 12
+        },
+        {
+          "label": "Rotate to item 5",
+          "width": 12,
+          "height": 12
+        }
+      ]
+    }
+  ],
+  "cartAxe": [
+    {
+      "id": "aria-dialog-name",
+      "impact": "serious",
+      "description": "Ensure every ARIA dialog and alertdialog node has an accessible name",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/aria-dialog-name?application=playwright",
+      "nodes": [
+        {
+          "html": "<div class=\"_overlay_1haok_1\" role=\"dialog\" aria-modal=\"true\">",
+          "target": [
+            "._overlay_1haok_1"
+          ],
+          "summary": "Fix any of the following:\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute"
+        }
+      ]
+    },
+    {
+      "id": "color-contrast",
+      "impact": "serious",
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=playwright",
+      "nodes": [
+        {
+          "html": "<span>© 2026 Soul Bites. All rights reserved.</span>",
+          "target": [
+            "._bottomBar_1osga_77 > span:nth-child(1)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.11 (foreground color: #65635c, background color: #121212, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "html": "<span>Premium Cloud Kitchen Experience</span>",
+          "target": [
+            "._bottomBar_1osga_77 > span:nth-child(2)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.11 (foreground color: #65635c, background color: #121212, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+        }
+      ]
+    },
+    {
+      "id": "region",
+      "impact": "moderate",
+      "description": "Ensure all page content is contained by landmarks",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/region?application=playwright",
+      "nodes": [
+        {
+          "html": "<span>Added \"Artisan Golden Mango Passion Elixir\" to your order!</span>",
+          "target": [
+            "._toast_wmgc8_114 > span"
+          ],
+          "summary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+        }
+      ]
+    }
+  ],
+  "cartFocus": {
+    "focus": "<button class=\"_cartButton_1xtpb_114\" aria-label=\"Open shopping cart with 1 items\"><span class=\"_cartIconWrapper_1xtpb_136\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" class=\"\" style=\"display: inline-block; vertical-align: middle; filter: drop-shadow(rgba(245, 183, 0, 0.75) 0px 0px 3px) drop-shadow(rgba(245, 183, 0, 0.35) 0px 0px 8px);\"><path d=\"M2.5 3.5H5.2L7.4 14.2C7.55 14.95 8.2 15.5 9 15.5H18.2C19 15.5 19.65 14.95 19.8 14.2L21.5 6.2H6\" stroke=\"var(--color-golden-yellow)\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></path><line x1=\"6.8\" y1=\"10.5\" x2=\"20.5\" y2=\"10.5\" stroke=\"var(--color-golden-yellow)\" stroke-width=\"1.4\" stroke-linecap=\"round\"></line><line x1=\"11\" y1=\"6.5\" x2=\"10.2\" y2=\"14.8\" stroke=\"var(--color-golden-yellow)\" stroke-width=\"1.3\" stroke-linecap=\"round\"></line><line x1=\"16\" y1=\"6.5\" x2=\"15.5\" y2=\"14.8\" stroke=\"var(--color-golden-yellow)\" stroke-width=\"1.3\" stroke-linecap=\"round\"></line><circle cx=\"9\" cy=\"19.5\" r=\"1.8\" stroke=\"var(--color-golden-yellow)\" stroke-width=\"1.8\"></circle><circle cx=\"17.5\" cy=\"19.5\" r=\"1.8\" stroke=\"var(--color-golden-yellow)\" stroke-width=\"1.8\"></circle></svg></span><span class=\"_cartLabel_1xtpb_147\">Cart</span><span class=\"_cartCount_1xtpb_157\">1</span></button>",
+    "focusInDialog": false,
+    "bodyOverflow": ""
+  },
+  "cartEscapeStillOpen": 1,
+  "minimumOrder": {
+    "configuredMinimum": 149,
+    "subtotal": 119,
+    "checkoutOpened": 1,
+    "payText": "Pay ₹159.95"
+  },
+  "checkoutAxe": [
+    {
+      "id": "aria-dialog-name",
+      "impact": "serious",
+      "description": "Ensure every ARIA dialog and alertdialog node has an accessible name",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/aria-dialog-name?application=playwright",
+      "nodes": [
+        {
+          "html": "<div class=\"_backdrop_1yx4y_1\" role=\"dialog\" aria-modal=\"true\">",
+          "target": [
+            "._backdrop_1yx4y_1"
+          ],
+          "summary": "Fix any of the following:\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute"
+        }
+      ]
+    },
+    {
+      "id": "color-contrast",
+      "impact": "serious",
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=playwright",
+      "nodes": [
+        {
+          "html": "<span>© 2026 Soul Bites. All rights reserved.</span>",
+          "target": [
+            "._bottomBar_1osga_77 > span:nth-child(1)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.11 (foreground color: #65635c, background color: #121212, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "html": "<span>Premium Cloud Kitchen Experience</span>",
+          "target": [
+            "._bottomBar_1osga_77 > span:nth-child(2)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.11 (foreground color: #65635c, background color: #121212, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+        }
+      ]
+    }
+  ],
+  "validationErrors": [
+    "Full name must be at least 2 characters.",
+    "Please enter a valid 10-digit phone number for delivery updates.",
+    "Street address is required for delivery.",
+    "City is required.",
+    "Valid postal / zip code is required."
+  ],
+  "order": {
+    "acceptedInvalidPhoneAndPostal": true,
+    "networkAfterPay": [],
+    "cart": "[{\"item\":{\"id\":\"sb-07\",\"name\":\"Artisan Golden Mango Passion Elixir\",\"subtitle\":\"with Alphonso mango nectar & mint leaves\",\"description\":\"Cold-pressed Alphonso mango nectar, passion fruit pulp, crushed mint leaves, and sparkling spring water.\",\"price\":119,\"rating\":4.9,\"category\":\"drinks\",\"dietaryTags\":[\"vegan\",\"gluten-free\"],\"imageUrl\":\"https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=600&q=80\",\"preparationTimeMinutes\":5,\"calories\":140},\"quantity\":1}]",
+    "trackerText": "Order #SB-395723\nPlaced at 12:23\nEst. Arrival: 28 mins\n🧾\nOrder Confirmed\nCloud Kitchen Hub has received your order.\n👨‍🍳\nIn The Kitchen\nOur culinary artists are grilling and crafting your bites fresh.\n🛵\nOut For Delivery\nRider picked up your insulated pack. On the way!\n✨\nDelivered Fresh\nEnjoy your hot meal. Don’t forget to leave a review!\n📍 Delivering to: 123 Test Street, Outside service area\nSimulate Next Kitchen Stage ➔\nHide Tracker"
+  },
+  "userCanMarkDelivered": 1,
+  "afterReload": {
+    "trackingButtons": 0,
+    "cart": "[{\"item\":{\"id\":\"sb-07\",\"name\":\"Artisan Golden Mango Passion Elixir\",\"subtitle\":\"with Alphonso mango nectar & mint leaves\",\"description\":\"Cold-pressed Alphonso mango nectar, passion fruit pulp, crushed mint leaves, and sparkling spring water.\",\"price\":119,\"rating\":4.9,\"category\":\"drinks\",\"dietaryTags\":[\"vegan\",\"gluten-free\"],\"imageUrl\":\"https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=600&q=80\",\"preparationTimeMinutes\":5,\"calories\":140},\"quantity\":1}]"
+  },
+  "heroKeyboardAdd": {
+    "cart": "[]",
+    "active": "Soul Fire Smash Burger - ₹249"
+  },
+  "corruptCart": {
+    "rootText": "",
+    "errors": [
+      "t.reduce is not a function"
+    ]
+  },
+  "modifiedPrice": "Your Order (1)\n✕\nArtisan Golden Mango Passion Elixir\n₹-100\n-\n1\n+\nSubtotal\n₹-100\nDelivery Fee\n₹35\nEstimated Tax\n₹-5\nTotal Amount\n₹-70\nCheckout Now • ₹-70",
+  "cancelledSubmissionStillPlacesOrder": 1,
+  "failedRequests": [],
+  "allRequests": [
+    {
+      "url": "http://127.0.0.1:4173/",
+      "method": "GET",
+      "type": "document"
+    },
+    {
+      "url": "https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap",
+      "method": "GET",
+      "type": "stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/index-DsZ1R7s_.js",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/index-sFMgSTV9.css",
+      "method": "GET",
+      "type": "stylesheet"
+    },
+    {
+      "url": "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap",
+      "method": "GET",
+      "type": "stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:4173/images/pattern.png",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko20yygg_vb.woff2",
+      "method": "GET",
+      "type": "font"
+    },
+    {
+      "url": "http://127.0.0.1:4173/images/soul_bites_logo.png",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4173/images/tandoori_paneer_pizza.jpg",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/caveat/v23/Wnz6HAc5bAfYB2Q7ZjYYiAzcPA.woff2",
+      "method": "GET",
+      "type": "font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko40yygg_vbd-E.woff2",
+      "method": "GET",
+      "type": "font"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1625813506062-0aeb1d7a094b?auto=format&fit=crop&w=800&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=800&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1625813506062-0aeb1d7a094b?auto=format&fit=crop&w=600&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=600&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=600&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=600&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?auto=format&fit=crop&w=600&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=600&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4173/favicon.png",
+      "method": "GET",
+      "type": "other"
+    },
+    {
+      "url": "https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap",
+      "method": "GET",
+      "type": "xhr"
+    },
+    {
+      "url": "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap",
+      "method": "GET",
+      "type": "xhr"
+    },
+    {
+      "url": "https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap",
+      "method": "GET",
+      "type": "xhr"
+    },
+    {
+      "url": "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap",
+      "method": "GET",
+      "type": "xhr"
+    },
+    {
+      "url": "https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap",
+      "method": "GET",
+      "type": "xhr"
+    },
+    {
+      "url": "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap",
+      "method": "GET",
+      "type": "xhr"
+    },
+    {
+      "url": "http://127.0.0.1:4173/",
+      "method": "GET",
+      "type": "document"
+    },
+    {
+      "url": "https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap",
+      "method": "GET",
+      "type": "stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/index-DsZ1R7s_.js",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/index-sFMgSTV9.css",
+      "method": "GET",
+      "type": "stylesheet"
+    },
+    {
+      "url": "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap",
+      "method": "GET",
+      "type": "stylesheet"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/caveat/v23/Wnz6HAc5bAfYB2Q7ZjYYiAzcPA.woff2",
+      "method": "GET",
+      "type": "font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko40yygg_vbd-E.woff2",
+      "method": "GET",
+      "type": "font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko20yygg_vb.woff2",
+      "method": "GET",
+      "type": "font"
+    },
+    {
+      "url": "http://127.0.0.1:4173/images/pattern.png",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4173/images/soul_bites_logo.png",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4173/images/tandoori_paneer_pizza.jpg",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1625813506062-0aeb1d7a094b?auto=format&fit=crop&w=800&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=800&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1625813506062-0aeb1d7a094b?auto=format&fit=crop&w=600&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=600&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=600&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?auto=format&fit=crop&w=600&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=600&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=600&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4173/favicon.png",
+      "method": "GET",
+      "type": "other"
+    },
+    {
+      "url": "http://127.0.0.1:4173/",
+      "method": "GET",
+      "type": "document"
+    },
+    {
+      "url": "https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap",
+      "method": "GET",
+      "type": "stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/index-DsZ1R7s_.js",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/index-sFMgSTV9.css",
+      "method": "GET",
+      "type": "stylesheet"
+    },
+    {
+      "url": "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap",
+      "method": "GET",
+      "type": "stylesheet"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/caveat/v23/Wnz6HAc5bAfYB2Q7ZjYYiAzcPA.woff2",
+      "method": "GET",
+      "type": "font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko40yygg_vbd-E.woff2",
+      "method": "GET",
+      "type": "font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko20yygg_vb.woff2",
+      "method": "GET",
+      "type": "font"
+    },
+    {
+      "url": "http://127.0.0.1:4173/images/pattern.png",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4173/images/soul_bites_logo.png",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4173/images/tandoori_paneer_pizza.jpg",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1625813506062-0aeb1d7a094b?auto=format&fit=crop&w=800&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=800&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1625813506062-0aeb1d7a094b?auto=format&fit=crop&w=600&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=600&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=600&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?auto=format&fit=crop&w=600&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=600&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=600&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4173/favicon.png",
+      "method": "GET",
+      "type": "other"
+    },
+    {
+      "url": "http://127.0.0.1:4173/",
+      "method": "GET",
+      "type": "document"
+    },
+    {
+      "url": "https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap",
+      "method": "GET",
+      "type": "stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/index-DsZ1R7s_.js",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/index-sFMgSTV9.css",
+      "method": "GET",
+      "type": "stylesheet"
+    },
+    {
+      "url": "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap",
+      "method": "GET",
+      "type": "stylesheet"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/caveat/v23/Wnz6HAc5bAfYB2Q7ZjYYiAzcPA.woff2",
+      "method": "GET",
+      "type": "font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko40yygg_vbd-E.woff2",
+      "method": "GET",
+      "type": "font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko20yygg_vb.woff2",
+      "method": "GET",
+      "type": "font"
+    },
+    {
+      "url": "http://127.0.0.1:4173/images/pattern.png",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4173/favicon.png",
+      "method": "GET",
+      "type": "other"
+    },
+    {
+      "url": "http://127.0.0.1:4173/",
+      "method": "GET",
+      "type": "document"
+    },
+    {
+      "url": "https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap",
+      "method": "GET",
+      "type": "stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/index-DsZ1R7s_.js",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/index-sFMgSTV9.css",
+      "method": "GET",
+      "type": "stylesheet"
+    },
+    {
+      "url": "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap",
+      "method": "GET",
+      "type": "stylesheet"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/caveat/v23/Wnz6HAc5bAfYB2Q7ZjYYiAzcPA.woff2",
+      "method": "GET",
+      "type": "font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko40yygg_vbd-E.woff2",
+      "method": "GET",
+      "type": "font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko20yygg_vb.woff2",
+      "method": "GET",
+      "type": "font"
+    },
+    {
+      "url": "http://127.0.0.1:4173/images/pattern.png",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4173/images/soul_bites_logo.png",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4173/images/tandoori_paneer_pizza.jpg",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1625813506062-0aeb1d7a094b?auto=format&fit=crop&w=800&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=800&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1625813506062-0aeb1d7a094b?auto=format&fit=crop&w=600&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=600&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=600&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?auto=format&fit=crop&w=600&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=600&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=600&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4173/favicon.png",
+      "method": "GET",
+      "type": "other"
+    },
+    {
+      "url": "http://127.0.0.1:4173/",
+      "method": "GET",
+      "type": "document"
+    },
+    {
+      "url": "https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap",
+      "method": "GET",
+      "type": "stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/index-DsZ1R7s_.js",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/index-sFMgSTV9.css",
+      "method": "GET",
+      "type": "stylesheet"
+    },
+    {
+      "url": "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap",
+      "method": "GET",
+      "type": "stylesheet"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/caveat/v23/Wnz6HAc5bAfYB2Q7ZjYYiAzcPA.woff2",
+      "method": "GET",
+      "type": "font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko40yygg_vbd-E.woff2",
+      "method": "GET",
+      "type": "font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko20yygg_vb.woff2",
+      "method": "GET",
+      "type": "font"
+    },
+    {
+      "url": "http://127.0.0.1:4173/images/pattern.png",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4173/images/soul_bites_logo.png",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4173/images/tandoori_paneer_pizza.jpg",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1625813506062-0aeb1d7a094b?auto=format&fit=crop&w=800&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=800&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1625813506062-0aeb1d7a094b?auto=format&fit=crop&w=600&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=600&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=600&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?auto=format&fit=crop&w=600&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=600&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=600&q=80",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4173/favicon.png",
+      "method": "GET",
+      "type": "other"
+    }
+  ],
+  "errors": [
+    "t.reduce is not a function"
+  ]
+}

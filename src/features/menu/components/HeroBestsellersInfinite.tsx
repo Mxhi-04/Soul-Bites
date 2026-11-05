@@ -1,120 +1,58 @@
-import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { MenuItem } from '../types/menuTypes';
-import { formatCurrency } from '../../../utils/formatters';
-import styles from './HeroBestsellersInfinite.module.css';
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+  useCallback,
+} from "react";
+import { INITIAL_MENU_ITEMS } from "../services/menuService";
+import { MenuItem } from "../types/menuTypes";
+import { formatCurrency } from "../../../utils/formatters";
+import styles from "./HeroBestsellersInfinite.module.css";
 
 interface PosterItemMeta {
   line1: string;
   scriptLine: string;
   line2: string;
-  promoTag: string;
   watermarkWords: [string, string, string];
 }
 
 const POSTER_METAS: Record<string, PosterItemMeta> = {
-  'sb-pizza-01': {
-    line1: 'PANEER',
-    scriptLine: 'Makhana',
-    line2: 'PIZZA',
-    promoTag: '15% OFF',
-    watermarkWords: ['PIZZA', 'PANEER', 'PANEER'],
+  "sb-pizza-01": {
+    line1: "PANEER",
+    scriptLine: "Tikka",
+    line2: "PIZZA",
+    watermarkWords: ["PIZZA", "PANEER", "PANEER"],
   },
-  'sb-01': {
-    line1: 'DOUBLE',
-    scriptLine: 'Smash',
-    line2: 'BURGER',
-    promoTag: 'HOT & FRESH',
-    watermarkWords: ['BURGER', 'SMASH', 'SMASH'],
+  "sb-01": {
+    line1: "DOUBLE",
+    scriptLine: "Smash",
+    line2: "BURGER",
+    watermarkWords: ["BURGER", "SMASH", "SMASH"],
   },
-  'sb-02': {
-    line1: 'CRISPY',
-    scriptLine: 'Hot Honey',
-    line2: 'CHICKEN',
-    promoTag: 'TOP RATED',
-    watermarkWords: ['CRISPY', 'HONEY', 'HONEY'],
+  "sb-02": {
+    line1: "CRISPY",
+    scriptLine: "Hot Honey",
+    line2: "CHICKEN",
+    watermarkWords: ["CRISPY", "HONEY", "HONEY"],
   },
-  'sb-05': {
-    line1: 'LOADED',
-    scriptLine: 'Truffle',
-    line2: 'FRIES',
-    promoTag: 'MUST TRY',
-    watermarkWords: ['FRIES', 'TRUFFLE', 'LOADED'],
+  "sb-05": {
+    line1: "LOADED",
+    scriptLine: "Truffle",
+    line2: "FRIES",
+    watermarkWords: ["FRIES", "TRUFFLE", "LOADED"],
   },
-  'sb-08': {
-    line1: 'SALTED',
-    scriptLine: 'Caramel',
-    line2: 'BROWNIE',
-    promoTag: 'FRESH BAKED',
-    watermarkWords: ['BROWNIE', 'CARAMEL', 'FUDGE'],
+  "sb-08": {
+    line1: "SALTED",
+    scriptLine: "Caramel",
+    line2: "BROWNIE",
+    watermarkWords: ["BROWNIE", "CARAMEL", "FUDGE"],
   },
 };
 
-const DEFAULT_5_BESTSELLERS: MenuItem[] = [
-  {
-    id: 'sb-pizza-01',
-    name: 'Artisanal Woodfired Paneer Tikka Pizza',
-    description: 'Hand-stretched sourdough loaded with tandoori paneer, caramelized onions, herbs & melted stretchy mozzarella.',
-    price: 269,
-    category: 'pizzas',
-    dietaryTags: ['veg', 'chef-special'],
-    spiceLevel: 'medium',
-    imageUrl: '/images/tandoori_paneer_pizza.jpg',
-    preparationTimeMinutes: 20,
-    calories: 640,
-    isPopular: true,
-  },
-  {
-    id: 'sb-01',
-    name: 'Soul Fire Smash Burger',
-    description: 'Double smashed patties, melted smoked cheddar, caramelized onions, house truffle aioli on a toasted brioche bun.',
-    price: 249,
-    category: 'burgers',
-    dietaryTags: ['non-veg', 'chef-special'],
-    spiceLevel: 'medium',
-    imageUrl: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80',
-    preparationTimeMinutes: 18,
-    calories: 740,
-    isPopular: true,
-  },
-  {
-    id: 'sb-02',
-    name: 'Crispy Truffle Hot Honey Chicken Burger',
-    description: 'Buttermilk fried crisp chicken thigh, hot honey drizzle, crunchy purple slaw & dill pickles in golden potato bun.',
-    price: 279,
-    category: 'burgers',
-    dietaryTags: ['non-veg', 'chef-special'],
-    spiceLevel: 'spicy',
-    imageUrl: 'https://images.unsplash.com/photo-1625813506062-0aeb1d7a094b?auto=format&fit=crop&w=800&q=80',
-    preparationTimeMinutes: 20,
-    calories: 680,
-    isPopular: true,
-  },
-  {
-    id: 'sb-05',
-    name: 'Charcoal Truffle Loaded Fries',
-    description: 'Hand-cut double cooked fries dusted with aromatic charcoal sea salt, white truffle oil & shaved parmesan.',
-    price: 169,
-    category: 'fries',
-    dietaryTags: ['veg', 'chef-special'],
-    spiceLevel: 'mild',
-    imageUrl: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=800&q=80',
-    preparationTimeMinutes: 12,
-    calories: 460,
-    isPopular: true,
-  },
-  {
-    id: 'sb-08',
-    name: 'Warm Salted Caramel Brownie Skillet Bite',
-    description: 'Rich dark chocolate fudge brownie infused with espresso, warm salted caramel sauce & toasted pecans.',
-    price: 149,
-    category: 'desserts',
-    dietaryTags: ['veg'],
-    imageUrl: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=80',
-    preparationTimeMinutes: 8,
-    calories: 420,
-    isPopular: true,
-  },
-];
+const DEFAULT_5_BESTSELLERS = INITIAL_MENU_ITEMS.filter(
+  (item) => item.isPopular,
+).slice(0, 5);
 
 // Leaf Accent SVG component
 const MintLeaf: React.FC<{ className?: string }> = ({ className }) => (
@@ -146,10 +84,9 @@ export interface HeroBestsellersInfiniteProps {
   onAddToCart: (item: MenuItem) => void;
 }
 
-export const HeroBestsellersInfinite: React.FC<HeroBestsellersInfiniteProps> = ({
-  items,
-  onAddToCart,
-}) => {
+export const HeroBestsellersInfinite: React.FC<
+  HeroBestsellersInfiniteProps
+> = ({ items, onAddToCart }) => {
   const bestsellers = useMemo(() => {
     if (items && items.length >= 5) {
       const popular = items.filter((i) => i.isPopular);
@@ -165,7 +102,20 @@ export const HeroBestsellersInfinite: React.FC<HeroBestsellersInfiniteProps> = (
   // 3D Spherical Rotation State
   const [currentAngle, setCurrentAngle] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
-  const [lastInteractionTime, setLastInteractionTime] = useState(() => Date.now());
+  const [isFocused, setIsFocused] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(
+    () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReducedMotion(media.matches);
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
+  const [lastInteractionTime, setLastInteractionTime] = useState(() =>
+    Date.now(),
+  );
 
   // Reset 30-second countdown on user interaction
   const resetTimer = useCallback(() => {
@@ -190,8 +140,8 @@ export const HeroBestsellersInfinite: React.FC<HeroBestsellersInfiniteProps> = (
       }
     };
     updateSize();
-    window.addEventListener('resize', updateSize);
-    return () => window.removeEventListener('resize', updateSize);
+    window.addEventListener("resize", updateSize);
+    return () => window.removeEventListener("resize", updateSize);
   }, []);
 
   const isMobile = stageWidth < 640;
@@ -239,16 +189,16 @@ export const HeroBestsellersInfinite: React.FC<HeroBestsellersInfiniteProps> = (
       const currentSlot = Math.round(currentAngle / anglePerItem);
       const activeIndex = ((-currentSlot % itemCount) + itemCount) % itemCount;
       let diff = itemIndex - activeIndex;
-      if (diff > 2) diff -= 5;
-      if (diff < -2) diff += 5;
+      if (diff > itemCount / 2) diff -= itemCount;
+      if (diff < -itemCount / 2) diff += itemCount;
       setCurrentAngle((currentSlot - diff) * anglePerItem);
     },
-    [anglePerItem, currentAngle, itemCount, resetTimer]
+    [anglePerItem, currentAngle, itemCount, resetTimer],
   );
 
   // Auto-rotation: ONLY moves automatically after every 30 seconds (pauses on hover)
   useEffect(() => {
-    if (isHovered) return;
+    if (isHovered || isFocused || isPaused || reducedMotion) return;
     const AUTO_ROTATE_INTERVAL_MS = 30000; // 30 seconds
     const timer = setInterval(() => {
       setCurrentAngle((prev) => {
@@ -257,7 +207,14 @@ export const HeroBestsellersInfinite: React.FC<HeroBestsellersInfiniteProps> = (
       });
     }, AUTO_ROTATE_INTERVAL_MS);
     return () => clearInterval(timer);
-  }, [isHovered, anglePerItem, lastInteractionTime]);
+  }, [
+    isHovered,
+    isFocused,
+    isPaused,
+    reducedMotion,
+    anglePerItem,
+    lastInteractionTime,
+  ]);
 
   // Pointer / Touch handlers: NO rotation with cursor during hover
   // Cards only move on click/tap, intentional swipe release, or the 30s timer
@@ -318,6 +275,12 @@ export const HeroBestsellersInfinite: React.FC<HeroBestsellersInfiniteProps> = (
       aria-label="Our Best Selling Cloud Kitchen Bites"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onFocusCapture={() => setIsFocused(true)}
+      onBlurCapture={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget))
+          setIsFocused(false);
+      }}
+      aria-roledescription="carousel"
     >
       {/* 3D Spherical Stage */}
       <div
@@ -326,7 +289,10 @@ export const HeroBestsellersInfinite: React.FC<HeroBestsellersInfiniteProps> = (
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
-        onPointerCancel={handlePointerUp}
+        onPointerCancel={() => {
+          isPointerDownRef.current = false;
+          hasDraggedRef.current = false;
+        }}
       >
         {/* Ambient Spherical Lighting */}
         <div className={styles.ambientGlow} />
@@ -359,14 +325,12 @@ export const HeroBestsellersInfinite: React.FC<HeroBestsellersInfiniteProps> = (
         {/* 3D Carousel Stage */}
         <div className={styles.carouselStage}>
           {bestsellers.map((item, index) => {
-            const meta =
-              POSTER_METAS[item.id] || {
-                line1: item.name.split(' ')[0] || 'CHEF',
-                scriptLine: 'Special',
-                line2: item.name.split(' ').slice(1).join(' ') || 'BITE',
-                promoTag: '15% OFF',
-                watermarkWords: ['CRAFTED', 'FRESH', 'KITCHEN'],
-              };
+            const meta = POSTER_METAS[item.id] || {
+              line1: item.name.split(" ")[0] || "CHEF",
+              scriptLine: "Special",
+              line2: item.name.split(" ").slice(1).join(" ") || "BITE",
+              watermarkWords: ["CRAFTED", "FRESH", "KITCHEN"],
+            };
 
             const baseAngle = index * anglePerItem;
 
@@ -394,15 +358,19 @@ export const HeroBestsellersInfinite: React.FC<HeroBestsellersInfiniteProps> = (
             // Center card is scaled, side cards shrink down gracefully
             const maxScale = isMobile ? 1.0 : 1.14;
             const minScale = isMobile ? 0.72 : 0.78;
-            const scale = maxScale - Math.min(1, absAngle / 72) * (maxScale - minScale);
+            const scale =
+              maxScale - Math.min(1, absAngle / 72) * (maxScale - minScale);
 
             // Smooth opacity
             let opacity = 0;
             if (isVisible) {
               if (isMobile) {
-                opacity = isCenter ? 1 : Math.max(0.3, 0.7 - (absAngle / 88) * 0.4);
+                opacity = isCenter
+                  ? 1
+                  : Math.max(0.3, 0.7 - (absAngle / 88) * 0.4);
               } else {
-                opacity = absAngle <= 60 ? 1 : Math.max(0, 1 - (absAngle - 60) / 25);
+                opacity =
+                  absAngle <= 60 ? 1 : Math.max(0, 1 - (absAngle - 60) / 25);
               }
             }
 
@@ -412,19 +380,21 @@ export const HeroBestsellersInfinite: React.FC<HeroBestsellersInfiniteProps> = (
               <div
                 key={item.id}
                 className={`${styles.card3D} ${
-                  isCenter ? styles.cardActive : isSide ? styles.cardSide : ''
+                  isCenter ? styles.cardActive : isSide ? styles.cardSide : ""
                 }`}
                 style={{
                   transform: `translate(-50%, -50%) translate3d(${x.toFixed(1)}px, ${y.toFixed(
-                    1
+                    1,
                   )}px, ${z.toFixed(1)}px) rotateY(${rotateY.toFixed(
-                    1
+                    1,
                   )}deg) rotateX(${rotateX.toFixed(1)}deg) scale(${scale.toFixed(3)})`,
                   opacity: opacity.toFixed(2),
                   zIndex,
-                  pointerEvents: isVisible ? 'auto' : 'none',
-                  visibility: isVisible ? 'visible' : 'hidden',
-                  transition: 'transform 0.55s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.4s ease, filter 0.4s ease',
+                  pointerEvents: isVisible ? "auto" : "none",
+                  visibility: isVisible ? "visible" : "hidden",
+                  transition: reducedMotion
+                    ? "none"
+                    : "transform 0.55s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.4s ease, filter 0.4s ease",
                 }}
                 onClick={() => {
                   if (hasDraggedRef.current) return;
@@ -436,7 +406,9 @@ export const HeroBestsellersInfinite: React.FC<HeroBestsellersInfiniteProps> = (
                   }
                 }}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
+                  if (e.target !== e.currentTarget) return;
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
                     resetTimer();
                     if (!isCenter) {
                       rotateToItem(index);
@@ -454,9 +426,15 @@ export const HeroBestsellersInfinite: React.FC<HeroBestsellersInfiniteProps> = (
 
                 {/* Watermark Hollow Typography in Background */}
                 <div className={styles.watermarkText} aria-hidden="true">
-                  <span className={styles.watermarkWord}>{meta.watermarkWords[0]}</span>
-                  <span className={styles.watermarkWord}>{meta.watermarkWords[1]}</span>
-                  <span className={styles.watermarkWord}>{meta.watermarkWords[2]}</span>
+                  <span className={styles.watermarkWord}>
+                    {meta.watermarkWords[0]}
+                  </span>
+                  <span className={styles.watermarkWord}>
+                    {meta.watermarkWords[1]}
+                  </span>
+                  <span className={styles.watermarkWord}>
+                    {meta.watermarkWords[2]}
+                  </span>
                 </div>
 
                 {/* Left Poster Content Area */}
@@ -464,7 +442,9 @@ export const HeroBestsellersInfinite: React.FC<HeroBestsellersInfiniteProps> = (
                   {/* Big Stylized Typography */}
                   <div className={styles.titleGroup}>
                     <span className={styles.titleLine1}>{meta.line1}</span>
-                    <span className={styles.titleScriptLine}>{meta.scriptLine}</span>
+                    <span className={styles.titleScriptLine}>
+                      {meta.scriptLine}
+                    </span>
                     <span className={styles.titleLine2}>{meta.line2}</span>
                     <MintLeaf className={styles.leafIcon} />
                   </div>
@@ -481,10 +461,9 @@ export const HeroBestsellersInfinite: React.FC<HeroBestsellersInfiniteProps> = (
                         e.stopPropagation();
                         onAddToCart(item);
                       }}
-                      aria-label={`Order ${item.name} for ${formatCurrency(item.price)}`}
+                      aria-label={`Add to cart: ${item.name} for ${formatCurrency(item.price)}`}
                     >
-                      <span className={styles.ctaText}>ORDER NOW</span>
-                      <span className={styles.ctaPromoTag}>{meta.promoTag}</span>
+                      <span className={styles.ctaText}>ADD TO CART</span>
                     </button>
                   ) : (
                     <span className={styles.focusHint}>Tap to Center</span>
@@ -502,7 +481,8 @@ export const HeroBestsellersInfinite: React.FC<HeroBestsellersInfiniteProps> = (
                       alt={item.name}
                       className={styles.productImage}
                       draggable={false}
-                      loading={isVisible ? 'eager' : 'lazy'}
+                      loading={index === 0 ? "eager" : "lazy"}
+                      {...{ fetchpriority: index === 0 ? "high" : "auto" }}
                     />
                   </div>
 
@@ -526,14 +506,32 @@ export const HeroBestsellersInfinite: React.FC<HeroBestsellersInfiniteProps> = (
             <button
               key={i}
               type="button"
-              className={`${styles.dot} ${i === activeIndex ? styles.activeDot : ''}`}
+              className={`${styles.dot} ${i === activeIndex ? styles.activeDot : ""}`}
               onClick={() => rotateToItem(i)}
-              aria-label={`Rotate to item ${i + 1}`}
+              aria-label={`Show ${bestsellers[i].name}`}
+              aria-pressed={i === activeIndex}
             />
           ))}
         </div>
-        <span className={styles.swipeHint}>
-          ✨ Tap any card to rotate • Auto-rotates every 30s
+        <button
+          type="button"
+          className={styles.pauseButton}
+          aria-pressed={isPaused}
+          onClick={() => setIsPaused((previous) => !previous)}
+          disabled={reducedMotion}
+        >
+          {reducedMotion
+            ? "Motion reduced"
+            : isPaused
+              ? "Resume rotation"
+              : "Pause rotation"}
+        </button>
+        <span
+          className={styles.swipeHint}
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          {activeIndex + 1} of {itemCount} · Tap a card to explore
         </span>
       </div>
     </section>

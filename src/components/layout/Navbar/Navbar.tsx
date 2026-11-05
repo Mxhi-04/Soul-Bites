@@ -1,7 +1,7 @@
-import React from 'react';
-import { APP_CONFIG } from '../../../constants/config';
-import { ShoppingCartIcon } from '../../ui/Icons/ShoppingCartIcon';
-import styles from './Navbar.module.css';
+import React from "react";
+import { APP_CONFIG } from "../../../constants/config";
+import { ShoppingCartIcon } from "../../ui/Icons/ShoppingCartIcon";
+import styles from "./Navbar.module.css";
 
 export interface NavbarProps {
   cartItemCount: number;
@@ -22,11 +22,13 @@ export const Navbar: React.FC<NavbarProps> = ({
         <button
           type="button"
           className={styles.brand}
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           aria-label={`${APP_CONFIG.brandName} - Return to top`}
         >
           <img
-            src="/images/soul_bites_logo.png"
+            src="/images/soul_bites_logo_small.png"
+            width={192}
+            height={138}
             alt={APP_CONFIG.brandName}
             className={styles.brandLogo}
           />
@@ -34,23 +36,27 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         <div className={styles.kitchenStatus}>
           <span className={styles.statusIndicator} />
-          <span>Kitchen Active • 20–35 min delivery</span>
+          <span>Menu preview · Ordering coming soon</span>
         </div>
 
         <div className={styles.actions}>
           {hasActiveOrder && onOpenTracking && (
             <button className={styles.cartButton} onClick={onOpenTracking}>
-              <span>🛵 Track Order</span>
+              <span>View preview</span>
             </button>
           )}
 
           <button
             className={styles.cartButton}
             onClick={onOpenCart}
-            aria-label={`Open shopping cart with ${cartItemCount} items`}
+            aria-label={`Open shopping cart with ${cartItemCount} ${cartItemCount === 1 ? "item" : "items"}`}
           >
             <span className={styles.cartIconWrapper}>
-              <ShoppingCartIcon size={20} color="var(--color-golden-yellow)" glow={cartItemCount > 0} />
+              <ShoppingCartIcon
+                size={20}
+                color="var(--color-golden-yellow)"
+                glow={cartItemCount > 0}
+              />
             </span>
             <span className={styles.cartLabel}>Cart</span>
             {cartItemCount > 0 && (

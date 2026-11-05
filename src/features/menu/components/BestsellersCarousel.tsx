@@ -1,9 +1,9 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { MenuItem } from '../types/menuTypes';
-import { Badge } from '../../../components/ui/Badge/Badge';
-import { Button } from '../../../components/ui/Button/Button';
-import { formatCurrency } from '../../../utils/formatters';
-import styles from './BestsellersCarousel.module.css';
+import React, { useRef, useState, useEffect, useCallback } from "react";
+import { MenuItem } from "../types/menuTypes";
+import { Badge } from "../../../components/ui/Badge/Badge";
+import { Button } from "../../../components/ui/Button/Button";
+import { formatCurrency } from "../../../utils/formatters";
+import styles from "./BestsellersCarousel.module.css";
 
 export interface BestsellersCarouselProps {
   items: MenuItem[];
@@ -20,63 +20,68 @@ export const BestsellersCarousel: React.FC<BestsellersCarouselProps> = ({
   // Filter bestseller items, ensuring the new Paneer Tikka Pizza is featured at the front
   const bestsellerItems = items.filter((item) => item.isPopular);
 
-  const scroll = (direction: 'left' | 'right') => {
+  const scroll = (direction: "left" | "right") => {
     if (!trackRef.current) return;
     const cardWidth = 350;
-    const offset = direction === 'left' ? -cardWidth : cardWidth;
-    trackRef.current.scrollBy({ left: offset, behavior: 'smooth' });
+    const offset = direction === "left" ? -cardWidth : cardWidth;
+    trackRef.current.scrollBy({ left: offset, behavior: "smooth" });
   };
 
-  const handleScroll = () => {
+  const handleScroll = useCallback(() => {
     if (!trackRef.current) return;
     const scrollLeft = trackRef.current.scrollLeft;
     const cardWidth = 340;
     const newIndex = Math.round(scrollLeft / cardWidth);
-    setActiveIndex(Math.min(newIndex, bestsellerItems.length - 1));
-  };
+    setActiveIndex(Math.max(0, Math.min(newIndex, bestsellerItems.length - 1)));
+  }, [bestsellerItems.length]);
 
   const scrollToIndex = (index: number) => {
     if (!trackRef.current) return;
     const cardWidth = 340;
-    trackRef.current.scrollTo({ left: index * cardWidth, behavior: 'smooth' });
+    trackRef.current.scrollTo({ left: index * cardWidth, behavior: "smooth" });
     setActiveIndex(index);
   };
 
   useEffect(() => {
     const el = trackRef.current;
     if (el) {
-      el.addEventListener('scroll', handleScroll, { passive: true });
-      return () => el.removeEventListener('scroll', handleScroll);
+      el.addEventListener("scroll", handleScroll, { passive: true });
+      return () => el.removeEventListener("scroll", handleScroll);
     }
-  }, [bestsellerItems.length]);
+  }, [handleScroll]);
 
   if (bestsellerItems.length === 0) return null;
 
   return (
-    <section className={styles.section} aria-label="Bestselling Cloud Kitchen Creations">
+    <section
+      className={styles.section}
+      aria-label="Bestselling Cloud Kitchen Creations"
+    >
       <div className="container">
         <div className={styles.header}>
           <div className={styles.titleArea}>
             <span className={styles.sectionPill}>🔥 Most Loved Creations</span>
             <h2 className={styles.title}>
-              Our <span className={styles.titleHighlight}>Best Selling</span> Bites
+              Our <span className={styles.titleHighlight}>Best Selling</span>{" "}
+              Bites
             </h2>
             <p className={styles.subtitle}>
-              Swipe through our crowd favorites, oven-fresh and delivered piping hot in insulated packaging.
+              Swipe through our crowd favorites, oven-fresh and delivered piping
+              hot in insulated packaging.
             </p>
           </div>
 
           <div className={styles.navButtons}>
             <button
               className={styles.navButton}
-              onClick={() => scroll('left')}
+              onClick={() => scroll("left")}
               aria-label="Previous bestselling item"
             >
               ‹
             </button>
             <button
               className={styles.navButton}
-              onClick={() => scroll('right')}
+              onClick={() => scroll("right")}
               aria-label="Next bestselling item"
             >
               ›
@@ -87,17 +92,17 @@ export const BestsellersCarousel: React.FC<BestsellersCarouselProps> = ({
         <div className={styles.trackWrapper}>
           <div className={styles.track} ref={trackRef}>
             {bestsellerItems.map((item, index) => {
-              const isSpecial = item.id === 'sb-pizza-01';
+              const isSpecial = item.id === "sb-pizza-01";
 
               return (
                 <div
                   key={item.id}
-                  className={`${styles.card} ${isSpecial ? styles.featuredCard : ''}`}
+                  className={`${styles.card} ${isSpecial ? styles.featuredCard : ""}`}
                   onClick={() => onAddToCart(item)}
                   role="button"
                   tabIndex={0}
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
+                    if (e.key === "Enter" || e.key === " ") {
                       e.preventDefault();
                       onAddToCart(item);
                     }
@@ -114,7 +119,9 @@ export const BestsellersCarousel: React.FC<BestsellersCarouselProps> = ({
 
                     <div className={styles.crownBadge}>
                       <span>★</span>
-                      <span>{index === 0 ? '#1 Bestseller' : "Chef's Choice"}</span>
+                      <span>
+                        {index === 0 ? "#1 Bestseller" : "Chef's Choice"}
+                      </span>
                     </div>
 
                     <div className={styles.prepBadge}>
@@ -135,7 +142,9 @@ export const BestsellersCarousel: React.FC<BestsellersCarouselProps> = ({
                     <div className={styles.footer}>
                       <div className={styles.priceTag}>
                         <span className={styles.priceLabel}>Price</span>
-                        <span className={styles.priceValue}>{formatCurrency(item.price)}</span>
+                        <span className={styles.priceValue}>
+                          {formatCurrency(item.price)}
+                        </span>
                       </div>
 
                       <Button
@@ -161,7 +170,7 @@ export const BestsellersCarousel: React.FC<BestsellersCarouselProps> = ({
           {bestsellerItems.map((_, i) => (
             <button
               key={i}
-              className={`${styles.dot} ${i === activeIndex ? styles.activeDot : ''}`}
+              className={`${styles.dot} ${i === activeIndex ? styles.activeDot : ""}`}
               onClick={() => scrollToIndex(i)}
               aria-label={`Go to slide ${i + 1}`}
             />

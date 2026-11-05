@@ -3,11 +3,13 @@
  */
 
 export const APP_CONFIG = {
-  brandName: 'Soul Bites',
-  tagline: 'Artisanal Comfort Food Straight From Our Cloud Kitchen',
+  brandName: "Soul Bites",
+  mode: "preview",
+  cart: { maxItemQuantity: 99 },
+  tagline: "Artisanal Comfort Food Straight From Our Cloud Kitchen",
   operatingHours: {
-    open: '11:00 AM',
-    close: '11:30 PM',
+    open: "11:00 AM",
+    close: "11:30 PM",
     isOpenNow: true,
   },
   delivery: {
@@ -17,13 +19,13 @@ export const APP_CONFIG = {
     deliveryFee: 35,
     freeDeliveryThreshold: 499,
     taxRatePercentage: 5.0,
-    currencySymbol: '₹',
-    currencyCode: 'INR',
+    currencySymbol: "₹",
+    currencyCode: "INR",
   },
   kitchenInfo: {
-    hygieneRating: '5-Star FSSAI Certified',
-    kitchenHub: 'Central Kitchen Hub #04',
-    contactPhone: '+1 (555) 768-5248',
-    contactEmail: 'orders@soulbiteskitchen.com',
+    hygieneRating: "5-Star FSSAI Certified",
+    kitchenHub: "Central Kitchen Hub #04",
+    contactPhone: "+1 (555) 768-5248",
+    contactEmail: "orders@soulbiteskitchen.com",
   },
 } as const;

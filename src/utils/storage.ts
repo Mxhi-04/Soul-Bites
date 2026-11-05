@@ -3,9 +3,13 @@
  */
 
 export const storage = {
-  get<T>(key: string, defaultValue: T): T {
+  get<T>(
+    key: string,
+    defaultValue: T,
+    area: "localStorage" | "sessionStorage" = "localStorage",
+  ): T {
     try {
-      const item = localStorage.getItem(key);
+      const item = window[area].getItem(key);
       return item ? (JSON.parse(item) as T) : defaultValue;
     } catch (error) {
       console.warn(`[storage] Error reading key "${key}":`, error);
@@ -13,17 +17,26 @@ export const storage = {
     }
   },
 
-  set<T>(key: string, value: T): void {
+  set<T>(
+    key: string,
+    value: T,
+    area: "localStorage" | "sessionStorage" = "localStorage",
+  ): boolean {
     try {
-      localStorage.setItem(key, JSON.stringify(value));
+      window[area].setItem(key, JSON.stringify(value));
+      return true;
     } catch (error) {
       console.warn(`[storage] Error saving key "${key}":`, error);
+      return false;
     }
   },
 
-  remove(key: string): void {
+  remove(
+    key: string,
+    area: "localStorage" | "sessionStorage" = "localStorage",
+  ): void {
     try {
-      localStorage.removeItem(key);
+      window[area].removeItem(key);
     } catch (error) {
       console.warn(`[storage] Error removing key "${key}":`, error);
     }

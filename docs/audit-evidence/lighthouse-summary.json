@@ -1,0 +1,147 @@
+{
+  "tool": "Lighthouse",
+  "version": "13.6.0",
+  "fetchTime": "2026-11-05T06:52:48.496Z",
+  "environment": {
+    "output": [
+      "json",
+      "html"
+    ],
+    "maxWaitForFcp": 30000,
+    "maxWaitForLoad": 45000,
+    "pauseAfterFcpMs": 1000,
+    "pauseAfterLoadMs": 1000,
+    "networkQuietThresholdMs": 1000,
+    "cpuQuietThresholdMs": 1000,
+    "formFactor": "mobile",
+    "throttling": {
+      "rttMs": 150,
+      "throughputKbps": 1638.4,
+      "requestLatencyMs": 562.5,
+      "downloadThroughputKbps": 1474.5600000000002,
+      "uploadThroughputKbps": 675,
+      "cpuSlowdownMultiplier": 4
+    },
+    "throttlingMethod": "simulate",
+    "screenEmulation": {
+      "mobile": true,
+      "width": 412,
+      "height": 823,
+      "deviceScaleFactor": 1.75,
+      "disabled": false
+    },
+    "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36",
+    "auditMode": false,
+    "gatherMode": false,
+    "clearStorageTypes": [
+      "file_systems",
+      "shader_cache",
+      "service_workers",
+      "cache_storage"
+    ],
+    "disableStorageReset": false,
+    "debugNavigation": false,
+    "channel": "cli",
+    "usePassiveGathering": false,
+    "disableFullPageScreenshot": false,
+    "skipAboutBlank": false,
+    "blankPage": "about:blank",
+    "ignoreStatusCode": false,
+    "locale": "en-US",
+    "blockedUrlPatterns": null,
+    "additionalTraceCategories": null,
+    "extraHeaders": null,
+    "precomputedLanternData": null,
+    "onlyAudits": null,
+    "onlyCategories": [
+      "performance",
+      "accessibility",
+      "best-practices",
+      "seo"
+    ],
+    "skipAudits": null
+  },
+  "categories": {
+    "performance": 74,
+    "accessibility": 92,
+    "best-practices": 100,
+    "seo": 92
+  },
+  "metrics": {
+    "first-contentful-paint": {
+      "display": "1.5 s",
+      "value": 1465.7226499999997
+    },
+    "largest-contentful-paint": {
+      "display": "10.1 s",
+      "value": 10067.289299999999
+    },
+    "total-blocking-time": {
+      "display": "0 ms",
+      "value": 0
+    },
+    "cumulative-layout-shift": {
+      "display": "0",
+      "value": 0
+    },
+    "speed-index": {
+      "display": "3.2 s",
+      "value": 3221.501514619891
+    },
+    "total-byte-weight": {
+      "display": "Total size was 1,654 KiB",
+      "value": 1694071
+    }
+  },
+  "issues": [
+    {
+      "id": "largest-contentful-paint",
+      "title": "Largest Contentful Paint",
+      "displayValue": "10.1 s"
+    },
+    {
+      "id": "interactive",
+      "title": "Time to Interactive",
+      "displayValue": "10.1 s"
+    },
+    {
+      "id": "unsized-images",
+      "title": "Image elements do not have explicit `width` and `height`"
+    },
+    {
+      "id": "color-contrast",
+      "title": "Background and foreground colors do not have a sufficient contrast ratio."
+    },
+    {
+      "id": "label-content-name-mismatch",
+      "title": "Elements with visible text labels do not have matching accessible names."
+    },
+    {
+      "id": "target-size",
+      "title": "Touch targets do not have sufficient size or spacing."
+    },
+    {
+      "id": "robots-txt",
+      "title": "robots.txt is not valid",
+      "displayValue": "20 errors found"
+    },
+    {
+      "id": "image-delivery-insight",
+      "title": "Improve image delivery",
+      "displayValue": "Est savings of 914 KiB"
+    },
+    {
+      "id": "lcp-discovery-insight",
+      "title": "LCP request discovery"
+    },
+    {
+      "id": "network-dependency-tree-insight",
+      "title": "Network dependency tree"
+    },
+    {
+      "id": "render-blocking-insight",
+      "title": "Render-blocking requests",
+      "displayValue": "Est savings of 830 ms"
+    }
+  ]
+}

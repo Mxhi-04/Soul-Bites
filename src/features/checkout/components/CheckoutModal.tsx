@@ -1,185 +1,264 @@
-import React, { useState } from 'react';
-import { Modal } from '../../../components/ui/Modal/Modal';
-import { Button } from '../../../components/ui/Button/Button';
-import { DeliveryDetails, CheckoutFormErrors, PlacedOrder } from '../types/checkoutTypes';
-import { validateCheckoutForm } from '../validation/checkoutValidation';
-import { formatCurrency } from '../../../utils/formatters';
-import styles from './CheckoutModal.module.css';
+import React, { useEffect, useRef, useState } from "react";
+import { Modal } from "../../../components/ui/Modal/Modal";
+import { Button } from "../../../components/ui/Button/Button";
+import { APP_CONFIG } from "../../../constants/config";
+import { useCart } from "../../cart/hooks/useCart";
+import {
+  DeliveryDetails,
+  CheckoutFormErrors,
+  OrderPreview,
+} from "../types/checkoutTypes";
+import { validateCheckoutForm } from "../validation/checkoutValidation";
+import { createOrderPreview } from "../services/checkoutService";
+import { formatCurrency } from "../../../utils/formatters";
+import styles from "./CheckoutModal.module.css";
 
-export interface CheckoutModalProps {
+interface CheckoutModalProps {
   isOpen: boolean;
   onClose: () => void;
-  totalAmount: number;
-  itemsCount: number;
-  onOrderPlaced: (order: PlacedOrder) => void;
+  onPreviewSaved: (order: OrderPreview) => void;
 }
+const EMPTY_DETAILS: DeliveryDetails = {
+  fullName: "",
+  phone: "",
+  address: "",
+  unitApt: "",
+  city: "",
+  postalCode: "",
+  deliveryNotes: "",
+};
+const FIELDS: {
+  name: keyof DeliveryDetails;
+  label: string;
+  placeholder: string;
+  autoComplete: string;
+  maxLength: number;
+  type?: string;
+}[] = [
+  {
+    name: "fullName",
+    label: "Full name",
+    placeholder: "Your name",
+    autoComplete: "name",
+    maxLength: 100,
+  },
+  {
+    name: "phone",
+    label: "Mobile number",
+    placeholder: "+91 98765 43210",
+    autoComplete: "tel",
+    maxLength: 25,
+    type: "tel",
+  },
+  {
+    name: "address",
+    label: "Street address",
+    placeholder: "House number and street",
+    autoComplete: "address-line1",
+    maxLength: 200,
+  },
+  {
+    name: "unitApt",
+    label: "Apartment or floor (optional)",
+    placeholder: "Apartment, floor or landmark",
+    autoComplete: "address-line2",
+    maxLength: 100,
+  },
+  {
+    name: "city",
+    label: "City",
+    placeholder: "Your city",
+    autoComplete: "address-level2",
+    maxLength: 100,
+  },
+  {
+    name: "postalCode",
+    label: "PIN code",
+    placeholder: "6-digit PIN code",
+    autoComplete: "postal-code",
+    maxLength: 6,
+  },
+  {
+    name: "deliveryNotes",
+    label: "Delivery instructions (optional)",
+    placeholder: "Anything the rider should know",
+    autoComplete: "off",
+    maxLength: 300,
+  },
+];
 
 export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   isOpen,
   onClose,
-  totalAmount,
-  itemsCount,
-  onOrderPlaced,
+  onPreviewSaved,
 }) => {
-  const [details, setDetails] = useState<DeliveryDetails>({
-    fullName: '',
-    phone: '',
-    address: '',
-    unitApt: '',
-    city: '',
-    postalCode: '',
-    deliveryNotes: '',
-    paymentMethod: 'card',
-  });
-
+  const { items, pricing, completeCheckout } = useCart();
+  const [details, setDetails] = useState<DeliveryDetails>(EMPTY_DETAILS);
   const [errors, setErrors] = useState<CheckoutFormErrors>({});
+  const [failure, setFailure] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setDetails((prev) => ({ ...prev, [name]: value }));
-    if (errors[name as keyof CheckoutFormErrors]) {
-      setErrors((prev) => ({ ...prev, [name]: undefined }));
+  const controller = useRef<AbortController | null>(null);
+  const formRef = useRef<HTMLFormElement>(null);
+  useEffect(() => {
+    if (!isOpen) {
+      controller.current?.abort();
+      controller.current = null;
+      setIsSubmitting(false);
     }
-  };
+    return () => {
+      controller.current?.abort();
+    };
+  }, [isOpen]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const close = () => {
+    controller.current?.abort();
+    controller.current = null;
+    setIsSubmitting(false);
+    onClose();
+  };
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (controller.current) return;
     const validation = validateCheckoutForm(details);
+    setErrors(validation.errors);
+    setFailure("");
     if (!validation.isValid) {
-      setErrors(validation.errors);
+      formRef.current
+        ?.querySelector<HTMLInputElement>(
+          `[name="${Object.keys(validation.errors)[0]}"]`,
+        )
+        ?.focus();
       return;
     }
-
+    const pending = new AbortController();
+    controller.current = pending;
     setIsSubmitting(true);
-    setTimeout(() => {
-      const order: PlacedOrder = {
-        orderId: `SB-${Math.floor(100000 + Math.random() * 900000)}`,
-        itemsCount,
-        total: totalAmount,
-        deliveryAddress: `${details.address}, ${details.city}`,
-        estimatedArrivalMinutes: 28,
-        placedAt: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      };
-      setIsSubmitting(false);
-      onOrderPlaced(order);
+    try {
+      const order = await createOrderPreview(details, items, pending.signal);
+      if (pending.signal.aborted) return;
+      completeCheckout(order.items);
+      onPreviewSaved(order);
+      setDetails(EMPTY_DETAILS);
+      setErrors({});
       onClose();
-    }, 600);
+    } catch (error) {
+      if (!pending.signal.aborted)
+        setFailure(
+          error instanceof Error
+            ? error.message
+            : "Could not save the preview. Try again.",
+        );
+    } finally {
+      if (controller.current === pending) {
+        controller.current = null;
+        setIsSubmitting(false);
+      }
+    }
   };
-
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Complete Your Order">
-      <form className={styles.form} onSubmit={handleSubmit} noValidate>
-        <span className={styles.sectionTitle}>Delivery Destination</span>
-
-        <div className={styles.field}>
-          <label className={styles.label}>Full Name</label>
-          <input
-            type="text"
-            name="fullName"
-            className={`${styles.input} ${errors.fullName ? styles.inputError : ''}`}
-            placeholder="e.g. Jordan Miller"
-            value={details.fullName}
-            onChange={handleChange}
-          />
-          {errors.fullName && <span className={styles.errorText}>{errors.fullName}</span>}
-        </div>
-
-        <div className={styles.field}>
-          <label className={styles.label}>Phone Number (For Delivery Updates)</label>
-          <input
-            type="tel"
-            name="phone"
-            className={`${styles.input} ${errors.phone ? styles.inputError : ''}`}
-            placeholder="(555) 000-0000"
-            value={details.phone}
-            onChange={handleChange}
-          />
-          {errors.phone && <span className={styles.errorText}>{errors.phone}</span>}
-        </div>
-
-        <div className={styles.field}>
-          <label className={styles.label}>Street Address</label>
-          <input
-            type="text"
-            name="address"
-            className={`${styles.input} ${errors.address ? styles.inputError : ''}`}
-            placeholder="124 Grand Ave, Apt 4B"
-            value={details.address}
-            onChange={handleChange}
-          />
-          {errors.address && <span className={styles.errorText}>{errors.address}</span>}
-        </div>
-
-        <div className={styles.row}>
-          <div className={styles.field}>
-            <label className={styles.label}>City</label>
-            <input
-              type="text"
-              name="city"
-              className={`${styles.input} ${errors.city ? styles.inputError : ''}`}
-              placeholder="Metropolis"
-              value={details.city}
-              onChange={handleChange}
-            />
-            {errors.city && <span className={styles.errorText}>{errors.city}</span>}
+    <Modal isOpen={isOpen} onClose={close} title="Review your order">
+      <form
+        ref={formRef}
+        className={styles.form}
+        onSubmit={handleSubmit}
+        noValidate
+        aria-busy={isSubmitting}
+      >
+        <p className={styles.notice}>
+          This is an order preview. No payment is collected and nothing is sent
+          to a kitchen. Use sample details.
+        </p>
+        <fieldset className={styles.fields} disabled={isSubmitting}>
+          <legend className={styles.sectionTitle}>Delivery details</legend>
+          {FIELDS.map(
+            ({ name, label, placeholder, autoComplete, maxLength, type }) => (
+              <div key={name} className={styles.field}>
+                <label className={styles.label} htmlFor={`checkout-${name}`}>
+                  {label}
+                </label>
+                <input
+                  id={`checkout-${name}`}
+                  name={name}
+                  type={type ?? "text"}
+                  placeholder={placeholder}
+                  autoComplete={autoComplete}
+                  maxLength={maxLength}
+                  inputMode={name === "postalCode" ? "numeric" : undefined}
+                  required={!["unitApt", "deliveryNotes"].includes(name)}
+                  aria-invalid={Boolean(errors[name])}
+                  aria-describedby={errors[name] ? `error-${name}` : undefined}
+                  className={`${styles.input} ${errors[name] ? styles.inputError : ""}`}
+                  value={details[name]}
+                  onChange={(event) => {
+                    setDetails((previous) => ({
+                      ...previous,
+                      [name]: event.target.value,
+                    }));
+                    setErrors((previous) => ({
+                      ...previous,
+                      [name]: undefined,
+                    }));
+                  }}
+                />
+                {errors[name] && (
+                  <span id={`error-${name}`} className={styles.errorText}>
+                    {errors[name]}
+                  </span>
+                )}
+              </div>
+            ),
+          )}
+        </fieldset>
+        <div className={styles.summary}>
+          {items.map(({ item, quantity }) => (
+            <div key={item.id} className={styles.summaryRow}>
+              <span>
+                {quantity} × {item.name}
+              </span>
+              <span>{formatCurrency(item.price * quantity)}</span>
+            </div>
+          ))}
+          <div className={styles.summaryRow}>
+            <span>Delivery</span>
+            <span>
+              {pricing.deliveryFee
+                ? formatCurrency(pricing.deliveryFee)
+                : "Free"}
+            </span>
           </div>
-
-          <div className={styles.field}>
-            <label className={styles.label}>Postal Code</label>
-            <input
-              type="text"
-              name="postalCode"
-              className={`${styles.input} ${errors.postalCode ? styles.inputError : ''}`}
-              placeholder="10001"
-              value={details.postalCode}
-              onChange={handleChange}
-            />
-            {errors.postalCode && <span className={styles.errorText}>{errors.postalCode}</span>}
+          <div className={styles.summaryRow}>
+            <span>Estimated tax</span>
+            <span>{formatCurrency(pricing.tax)}</span>
+          </div>
+          <div className={styles.summaryRow}>
+            <strong>Preview total</strong>
+            <strong>{formatCurrency(pricing.total)}</strong>
           </div>
         </div>
-
-        <span className={styles.sectionTitle}>Payment Method</span>
-        <div className={styles.paymentOptions}>
-          <button
-            type="button"
-            className={`${styles.paymentCard} ${
-              details.paymentMethod === 'card' ? styles.activePayment : ''
-            }`}
-            onClick={() => setDetails((prev) => ({ ...prev, paymentMethod: 'card' }))}
-          >
-            <span>💳 Card</span>
-          </button>
-          <button
-            type="button"
-            className={`${styles.paymentCard} ${
-              details.paymentMethod === 'apple-pay' ? styles.activePayment : ''
-            }`}
-            onClick={() => setDetails((prev) => ({ ...prev, paymentMethod: 'apple-pay' }))}
-          >
-            <span>🍏 Apple Pay</span>
-          </button>
-          <button
-            type="button"
-            className={`${styles.paymentCard} ${
-              details.paymentMethod === 'cash-on-delivery' ? styles.activePayment : ''
-            }`}
-            onClick={() =>
-              setDetails((prev) => ({ ...prev, paymentMethod: 'cash-on-delivery' }))
-            }
-          >
-            <span>💵 Cash</span>
-          </button>
-        </div>
-
+        {failure && (
+          <p role="alert" className={styles.errorText}>
+            {failure}
+          </p>
+        )}
         <div className={styles.actions}>
-          <Button type="button" variant="ghost" fullWidth onClick={onClose}>
+          <Button type="button" variant="ghost" fullWidth onClick={close}>
             Back
           </Button>
-          <Button type="submit" variant="primary" fullWidth disabled={isSubmitting}>
-            {isSubmitting ? 'Placing Order...' : `Pay ${formatCurrency(totalAmount)}`}
+          <Button
+            type="submit"
+            fullWidth
+            disabled={
+              isSubmitting ||
+              pricing.subtotal < APP_CONFIG.delivery.minimumOrderAmount
+            }
+          >
+            {isSubmitting ? "Saving preview…" : "Save order preview"}
           </Button>
         </div>
+        <p className={styles.notice}>
+          Your latest preview stays in this tab until you close it or clear the
+          preview. Delivery availability has not been checked.
+        </p>
       </form>
     </Modal>
   );

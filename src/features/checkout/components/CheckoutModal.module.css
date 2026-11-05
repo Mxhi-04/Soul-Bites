@@ -4,6 +4,39 @@
   gap: var(--space-md);
 }
 
+.fields {
+  border: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+.fields legend {
+  margin-bottom: var(--space-md);
+}
+.notice {
+  color: var(--color-cream-subtle);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-charcoal-border);
+}
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-md);
+  font-size: 0.875rem;
+}
+.summaryRow > :last-child {
+  white-space: nowrap;
+}
+
 .sectionTitle {
   font-size: 0.9375rem;
   font-weight: 700;

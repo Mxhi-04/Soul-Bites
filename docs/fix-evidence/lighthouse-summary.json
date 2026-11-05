@@ -1,0 +1,58 @@
+{
+  "version": "13.6.0",
+  "fetchTime": "2026-11-05T07:31:13.203Z",
+  "categories": {
+    "performance": 87,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+  },
+  "metrics": {
+    "first-contentful-paint": {
+      "display": "1.5 s",
+      "value": 1544.9213
+    },
+    "largest-contentful-paint": {
+      "display": "4.1 s",
+      "value": 4053.2509
+    },
+    "total-blocking-time": {
+      "display": "0 ms",
+      "value": 0
+    },
+    "cumulative-layout-shift": {
+      "display": "0.002",
+      "value": 0.002110357430325229
+    },
+    "total-byte-weight": {
+      "display": "Total size was 997 KiB",
+      "value": 1020835
+    }
+  },
+  "issues": [
+    {
+      "id": "largest-contentful-paint",
+      "title": "Largest Contentful Paint",
+      "displayValue": "4.1 s"
+    },
+    {
+      "id": "interactive",
+      "title": "Time to Interactive",
+      "displayValue": "4.1 s"
+    },
+    {
+      "id": "image-delivery-insight",
+      "title": "Improve image delivery",
+      "displayValue": "Est savings of 118 KiB"
+    },
+    {
+      "id": "network-dependency-tree-insight",
+      "title": "Network dependency tree"
+    },
+    {
+      "id": "render-blocking-insight",
+      "title": "Render-blocking requests",
+      "displayValue": "Est savings of 920 ms"
+    }
+  ]
+}

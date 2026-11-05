@@ -8,10 +8,22 @@
   flex: 1;
 }
 
+.demoNotice {
+  padding: var(--space-sm) var(--space-md);
+  text-align: center;
+  color: var(--color-cream-subtle);
+  background: var(--color-charcoal-pure);
+  font-size: 0.875rem;
+}
+
 /* Hero Section */
 .hero {
   padding: var(--space-3xl) 0 var(--space-2xl);
-  background: radial-gradient(circle at 50% 0%, rgba(245, 183, 0, 0.12) 0%, transparent 65%);
+  background: radial-gradient(
+    circle at 50% 0%,
+    rgba(245, 183, 0, 0.12) 0%,
+    transparent 65%
+  );
   border-bottom: 1px solid var(--color-charcoal-border);
   text-align: center;
   position: relative;

@@ -1,8 +1,9 @@
-@import './tokens.css';
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import "./tokens.css";
 
 /* CSS Reset & Global Styling */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -28,7 +29,7 @@ body {
 
 /* Seamless Brand Doodle Pattern Overlay */
 body::before {
-  content: '';
+  content: "";
   position: fixed;
   top: 0;
   left: 0;
@@ -47,7 +48,12 @@ body::before {
   z-index: 1;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-heading);
   color: var(--color-cream-white);
   line-height: 1.2;
@@ -66,7 +72,9 @@ button {
   cursor: pointer;
 }
 
-input, select, textarea {
+input,
+select,
+textarea {
   font-family: inherit;
   color: inherit;
 }
@@ -95,6 +103,47 @@ input, select, textarea {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 var(--space-md);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-golden-yellow);
+  outline-offset: 4px;
+}
+.recovery-button {
+  background: var(--color-golden-yellow);
+  color: var(--color-charcoal-pure);
+  padding: 12px 20px;
+  margin-top: var(--space-md);
+  border-radius: var(--radius-md);
+}
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 3000;
+  padding: 12px 20px;
+  background: var(--color-golden-yellow);
+  color: var(--color-charcoal-pure);
+  transform: translateY(-160%);
+  border-radius: var(--radius-sm);
+}
+.skip-link:focus {
+  transform: translateY(0);
+}
+#menu {
+  scroll-margin-top: 90px;
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 @media (min-width: 768px) {
