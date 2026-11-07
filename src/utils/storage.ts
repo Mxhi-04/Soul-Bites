@@ -42,3 +42,7 @@ export const storage = {
     }
   },
 };
+
+export function accountStorageKey(key: string, accountId?: string): string {
+  return accountId ? `${key}:${accountId}` : key;
+}

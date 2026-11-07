@@ -22,7 +22,7 @@
 .stageWrapper {
   position: relative;
   width: 100%;
-  height: clamp(620px, 72vh, 800px);
+  height: clamp(550px, 65svh, 760px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -521,8 +521,11 @@
     margin-right: -20px;
   }
 
-  .navButton {
-    display: none;
+  .navPrev {
+    left: 16px;
+  }
+  .navNext {
+    right: 16px;
   }
 }
 
@@ -662,5 +665,28 @@
     width: 280px;
     height: 36px;
     bottom: 4px;
+  }
+}
+
+@media (max-width: 639px) {
+  .navButton {
+    display: flex;
+    top: auto;
+    bottom: 0;
+    width: 44px;
+    height: 44px;
+    transform: none;
+  }
+  .navPrev {
+    left: 18px;
+  }
+  .navNext {
+    right: 18px;
+  }
+  .navButton:hover {
+    transform: none;
+  }
+  .controlsRow {
+    margin-top: 12px;
   }
 }

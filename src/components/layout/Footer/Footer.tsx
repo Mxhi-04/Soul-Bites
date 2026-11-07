@@ -8,7 +8,7 @@ export const Footer: React.FC = () => {
       <div className={`container ${styles.grid}`}>
         <div className={styles.brandColumn}>
           <img
-            src="/images/soul_bites_logo_small.png"
+            src="/images/soul_bites_logo_small.webp"
             width={192}
             height={138}
             loading="lazy"

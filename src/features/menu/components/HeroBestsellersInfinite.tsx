@@ -65,12 +65,12 @@ const MintLeaf: React.FC<{ className?: string }> = ({ className }) => (
   >
     <path
       d="M19.5 4.5C14.5 4.5 8 7.5 5 12.5C2.5 16.5 3 20 5.5 21C8 22 13 20.5 17 17C21 13.5 22 8 19.5 4.5Z"
-      fill="#4ADE80"
+      fill="var(--color-success)"
       fillOpacity="0.9"
     />
     <path
       d="M6 19C10.5 15.5 14.5 11 18.5 6"
-      stroke="#166534"
+      stroke="var(--color-charcoal-surface)"
       strokeWidth="1.5"
       strokeLinecap="round"
     />
@@ -81,12 +81,13 @@ const MintLeaf: React.FC<{ className?: string }> = ({ className }) => (
 
 export interface HeroBestsellersInfiniteProps {
   items?: MenuItem[];
+  initialItemId?: string;
   onAddToCart: (item: MenuItem) => void;
 }
 
 export const HeroBestsellersInfinite: React.FC<
   HeroBestsellersInfiniteProps
-> = ({ items, onAddToCart }) => {
+> = ({ items, initialItemId, onAddToCart }) => {
   const bestsellers = useMemo(() => {
     if (items && items.length >= 5) {
       const popular = items.filter((i) => i.isPopular);
@@ -100,7 +101,15 @@ export const HeroBestsellersInfinite: React.FC<
   const anglePerItem = 360 / itemCount; // 72 degrees
 
   // 3D Spherical Rotation State
-  const [currentAngle, setCurrentAngle] = useState(0);
+  const [currentAngle, setCurrentAngle] = useState(
+    () =>
+      -anglePerItem *
+      Math.max(
+        0,
+        bestsellers.findIndex((item) => item.id === initialItemId),
+      ),
+  );
+  const [isOnscreen, setIsOnscreen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -128,20 +137,26 @@ export const HeroBestsellersInfinite: React.FC<
   const dragStartYRef = useRef(0);
   const dragStartTimeRef = useRef(0);
   const hasDraggedRef = useRef(false);
+  const wheelGesture = useRef({ delta: 0, lastAt: 0, rotatedAt: -Infinity });
 
   // Stage measurement
   const stageRef = useRef<HTMLDivElement>(null);
-  const [stageWidth, setStageWidth] = useState(1100);
+  const [stageWidth, setStageWidth] = useState(() => window.innerWidth);
 
   useEffect(() => {
-    const updateSize = () => {
-      if (stageRef.current) {
-        setStageWidth(stageRef.current.offsetWidth);
-      }
+    const stage = stageRef.current;
+    if (!stage) return;
+    const resize = new ResizeObserver(() => setStageWidth(stage.offsetWidth));
+    const visibility = new IntersectionObserver(
+      ([entry]) => setIsOnscreen(entry.isIntersecting),
+      { threshold: 0.25 },
+    );
+    resize.observe(stage);
+    visibility.observe(stage);
+    return () => {
+      resize.disconnect();
+      visibility.disconnect();
     };
-    updateSize();
-    window.addEventListener("resize", updateSize);
-    return () => window.removeEventListener("resize", updateSize);
   }, []);
 
   const isMobile = stageWidth < 640;
@@ -198,9 +213,11 @@ export const HeroBestsellersInfinite: React.FC<
 
   // Auto-rotation: ONLY moves automatically after every 30 seconds (pauses on hover)
   useEffect(() => {
-    if (isHovered || isFocused || isPaused || reducedMotion) return;
+    if (!isOnscreen || isHovered || isFocused || isPaused || reducedMotion)
+      return;
     const AUTO_ROTATE_INTERVAL_MS = 30000; // 30 seconds
     const timer = setInterval(() => {
+      if (document.hidden) return;
       setCurrentAngle((prev) => {
         const nearest = Math.round(prev / anglePerItem);
         return (nearest - 1) * anglePerItem;
@@ -208,6 +225,7 @@ export const HeroBestsellersInfinite: React.FC<
     }, AUTO_ROTATE_INTERVAL_MS);
     return () => clearInterval(timer);
   }, [
+    isOnscreen,
     isHovered,
     isFocused,
     isPaused,
@@ -265,6 +283,24 @@ export const HeroBestsellersInfinite: React.FC<
     }
   };
 
+  const handleWheel = (event: React.WheelEvent) => {
+    if (event.ctrlKey || Math.abs(event.deltaX) <= Math.abs(event.deltaY))
+      return;
+
+    const now = performance.now();
+    const gesture = wheelGesture.current;
+    if (now - gesture.lastAt > 160) gesture.delta = 0;
+    gesture.lastAt = now;
+    if (now - gesture.rotatedAt < 650) return;
+
+    gesture.delta += event.deltaX * (event.deltaMode === 1 ? 16 : 1);
+    if (Math.abs(gesture.delta) < 40) return;
+    if (gesture.delta > 0) rotateNext();
+    else rotatePrev();
+    gesture.delta = 0;
+    gesture.rotatedAt = now;
+  };
+
   // Active item index for indicator dots
   const nearestSlot = Math.round(currentAngle / anglePerItem);
   const activeIndex = ((-nearestSlot % itemCount) + itemCount) % itemCount;
@@ -272,7 +308,7 @@ export const HeroBestsellersInfinite: React.FC<
   return (
     <section
       className={styles.heroWindow}
-      aria-label="Our Best Selling Cloud Kitchen Bites"
+      aria-label="Featured dishes"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onFocusCapture={() => setIsFocused(true)}
@@ -281,6 +317,13 @@ export const HeroBestsellersInfinite: React.FC<
           setIsFocused(false);
       }}
       aria-roledescription="carousel"
+      onKeyDown={(event) => {
+        if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+          event.preventDefault();
+          if (event.key === "ArrowLeft") rotatePrev();
+          else rotateNext();
+        }
+      }}
     >
       {/* 3D Spherical Stage */}
       <div
@@ -289,6 +332,7 @@ export const HeroBestsellersInfinite: React.FC<
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
+        onWheel={handleWheel}
         onPointerCancel={() => {
           isPointerDownRef.current = false;
           hasDraggedRef.current = false;
@@ -306,7 +350,7 @@ export const HeroBestsellersInfinite: React.FC<
             e.stopPropagation();
             rotatePrev();
           }}
-          aria-label="Previous bestselling bite"
+          aria-label="Previous featured dish"
         >
           ‹
         </button>
@@ -317,7 +361,7 @@ export const HeroBestsellersInfinite: React.FC<
             e.stopPropagation();
             rotateNext();
           }}
-          aria-label="Next bestselling bite"
+          aria-label="Next featured dish"
         >
           ›
         </button>
@@ -459,7 +503,8 @@ export const HeroBestsellersInfinite: React.FC<
                       className={styles.ctaWrapper}
                       onClick={(e) => {
                         e.stopPropagation();
-                        onAddToCart(item);
+                        if (e.detail === 0 || !hasDraggedRef.current)
+                          onAddToCart(item);
                       }}
                       aria-label={`Add to cart: ${item.name} for ${formatCurrency(item.price)}`}
                     >
@@ -481,8 +526,8 @@ export const HeroBestsellersInfinite: React.FC<
                       alt={item.name}
                       className={styles.productImage}
                       draggable={false}
-                      loading={index === 0 ? "eager" : "lazy"}
-                      {...{ fetchpriority: index === 0 ? "high" : "auto" }}
+                      loading="lazy"
+                      decoding="async"
                     />
                   </div>
 

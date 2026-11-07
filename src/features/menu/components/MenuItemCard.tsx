@@ -39,9 +39,9 @@ export const MenuItemCard: React.FC<MenuItemCardProps> = ({
       <div className={styles.content}>
         {/* Row 1: Dish Name (Left) + Numeric Rating (Right) */}
         <div className={styles.headerRow}>
-          <h2 className={styles.title} title={item.name}>
+          <h3 className={styles.title} title={item.name}>
             {item.name}
-          </h2>
+          </h3>
           <span
             className={styles.preparationTime}
             aria-label={`Preparation: ${item.preparationTimeMinutes} minutes`}

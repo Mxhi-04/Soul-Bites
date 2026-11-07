@@ -64,11 +64,9 @@ test("corrupt cart recovers and forged stored prices are ignored", async ({
   ).toBeDisabled();
 });
 
-test("hero purchases work with Enter and Space without rotating", async ({
-  page,
-}) => {
+test("featured dish can be added with Enter and Space", async ({ page }) => {
   const button = page.getByRole("button", {
-    name: /^Add to cart: Artisanal Woodfired/,
+    name: /^Add to cart: Soul Fire Smash Burger/,
   });
   await button.focus();
   await page.keyboard.press("Enter");
@@ -268,15 +266,75 @@ test("home, cart and review pass automated accessibility checks", async ({
   await scan();
 });
 
-test("reduced motion disables automatic carousel changes", async ({ page }) => {
+test("reduced motion uses the still hero and keeps menu navigation available", async ({
+  page,
+}) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.reload();
   await expect(
-    page.getByRole("button", { name: "Motion reduced" }),
-  ).toBeDisabled();
+    page.getByRole("link", { name: "Explore the menu" }),
+  ).toBeVisible();
+  await expect(page.locator("#top")).not.toHaveAttribute(
+    "data-motion",
+    "webgl",
+  );
+  await expect(page.getByAltText(/Double smash burger/)).toBeVisible();
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,
     ),
   ).toBe(true);
+});
+
+test("the featured carousel follows the WebGL opening and supports horizontal navigation", async ({
+  page,
+}) => {
+  expect(
+    await page.evaluate(() =>
+      Boolean(
+        document
+          .querySelector("#top")!
+          .compareDocumentPosition(document.querySelector("#featured")!) &
+          Node.DOCUMENT_POSITION_FOLLOWING,
+      ),
+    ),
+  ).toBe(true);
+  await page.getByRole("link", { name: "Featured", exact: true }).click();
+  const featured = page.locator("#featured");
+  const fries = featured.getByRole("button", {
+    name: /^Add to cart: Charcoal Truffle/,
+  });
+  await expect(fries).toBeVisible();
+  const next = featured.getByRole("button", { name: "Next featured dish" });
+  await next.click();
+  await expect(
+    featured.getByRole("button", { name: /^Add to cart: Warm Salted/ }),
+  ).toBeVisible();
+  await next.focus();
+  await page.keyboard.press("ArrowLeft");
+  await fries.click();
+  await expect(
+    page.getByRole("button", { name: "Open shopping cart with 1 item" }),
+  ).toBeVisible();
+  await page.goto("/?entry=featured#featured");
+  await expect(page.locator("#featured")).toBeInViewport({ ratio: 0.1 });
+});
+
+test("the sign-in page offers a guest route", async ({
+  page,
+}) => {
+  await page.getByRole("link", { name: "Sign in", exact: true }).click();
+  await expect(page).toHaveURL(/\/login$/);
+  await expect(
+    page.getByRole("heading", { name: "Welcome back." }),
+  ).toBeVisible();
+  await expect(page.getByLabel("Email address")).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Send sign-in link" }),
+  ).toBeVisible();
+  await page.getByRole("link", { name: /Continue as guest/ }).click();
+  await expect(page).toHaveURL(/#menu$/);
+  await expect(
+    page.getByRole("heading", { name: "Find your bite." }),
+  ).toBeVisible();
 });

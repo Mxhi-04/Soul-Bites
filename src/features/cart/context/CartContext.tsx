@@ -17,49 +17,50 @@ import {
   serializeCart,
 } from "../services/cartService";
 
-export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const CartProvider: React.FC<{
+  children: React.ReactNode;
+  storageKey?: string;
+}> = ({ children, storageKey = CART_STORAGE_KEY }) => {
   const [items, setItems] = useState<CartItem[]>(() =>
-    hydrateCart(storage.get<unknown>(CART_STORAGE_KEY, [])),
+    hydrateCart(storage.get<unknown>(storageKey, [])),
   );
   const currentItems = useRef(items);
   const [isCartOpen, setIsCartOpen] = useState(false);
 
-  const mutate = useCallback((update: (current: CartItem[]) => CartItem[]) => {
-    const commit = () => {
-      const current = hydrateCart(
-        storage.get<unknown>(
-          CART_STORAGE_KEY,
-          serializeCart(currentItems.current),
-        ),
-      );
-      const next = update(current);
-      storage.set(CART_STORAGE_KEY, serializeCart(next));
-      currentItems.current = next;
-      setItems(next);
-    };
-    // Serialize mutations across tabs; incoming storage events never echo a write.
-    if (navigator.locks)
-      void navigator.locks.request(CART_STORAGE_KEY, commit).catch(commit);
-    else commit();
-  }, []);
+  const mutate = useCallback(
+    (update: (current: CartItem[]) => CartItem[]) => {
+      const commit = () => {
+        const current = hydrateCart(
+          storage.get<unknown>(storageKey, serializeCart(currentItems.current)),
+        );
+        const next = update(current);
+        storage.set(storageKey, serializeCart(next));
+        currentItems.current = next;
+        setItems(next);
+      };
+      // Serialize mutations across tabs; incoming storage events never echo a write.
+      if (navigator.locks)
+        void navigator.locks.request(storageKey, commit).catch(commit);
+      else commit();
+    },
+    [storageKey],
+  );
 
   useEffect(() => {
     const sync = (event: StorageEvent) => {
       if (
         event.storageArea !== localStorage ||
-        (event.key !== CART_STORAGE_KEY && event.key !== null)
+        (event.key !== storageKey && event.key !== null)
       )
         return;
-      const next = hydrateCart(storage.get<unknown>(CART_STORAGE_KEY, []));
+      const next = hydrateCart(storage.get<unknown>(storageKey, []));
       currentItems.current = next;
       setItems(next);
     };
     window.addEventListener("storage", sync);
     mutate((current) => current); // Validate and migrate storage once, under the same lock.
     return () => window.removeEventListener("storage", sync);
-  }, [mutate]);
+  }, [mutate, storageKey]);
 
   const addItem = (item: MenuItem) =>
     mutate((current) =>

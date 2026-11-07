@@ -29,8 +29,7 @@ export const INITIAL_MENU_ITEMS: MenuItem[] = [
     category: "burgers",
     dietaryTags: ["non-veg", "chef-special"],
     spiceLevel: "medium",
-    imageUrl:
-      "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80",
+    imageUrl: "/images/landing/smash.webp",
     preparationTimeMinutes: 18,
     calories: 740,
     isPopular: true,
@@ -63,8 +62,7 @@ export const INITIAL_MENU_ITEMS: MenuItem[] = [
     category: "fries",
     dietaryTags: ["veg", "chef-special"],
     spiceLevel: "mild",
-    imageUrl:
-      "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=600&q=80",
+    imageUrl: "/images/landing/fries.webp",
     preparationTimeMinutes: 12,
     calories: 460,
     isPopular: true,
@@ -80,8 +78,7 @@ export const INITIAL_MENU_ITEMS: MenuItem[] = [
     category: "bowls",
     dietaryTags: ["vegan", "gluten-free"],
     spiceLevel: "mild",
-    imageUrl:
-      "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+    imageUrl: "/images/landing/bowl.webp",
     preparationTimeMinutes: 15,
     calories: 520,
   },

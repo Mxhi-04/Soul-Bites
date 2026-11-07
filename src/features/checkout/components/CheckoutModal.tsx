@@ -14,6 +14,7 @@ import { formatCurrency } from "../../../utils/formatters";
 import styles from "./CheckoutModal.module.css";
 
 interface CheckoutModalProps {
+  storageKey?: string;
   isOpen: boolean;
   onClose: () => void;
   onPreviewSaved: (order: OrderPreview) => void;
@@ -91,6 +92,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   isOpen,
   onClose,
   onPreviewSaved,
+  storageKey,
 }) => {
   const { items, pricing, completeCheckout } = useCart();
   const [details, setDetails] = useState<DeliveryDetails>(EMPTY_DETAILS);
@@ -134,7 +136,12 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     controller.current = pending;
     setIsSubmitting(true);
     try {
-      const order = await createOrderPreview(details, items, pending.signal);
+      const order = await createOrderPreview(
+        details,
+        items,
+        pending.signal,
+        storageKey,
+      );
       if (pending.signal.aborted) return;
       completeCheckout(order.items);
       onPreviewSaved(order);

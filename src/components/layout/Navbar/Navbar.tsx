@@ -5,6 +5,7 @@ import styles from "./Navbar.module.css";
 
 export interface NavbarProps {
   cartItemCount: number;
+  signedIn?: boolean;
   onOpenCart: () => void;
   onOpenTracking?: () => void;
   hasActiveOrder?: boolean;
@@ -12,6 +13,7 @@ export interface NavbarProps {
 
 export const Navbar: React.FC<NavbarProps> = ({
   cartItemCount,
+  signedIn = false,
   onOpenCart,
   onOpenTracking,
   hasActiveOrder = false,
@@ -22,11 +24,11 @@ export const Navbar: React.FC<NavbarProps> = ({
         <button
           type="button"
           className={styles.brand}
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          onClick={() => window.scrollTo({ top: 0 })}
           aria-label={`${APP_CONFIG.brandName} - Return to top`}
         >
           <img
-            src="/images/soul_bites_logo_small.png"
+            src="/images/soul_bites_logo_small.webp"
             width={192}
             height={138}
             alt={APP_CONFIG.brandName}
@@ -34,12 +36,16 @@ export const Navbar: React.FC<NavbarProps> = ({
           />
         </button>
 
-        <div className={styles.kitchenStatus}>
-          <span className={styles.statusIndicator} />
-          <span>Menu preview · Ordering coming soon</span>
-        </div>
+        <nav className={styles.nav} aria-label="Main navigation">
+          <a href="#featured">Featured</a>
+          <a href="#menu">Menu</a>
+          <a href="#questions">FAQ</a>
+        </nav>
 
         <div className={styles.actions}>
+          <a className={styles.signIn} href="/login">
+            {signedIn ? "Account" : "Sign in"}
+          </a>
           {hasActiveOrder && onOpenTracking && (
             <button className={styles.cartButton} onClick={onOpenTracking}>
               <span>View preview</span>
@@ -52,11 +58,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             aria-label={`Open shopping cart with ${cartItemCount} ${cartItemCount === 1 ? "item" : "items"}`}
           >
             <span className={styles.cartIconWrapper}>
-              <ShoppingCartIcon
-                size={20}
-                color="var(--color-golden-yellow)"
-                glow={cartItemCount > 0}
-              />
+              <ShoppingCartIcon size={20} color="var(--color-golden-yellow)" />
             </span>
             <span className={styles.cartLabel}>Cart</span>
             {cartItemCount > 0 && (

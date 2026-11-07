@@ -41,7 +41,20 @@ To use a locally installed Chrome executable instead of Playwright's Chromium, s
 - Delivery validation currently targets Indian mobile numbers and six-digit PIN codes, consistent with INR pricing. It does not verify delivery serviceability.
 - Only the latest preview is saved, in session storage for the current tab. It includes sample delivery details and survives a refresh. Clear it with **Clear preview**; closing the tab ends its normal session. Browser session-restoration behavior may retain session storage.
 - Cancelling an in-progress preview leaves the cart intact. Saving subtracts the previewed quantities, preserving later additions.
-- No environment variables, API credentials, payment secrets, or backend services are required for the current preview.
+- Guest browsing and order previews work without environment variables.
+
+## Enable email sign-in
+
+The account page lives at `/login`. Add these public configuration values to `.env.local` for development and to the Vercel build environment for deployment.
+
+```dotenv
+VITE_SUPABASE_URL=https://YOUR-PROJECT-REF.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_YOUR_KEY
+```
+
+Enable the email provider and the default magic-link email template with `{{ .ConfirmationURL }}`. Add `https://soul-bites.vercel.app/login` and the local preview URL ending in `/login` to the allowed redirect URLs. Configure a mail sender for public signup. Users complete the PKCE flow by opening the link in the browser where they requested it. [Supabase email sign-in setup](https://supabase.com/docs/guides/auth/auth-email-passwordless)
+
+Use the project's publishable key in the browser. Guest and account carts and previews have separate storage keys on this device. [Supabase API key guidance](https://supabase.com/docs/guides/getting-started/api-keys)
 
 ## Architecture
 

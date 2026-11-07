@@ -1,9 +1,15 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, lazy, Suspense } from "react";
 import { Navbar } from "./components/layout/Navbar/Navbar";
 import { Footer } from "./components/layout/Footer/Footer";
 import { MenuCategoryFilter } from "./features/menu/components/MenuCategoryFilter";
 import { MenuItemCard } from "./features/menu/components/MenuItemCard";
 import { HeroBestsellersInfinite } from "./features/menu/components/HeroBestsellersInfinite";
+import { useAuth } from "./features/auth/context/authContext";
+import { accountStorageKey } from "./utils/storage";
+import { CART_STORAGE_KEY } from "./features/cart/services/cartService";
+import { LandingHero } from "./features/landing/components/LandingHero";
+import { KitchenPicks } from "./features/landing/components/KitchenPicks";
+import { LandingQuestions } from "./features/landing/components/LandingQuestions";
 import { CartDrawer } from "./features/cart/components/CartDrawer";
 import { CheckoutModal } from "./features/checkout/components/CheckoutModal";
 import { OrderTracker } from "./features/tracking/components/OrderTracker";
@@ -18,18 +24,31 @@ import { MenuItem, MenuCategory } from "./features/menu/types/menuTypes";
 import { OrderPreview } from "./features/checkout/types/checkoutTypes";
 import {
   restoreOrderPreview,
+  PREVIEW_STORAGE_KEY,
   clearOrderPreview,
 } from "./features/checkout/services/checkoutService";
 import { DietaryTag } from "./types";
 import { MAX_ITEM_QUANTITY } from "./features/cart/services/cartService";
 import styles from "./App.module.css";
 
-const MainContent: React.FC = () => {
+const kitchenPicks = ["sb-01", "sb-05", "sb-03"].flatMap((id) => {
+  const item = menuService.getItemById(id);
+  return item ? [item] : [];
+});
+const smashBurger = menuService.getItemById("sb-01");
+const LoginPage = lazy(() => import("./features/auth/components/LoginPage"));
+
+const MainContent: React.FC<{ accountId?: string }> = ({ accountId }) => {
+  const previewKey = accountStorageKey(PREVIEW_STORAGE_KEY, accountId);
   const { pricing, addItem, openCart, items: cartItems } = useCart();
+
+  useEffect(() => {
+    const target = document.getElementById(window.location.hash.slice(1));
+    if (target) target.scrollIntoView({ behavior: "instant" });
+  }, []);
 
   // Menu State
   const [items, setItems] = useState<MenuItem[]>(INITIAL_MENU_ITEMS);
-  const bestsellers = INITIAL_MENU_ITEMS;
   const [dietaryTag, setDietaryTag] = useState<DietaryTag | "all">("all");
   const [menuError, setMenuError] = useState(false);
   const toastTimer = useRef<ReturnType<typeof setTimeout>>();
@@ -40,8 +59,8 @@ const MainContent: React.FC = () => {
 
   // Local order preview state
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
-  const [activeOrder, setActiveOrder] = useState<OrderPreview | null>(
-    restoreOrderPreview,
+  const [activeOrder, setActiveOrder] = useState<OrderPreview | null>(() =>
+    restoreOrderPreview(previewKey),
   );
   const [isTrackerOpen, setIsTrackerOpen] = useState(false);
 
@@ -98,15 +117,13 @@ const MainContent: React.FC = () => {
       </a>
       <Navbar
         cartItemCount={pricing.itemCount}
+        signedIn={Boolean(accountId)}
         onOpenCart={openCart}
         hasActiveOrder={Boolean(activeOrder)}
         onOpenTracking={() => setIsTrackerOpen(true)}
       />
 
       <main className={styles.main}>
-        <p className={styles.demoNotice}>
-          Explore the Soul Bites demo. Orders and payments are not live yet.
-        </p>
         {/* Saved order preview */}
         {activeOrder && isTrackerOpen && (
           <section
@@ -120,7 +137,7 @@ const MainContent: React.FC = () => {
                 tracking={activeOrder}
                 onClose={() => setIsTrackerOpen(false)}
                 onClear={() => {
-                  clearOrderPreview();
+                  clearOrderPreview(previewKey);
                   setActiveOrder(null);
                   setIsTrackerOpen(false);
                 }}
@@ -129,23 +146,43 @@ const MainContent: React.FC = () => {
           </section>
         )}
 
-        {/* Hero Window: Best Selling Items with Infinite Swiping */}
-        <HeroBestsellersInfinite
-          items={bestsellers}
-          onAddToCart={handleAddToCart}
-        />
+        {smashBurger && (
+          <LandingHero
+            item={smashBurger}
+            onAdd={() => handleAddToCart(smashBurger)}
+          />
+        )}
+        <section
+          id="featured"
+          className={styles.featured}
+          aria-labelledby="featured-title"
+        >
+          <div className={styles.featuredHeader}>
+            <div>
+              <p className={styles.sectionLabel}>Featured dishes</p>
+              <h2 id="featured-title" className={styles.sectionTitle}>
+                Pick your favorite.
+              </h2>
+            </div>
+            <p>Swipe across the dishes or use the arrows.</p>
+          </div>
+          <HeroBestsellersInfinite
+            initialItemId="sb-05"
+            onAddToCart={handleAddToCart}
+          />
+        </section>
+        <KitchenPicks items={kitchenPicks} onAdd={handleAddToCart} />
 
         {/* Menu Section */}
         <section className={styles.menuSection} id="menu">
           <div className="container">
             <div className={styles.sectionHeader}>
               <div>
-                <h1 className={styles.sectionTitle}>
-                  Explore Our Kitchen Menu
-                </h1>
+                <p className={styles.sectionLabel}>02 / The full menu</p>
+                <h2 className={styles.sectionTitle}>Find your bite.</h2>
                 <p className={styles.sectionDesc}>
-                  Explore sample dishes, dietary preferences and preparation
-                  estimates.
+                  Browse sample dishes, check the ingredients and build an order
+                  preview.
                 </p>
               </div>
             </div>
@@ -179,6 +216,7 @@ const MainContent: React.FC = () => {
             )}
           </div>
         </section>
+        <LandingQuestions />
       </main>
 
       <Footer />
@@ -190,6 +228,7 @@ const MainContent: React.FC = () => {
         isOpen={isCheckoutOpen}
         onClose={() => setIsCheckoutOpen(false)}
         onPreviewSaved={handlePreviewSaved}
+        storageKey={previewKey}
       />
 
       {/* Toast Alert */}
@@ -210,9 +249,25 @@ const MainContent: React.FC = () => {
 };
 
 export const App: React.FC = () => {
+  const { status, user } = useAuth();
+  const waiting = (
+    <main className={styles.loading} role="status">
+      Loading Soul Bites…
+    </main>
+  );
+  if (/^\/login\/?$/.test(window.location.pathname)) {
+    return (
+      <Suspense fallback={waiting}>
+        <LoginPage />
+      </Suspense>
+    );
+  }
+  if (status === "loading") return waiting;
+
+  const cartKey = accountStorageKey(CART_STORAGE_KEY, user?.id);
   return (
-    <CartProvider>
-      <MainContent />
+    <CartProvider key={cartKey} storageKey={cartKey}>
+      <MainContent accountId={user?.id} />
     </CartProvider>
   );
 };

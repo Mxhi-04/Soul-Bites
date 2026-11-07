@@ -30,12 +30,10 @@ function validDetails(value: unknown): value is DeliveryDetails {
   );
 }
 
-export function restoreOrderPreview(): OrderPreview | null {
-  const stored = storage.get<unknown>(
-    PREVIEW_STORAGE_KEY,
-    null,
-    "sessionStorage",
-  );
+export function restoreOrderPreview(
+  storageKey = PREVIEW_STORAGE_KEY,
+): OrderPreview | null {
+  const stored = storage.get<unknown>(storageKey, null, "sessionStorage");
   if (!stored || typeof stored !== "object") return null;
   if (
     !(
@@ -71,6 +69,7 @@ export async function createOrderPreview(
   details: DeliveryDetails,
   cart: CartItem[],
   signal: AbortSignal,
+  storageKey = PREVIEW_STORAGE_KEY,
 ): Promise<OrderPreview> {
   if (!validateCheckoutForm(details).isValid)
     throw new Error("Check your delivery details.");
@@ -110,13 +109,13 @@ export async function createOrderPreview(
     },
     placedAt: new Date().toISOString(),
   };
-  if (!storage.set(PREVIEW_STORAGE_KEY, order, "sessionStorage"))
+  if (!storage.set(storageKey, order, "sessionStorage"))
     throw new Error(
       "This browser could not save the preview. Allow session storage and try again.",
     );
   return order;
 }
 
-export function clearOrderPreview() {
-  storage.remove(PREVIEW_STORAGE_KEY, "sessionStorage");
+export function clearOrderPreview(storageKey = PREVIEW_STORAGE_KEY) {
+  storage.remove(storageKey, "sessionStorage");
 }
