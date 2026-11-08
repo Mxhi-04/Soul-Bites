@@ -286,36 +286,45 @@ test("reduced motion uses the still hero and keeps menu navigation available", a
   ).toBe(true);
 });
 
-test("the featured carousel follows the WebGL opening and supports horizontal navigation", async ({
+test("featured dishes follow the combined hero and advance and rewind with native scroll", async ({
   page,
 }) => {
-  expect(
-    await page.evaluate(() =>
-      Boolean(
-        document
-          .querySelector("#top")!
-          .compareDocumentPosition(document.querySelector("#featured")!) &
-          Node.DOCUMENT_POSITION_FOLLOWING,
-      ),
-    ),
-  ).toBe(true);
+  const hero = page.locator("#top");
+  await expect(hero.getByAltText(/Double smash burger/)).toBeVisible();
+  await expect(hero.getByRole("img", { name: "Lime and mint mojito" })).toBeVisible();
+  await expect(hero.getByRole("img", { name: "Charcoal truffle fries" })).toBeVisible();
+  await expect(page.locator("#top + #featured")).toHaveCount(1);
+
   await page.getByRole("link", { name: "Featured", exact: true }).click();
-  const featured = page.locator("#featured");
+  const featured = page.getByRole("region", { name: "Featured dishes", exact: true });
   const fries = featured.getByRole("button", {
     name: /^Add to cart: Charcoal Truffle/,
   });
   await expect(fries).toBeVisible();
-  const next = featured.getByRole("button", { name: "Next featured dish" });
-  await next.click();
+  await expect.poll(() =>
+    page.locator("#featured").evaluate((section) => {
+      const nav = parseFloat(getComputedStyle(section).scrollMarginTop);
+      return Math.abs(section.getBoundingClientRect().top - nav);
+    }),
+  ).toBeLessThan(3);
+  await expect(featured.getByRole("button", { name: /rotation|featured dish/ })).toHaveCount(0);
+
+  const scrollCarouselTo = (progress: number) =>
+    featured.evaluate((track, progress) => {
+      const nav = parseFloat(getComputedStyle(track).getPropertyValue("--nav-height"));
+      const travel = track.clientHeight - track.firstElementChild!.clientHeight;
+      window.scrollBy({
+        top: track.getBoundingClientRect().top - nav + travel * progress,
+        behavior: "instant",
+      });
+    }, progress);
+
+  await scrollCarouselTo(0.25);
   await expect(
     featured.getByRole("button", { name: /^Add to cart: Warm Salted/ }),
   ).toBeVisible();
-  await next.focus();
-  await page.keyboard.press("ArrowLeft");
-  await fries.click();
-  await expect(
-    page.getByRole("button", { name: "Open shopping cart with 1 item" }),
-  ).toBeVisible();
+  await scrollCarouselTo(0);
+  await expect(fries).toBeInViewport();
   await page.goto("/?entry=featured#featured");
   await expect(page.locator("#featured")).toBeInViewport({ ratio: 0.1 });
 });

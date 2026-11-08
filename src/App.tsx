@@ -164,7 +164,7 @@ const MainContent: React.FC<{ accountId?: string }> = ({ accountId }) => {
                 Pick your favorite.
               </h2>
             </div>
-            <p>Swipe across the dishes or use the arrows.</p>
+            <p>Scroll or swipe to explore the featured dishes.</p>
           </div>
           <HeroBestsellersInfinite
             initialItemId="sb-05"

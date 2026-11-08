@@ -17,11 +17,54 @@ const fragmentSource = `
     return vec4(rgb / max(a, 0.001), a);
   }
 
-  vec4 sampleLayer(vec2 uv, bool top) {
-    // The transparent gap in the source art separates the bun and the stack.
-    if (any(lessThan(uv, vec2(0.0))) || any(greaterThan(uv, vec2(1.0)))
-        || (top && uv.y > 0.38) || (!top && uv.y < 0.38)) return vec4(0.0);
+  float heelSeam(float x) {
+    float center = x - 0.46;
+    return 0.848 - 0.34 * center * center;
+  }
+
+  float lowerPattySeam(float x) {
+    float center = x - 0.51;
+    return 0.711 - 0.19 * center * center + 0.004 * sin(x * 83.0);
+  }
+
+  float upperPattySeam(float x) {
+    float center = x - 0.52;
+    return 0.589 - 0.17 * center * center + 0.006 * sin(x * 64.0);
+  }
+
+  vec4 sampleSlice(vec2 uv, float from, float to) {
+    if (uv.x < 0.0 || uv.x > 1.0 || uv.y < from || uv.y >= to)
+      return vec4(0.0);
     return texture2D(uBurger, uv);
+  }
+
+  vec4 fallingLayer(vec2 uv, float arrival, vec2 drift, int layer) {
+    if (arrival <= 0.0) return vec4(0.0);
+
+    uv += (1.0 - arrival) * drift;
+    vec4 slice;
+    if (layer == 0) {
+      slice = sampleSlice(uv, lowerPattySeam(uv.x), heelSeam(uv.x));
+    } else if (layer == 1) {
+      slice = sampleSlice(uv, upperPattySeam(uv.x), lowerPattySeam(uv.x));
+    } else if (layer == 2) {
+      slice = sampleSlice(uv, 0.38, upperPattySeam(uv.x));
+    } else {
+      // Close the gap between the crown and toppings in the source image.
+      uv.y -= 0.058 * arrival;
+      slice = sampleSlice(uv, 0.0, 0.38);
+    }
+    slice.a *= smoothstep(0.0, 0.28, arrival);
+    return slice;
+  }
+
+  vec4 toastedFace(vec2 uv, float covering) {
+    // Reuse the photographed crumb on the underside of the crown.
+    vec2 face = (uv - vec2(0.496, 0.806)) / vec2(0.409, 0.044);
+    float edge = length(face);
+    if (edge > 1.02 || covering >= 1.0) return vec4(0.0);
+    vec3 crumb = texture2D(uBurger, vec2(0.5, 0.346) + face * vec2(0.36, 0.012)).rgb;
+    return vec4(crumb * 1.05, (1.0 - smoothstep(0.97, 1.02, edge)) * (1.0 - covering));
   }
 
   float hash(vec2 p) {
@@ -33,17 +76,18 @@ const fragmentSource = `
   void main() {
     vec2 pixel = vec2(gl_FragCoord.x, uResolution.y - gl_FragCoord.y);
     vec2 p = (pixel - uResolution * 0.5) / uSize;
-    float opening = sin(3.14159 * smoothstep(0.08, 0.92, uProgress));
-    float settling = smoothstep(0.65, 1.0, uProgress);
-    float turn = sin(uProgress * 4.5) * 0.095;
-    mat2 rotation = mat2(cos(turn), -sin(turn), sin(turn), cos(turn));
-    vec2 burger = rotation * (p - vec2(0.035 * opening, 0.025 * settling));
-    burger /= 1.0 + 0.055 * opening + 0.04 * settling;
+    vec2 uv = p + 0.5;
+    float firstPatty = smoothstep(0.05, 0.34, uProgress);
+    float secondPatty = smoothstep(0.23, 0.55, uProgress);
+    float toppings = smoothstep(0.43, 0.75, uProgress);
+    float crown = smoothstep(0.66, 0.99, uProgress);
 
-    vec2 bun = burger + vec2(0.5 + 0.035 * opening, 0.5 + 0.13 * opening - 0.034 * settling);
-    vec2 stack = burger + vec2(0.5, 0.5 - 0.05 * opening);
-    vec4 food = over(sampleLayer(bun, true), sampleLayer(stack, false));
-    food.rgb *= 1.0 + 0.05 * opening;
+    vec4 food = sampleSlice(uv, heelSeam(uv.x), 1.0);
+    food = over(toastedFace(uv, smoothstep(0.66, 1.0, firstPatty)), food);
+    food = over(fallingLayer(uv, firstPatty, vec2(-0.08, 0.37), 0), food);
+    food = over(fallingLayer(uv, secondPatty, vec2(0.07, 0.39), 1), food);
+    food = over(fallingLayer(uv, toppings, vec2(-0.055, 0.34), 2), food);
+    food = over(fallingLayer(uv, crown, vec2(0.04, 0.24), 3), food);
 
     // Embers sit at two depths and travel at different speeds during the reveal.
     vec2 dust = p * vec2(14.0, 12.0) + vec2(-uProgress, uProgress * 2.0);
@@ -52,8 +96,8 @@ const fragmentSource = `
     vec2 speck = fract(dust) - vec2(0.2 + 0.6 * seed, 0.2 + 0.6 * hash(cell + 13.0));
     float ember = (1.0 - smoothstep(0.018, 0.048, length(speck)))
       * step(0.62, seed) * (1.0 - smoothstep(0.30, 0.8, length(p)))
-      * (0.45 + 0.35 * opening);
-    vec2 shadow = (p - vec2(0.0, 0.52 + 0.02 * settling)) * vec2(3.0, 21.0);
+      * (0.28 + 0.46 * sin(3.14159 * uProgress));
+    vec2 shadow = (p - vec2(0.0, 0.52)) * vec2(3.0, 21.0);
     float shade = exp(-dot(shadow, shadow)) * 0.48;
     gl_FragColor = over(food, over(vec4(uGold, ember), vec4(vec3(0.0), shade)));
   }

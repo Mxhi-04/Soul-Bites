@@ -254,7 +254,7 @@
 
 .wordmark {
   position: absolute;
-  top: 2%;
+  top: 12%;
   inset-inline: 0;
   text-align: center;
   font: 800 clamp(78px, 14.8vw, 255px) / 0.9 var(--font-display);
@@ -265,10 +265,18 @@
   transform: translateY(calc(-36px * var(--scene-progress)));
 }
 
+.platter {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: min(100%, 76svh, 770px);
+  height: 100%;
+}
+
 .poster {
-  z-index: 1;
+  z-index: 2;
   display: block;
-  width: min(89%, 58svh, 650px);
+  width: 53%;
   height: auto;
   filter: drop-shadow(0 24px 32px var(--color-overlay));
 }
@@ -276,13 +284,23 @@
 .canvas {
   display: block;
   position: absolute;
-  z-index: 1;
+  z-index: 2;
   inset: -34px -12px;
   width: calc(100% + 24px);
   height: calc(100% + 68px);
   opacity: 0;
   pointer-events: none;
 }
+@media (prefers-reduced-motion: no-preference) {
+  /* Match the heel while the first WebGL frame is loading. */
+  .track:not([data-motion]) .poster {
+    clip-path: polygon(
+      0 78%, 12% 80%, 25% 83%, 46% 85%, 66% 83%, 86% 80%, 100% 75%,
+      100% 100%, 0 100%
+    );
+  }
+}
+
 .track[data-motion="webgl"] .poster {
   opacity: 0;
 }
@@ -292,10 +310,10 @@
 
 .stamp {
   position: absolute;
-  right: 3%;
-  bottom: 6%;
-  z-index: 2;
-  width: clamp(74px, 8.2vw, 119px);
+  right: 9%;
+  bottom: 7%;
+  z-index: 3;
+  width: clamp(62px, 6.8vw, 100px);
   padding: 4px;
   border-radius: 50%;
   transform: rotate(12deg);
@@ -364,14 +382,7 @@
   color: var(--color-golden-yellow);
   font-size: 1.25rem;
 }
-.progress,
-.motionLabel {
-  display: none;
-}
-.track[data-layout="sticky"] .motionLabel {
-  display: inline;
-}
-.track[data-layout="sticky"] .staticLabel {
+.progress {
   display: none;
 }
 
@@ -409,6 +420,14 @@
 }
 
 @media (max-width: 899px) {
+  .track[data-layout="sticky"] {
+    height: calc(100svh + clamp(240px, 46svh, 370px));
+  }
+
+  .track[data-layout="sticky"] .art {
+    height: min(56vw, 500px, calc(100svh - var(--nav-height) - 140px));
+  }
+
   .stage {
     min-height: auto;
   }
@@ -418,18 +437,11 @@
   .art {
     height: min(56vw, 500px);
   }
-  .poster {
-    width: 88%;
-  }
   .title {
     font-size: clamp(60px, 10.5vw, 106px);
   }
   .title em {
     font-size: clamp(49px, 8.5vw, 83px);
-  }
-  .stamp {
-    right: 0;
-    bottom: 11%;
   }
   .caption {
     margin-inline: 4%;
@@ -476,20 +488,16 @@
     height: min(89vw, 385px);
   }
   .wordmark {
-    top: 7%;
     font-size: min(28vw, 155px);
-  }
-  .poster {
-    width: min(78%, 320px);
   }
   .halo {
     width: min(76%, 320px);
     box-shadow: none;
   }
   .stamp {
-    bottom: 9%;
-    width: 69px;
-    right: 2%;
+    bottom: 6%;
+    width: 55px;
+    right: 7%;
   }
   .caption {
     position: absolute;

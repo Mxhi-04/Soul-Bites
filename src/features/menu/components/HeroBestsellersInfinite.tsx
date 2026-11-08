@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { INITIAL_MENU_ITEMS } from "../services/menuService";
 import { MenuItem } from "../types/menuTypes";
+import { useScrollProgress } from "../../../hooks/useScrollProgress";
 import { formatCurrency } from "../../../utils/formatters";
 import styles from "./HeroBestsellersInfinite.module.css";
 
@@ -97,39 +98,35 @@ export const HeroBestsellersInfinite: React.FC<
     return DEFAULT_5_BESTSELLERS;
   }, [items]);
 
-  const itemCount = bestsellers.length; // 5 items
-  const anglePerItem = 360 / itemCount; // 72 degrees
+  const itemCount = bestsellers.length;
+  const anglePerItem = 360 / itemCount;
+  const initialIndex = Math.max(
+    0,
+    bestsellers.findIndex((item) => item.id === initialItemId),
+  );
+  const [currentAngle, setCurrentAngle] = useState(-anglePerItem * initialIndex);
+  const scrollStep = useRef(0);
+  const trackRef = useRef<HTMLElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
 
-  // 3D Spherical Rotation State
-  const [currentAngle, setCurrentAngle] = useState(
-    () =>
-      -anglePerItem *
-      Math.max(
-        0,
-        bestsellers.findIndex((item) => item.id === initialItemId),
-      ),
-  );
-  const [isOnscreen, setIsOnscreen] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
-  const [reducedMotion, setReducedMotion] = useState(
-    () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-  );
-  useEffect(() => {
-    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setReducedMotion(media.matches);
-    media.addEventListener("change", update);
-    return () => media.removeEventListener("change", update);
-  }, []);
-  const [lastInteractionTime, setLastInteractionTime] = useState(() =>
-    Date.now(),
-  );
+  const followScroll = useCallback(
+    (progress: number) => {
+      const nextStep = Math.round(progress * (itemCount - 1));
+      if (nextStep === scrollStep.current) return;
 
-  // Reset 30-second countdown on user interaction
-  const resetTimer = useCallback(() => {
-    setLastInteractionTime(Date.now());
-  }, []);
+      scrollStep.current = nextStep;
+      setCurrentAngle((previous) => {
+        const currentSlot = Math.round(-previous / anglePerItem);
+        const targetSlot = initialIndex + nextStep;
+        const difference = targetSlot - currentSlot;
+        const nearest =
+          difference - itemCount * Math.round(difference / itemCount);
+        return -(currentSlot + nearest) * anglePerItem;
+      });
+    },
+    [anglePerItem, initialIndex, itemCount],
+  );
+  useScrollProgress(trackRef, stageRef, followScroll);
 
   // Drag tracking refs
   const isPointerDownRef = useRef(false);
@@ -140,23 +137,14 @@ export const HeroBestsellersInfinite: React.FC<
   const wheelGesture = useRef({ delta: 0, lastAt: 0, rotatedAt: -Infinity });
 
   // Stage measurement
-  const stageRef = useRef<HTMLDivElement>(null);
   const [stageWidth, setStageWidth] = useState(() => window.innerWidth);
 
   useEffect(() => {
     const stage = stageRef.current;
     if (!stage) return;
     const resize = new ResizeObserver(() => setStageWidth(stage.offsetWidth));
-    const visibility = new IntersectionObserver(
-      ([entry]) => setIsOnscreen(entry.isIntersecting),
-      { threshold: 0.25 },
-    );
     resize.observe(stage);
-    visibility.observe(stage);
-    return () => {
-      resize.disconnect();
-      visibility.disconnect();
-    };
+    return () => resize.disconnect();
   }, []);
 
   const isMobile = stageWidth < 640;
@@ -183,24 +171,21 @@ export const HeroBestsellersInfinite: React.FC<
 
   // Navigation handlers
   const rotateNext = useCallback(() => {
-    resetTimer();
     setCurrentAngle((prev) => {
       const nearest = Math.round(prev / anglePerItem);
       return (nearest - 1) * anglePerItem;
     });
-  }, [anglePerItem, resetTimer]);
+  }, [anglePerItem]);
 
   const rotatePrev = useCallback(() => {
-    resetTimer();
     setCurrentAngle((prev) => {
       const nearest = Math.round(prev / anglePerItem);
       return (nearest + 1) * anglePerItem;
     });
-  }, [anglePerItem, resetTimer]);
+  }, [anglePerItem]);
 
   const rotateToItem = useCallback(
     (itemIndex: number) => {
-      resetTimer();
       const currentSlot = Math.round(currentAngle / anglePerItem);
       const activeIndex = ((-currentSlot % itemCount) + itemCount) % itemCount;
       let diff = itemIndex - activeIndex;
@@ -208,34 +193,9 @@ export const HeroBestsellersInfinite: React.FC<
       if (diff < -itemCount / 2) diff += itemCount;
       setCurrentAngle((currentSlot - diff) * anglePerItem);
     },
-    [anglePerItem, currentAngle, itemCount, resetTimer],
+    [anglePerItem, currentAngle, itemCount],
   );
 
-  // Auto-rotation: ONLY moves automatically after every 30 seconds (pauses on hover)
-  useEffect(() => {
-    if (!isOnscreen || isHovered || isFocused || isPaused || reducedMotion)
-      return;
-    const AUTO_ROTATE_INTERVAL_MS = 30000; // 30 seconds
-    const timer = setInterval(() => {
-      if (document.hidden) return;
-      setCurrentAngle((prev) => {
-        const nearest = Math.round(prev / anglePerItem);
-        return (nearest - 1) * anglePerItem;
-      });
-    }, AUTO_ROTATE_INTERVAL_MS);
-    return () => clearInterval(timer);
-  }, [
-    isOnscreen,
-    isHovered,
-    isFocused,
-    isPaused,
-    reducedMotion,
-    anglePerItem,
-    lastInteractionTime,
-  ]);
-
-  // Pointer / Touch handlers: NO rotation with cursor during hover
-  // Cards only move on click/tap, intentional swipe release, or the 30s timer
   const handlePointerDown = (e: React.PointerEvent) => {
     if (e.button !== 0) return;
     isPointerDownRef.current = true;
@@ -268,7 +228,6 @@ export const HeroBestsellersInfinite: React.FC<
 
     // Trigger swipe advance ONLY upon releasing a deliberate gesture (> 40px in < 800ms)
     if (hasDraggedRef.current && Math.abs(deltaX) > 40 && elapsed < 800) {
-      resetTimer();
       if (deltaX < 0) {
         rotateNext();
       } else {
@@ -301,21 +260,11 @@ export const HeroBestsellersInfinite: React.FC<
     gesture.rotatedAt = now;
   };
 
-  // Active item index for indicator dots
-  const nearestSlot = Math.round(currentAngle / anglePerItem);
-  const activeIndex = ((-nearestSlot % itemCount) + itemCount) % itemCount;
-
   return (
     <section
+      ref={trackRef}
       className={styles.heroWindow}
       aria-label="Featured dishes"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      onFocusCapture={() => setIsFocused(true)}
-      onBlurCapture={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget))
-          setIsFocused(false);
-      }}
       aria-roledescription="carousel"
       onKeyDown={(event) => {
         if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
@@ -341,30 +290,6 @@ export const HeroBestsellersInfinite: React.FC<
         {/* Ambient Spherical Lighting */}
         <div className={styles.ambientGlow} />
         <div className={styles.floorShadow} />
-
-        {/* Floating 3D Navigation Controls */}
-        <button
-          type="button"
-          className={`${styles.navButton} ${styles.navPrev}`}
-          onClick={(e) => {
-            e.stopPropagation();
-            rotatePrev();
-          }}
-          aria-label="Previous featured dish"
-        >
-          ‹
-        </button>
-        <button
-          type="button"
-          className={`${styles.navButton} ${styles.navNext}`}
-          onClick={(e) => {
-            e.stopPropagation();
-            rotateNext();
-          }}
-          aria-label="Next featured dish"
-        >
-          ›
-        </button>
 
         {/* 3D Carousel Stage */}
         <div className={styles.carouselStage}>
@@ -436,13 +361,9 @@ export const HeroBestsellersInfinite: React.FC<
                   zIndex,
                   pointerEvents: isVisible ? "auto" : "none",
                   visibility: isVisible ? "visible" : "hidden",
-                  transition: reducedMotion
-                    ? "none"
-                    : "transform 0.55s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.4s ease, filter 0.4s ease",
                 }}
                 onClick={() => {
                   if (hasDraggedRef.current) return;
-                  resetTimer();
                   if (!isCenter) {
                     rotateToItem(index);
                   } else {
@@ -453,7 +374,6 @@ export const HeroBestsellersInfinite: React.FC<
                   if (e.target !== e.currentTarget) return;
                   if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
-                    resetTimer();
                     if (!isCenter) {
                       rotateToItem(index);
                     } else {
@@ -544,41 +464,6 @@ export const HeroBestsellersInfinite: React.FC<
         </div>
       </div>
 
-      {/* Indicator Dots & Drag Prompt */}
-      <div className={styles.controlsRow}>
-        <div className={styles.dotsWrapper}>
-          {bestsellers.map((_, i) => (
-            <button
-              key={i}
-              type="button"
-              className={`${styles.dot} ${i === activeIndex ? styles.activeDot : ""}`}
-              onClick={() => rotateToItem(i)}
-              aria-label={`Show ${bestsellers[i].name}`}
-              aria-pressed={i === activeIndex}
-            />
-          ))}
-        </div>
-        <button
-          type="button"
-          className={styles.pauseButton}
-          aria-pressed={isPaused}
-          onClick={() => setIsPaused((previous) => !previous)}
-          disabled={reducedMotion}
-        >
-          {reducedMotion
-            ? "Motion reduced"
-            : isPaused
-              ? "Resume rotation"
-              : "Pause rotation"}
-        </button>
-        <span
-          className={styles.swipeHint}
-          aria-live="polite"
-          aria-atomic="true"
-        >
-          {activeIndex + 1} of {itemCount} · Tap a card to explore
-        </span>
-      </div>
     </section>
   );
 };

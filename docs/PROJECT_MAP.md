@@ -23,8 +23,8 @@ This project map links every business feature directly to its responsible files,
 
 ### Landing and account pages
 
-- The [landing hero](../src/features/landing/components/LandingHero.tsx) drives the [WebGL burger scene](../src/features/landing/services/burgerScene.ts) through native scroll. Desktop uses a pinned sequence, mobile uses a shorter track, and reduced motion or unavailable WebGL shows the still image.
-- The featured carousel follows the hero. The [kitchen edit](../src/features/landing/components/KitchenPicks.tsx), full menu, and [FAQ](../src/features/landing/components/LandingQuestions.tsx) follow the carousel.
+- The [landing hero](../src/features/landing/components/LandingHero.tsx) uses native scroll to assemble the [WebGL burger](../src/features/landing/services/burgerScene.ts) from its bottom bun up. Desktop uses a pinned sequence, mobile uses a shorter track, and reduced motion or unavailable WebGL shows the still image.
+- The [mojito and fries](../src/features/landing/components/HeroSides.tsx) animate beside the burger using the same scroll progress. The featured carousel follows the combined hero. The [kitchen edit](../src/features/landing/components/KitchenPicks.tsx), full menu, and [FAQ](../src/features/landing/components/LandingQuestions.tsx) follow the carousel.
 - The [account page](../src/features/auth/components/LoginPage.tsx) uses [Supabase email links](../src/features/auth/services/authService.ts). Guests and signed-in accounts use separate local cart and preview keys.
 - Visual references inspected include the previous Soul Bites hero, Impossible Foods for oversized display type and floating cutouts, and Graza for cream editorial sections. [Soul Bites](https://soul-bites.vercel.app/) · [Impossible Foods](https://styles.refero.design/style/04961c7d-8ca6-4e87-ba88-6ad7ffa3b245) · [Graza](https://styles.refero.design/style/f2a84e0f-cf77-41fa-ade0-b062a3a42495)
 - The new food images are illustrative ImageGen renders optimized to WebP. Barlow Condensed, Fraunces, Caveat, and Plus Jakarta Sans are self-hosted with [their licenses](../public/fonts/).

@@ -1,61 +1,63 @@
-import React from "react";
 import { APP_CONFIG } from "../../../constants/config";
 import styles from "./Footer.module.css";
 
-export const Footer: React.FC = () => {
+export function Footer() {
   return (
     <footer className={styles.footer}>
-      <div className={`container ${styles.grid}`}>
-        <div className={styles.brandColumn}>
-          <img
-            src="/images/soul_bites_logo_small.webp"
-            width={192}
-            height={138}
-            loading="lazy"
-            alt={APP_CONFIG.brandName}
-            className={styles.brandLogo}
-          />
-          <div className={styles.brandTagline}>{APP_CONFIG.tagline}</div>
-          <p className={styles.description}>
-            Browse our sample menu and explore your order. Live ordering and
-            delivery are coming soon.
+      <div className={styles.inner}>
+        <div className={styles.masthead}>
+          <div>
+            <p className={styles.brandName}>
+              {APP_CONFIG.brandName} · Cloud kitchen
+            </p>
+            <h2 className={styles.title}>
+              Come hungry. <em>Leave happy.</em>
+            </h2>
+          </div>
+
+          <div className={styles.mascot} aria-hidden="true">
+            <img
+              src="/images/soul_bites_mascot.webp"
+              width={280}
+              height={280}
+              loading="lazy"
+              decoding="async"
+              alt=""
+            />
+          </div>
+
+          <nav className={styles.navigation} aria-label="Footer navigation">
+            <h3 className={styles.label}>Explore</h3>
+            <ul className={styles.links}>
+              <li>
+                <a href="#featured">
+                  Featured dishes <span aria-hidden="true">→</span>
+                </a>
+              </li>
+              <li>
+                <a href="#menu">
+                  Full menu <span aria-hidden="true">→</span>
+                </a>
+              </li>
+              <li>
+                <a href="#questions">
+                  Kitchen FAQs <span aria-hidden="true">→</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+
+        <div className={styles.bottom}>
+          <p>
+            © {new Date().getFullYear()} {APP_CONFIG.brandName}. All rights
+            reserved.
           </p>
+          <a className={styles.back} href="#">
+            Back to top <span aria-hidden="true">↑</span>
+          </a>
         </div>
-
-        <div>
-          <h2 className={styles.columnTitle}>Before you order</h2>
-          <ul className={styles.list}>
-            <li>Menu items and photography are illustrative.</li>
-            <li>
-              Ingredients and allergen information must be confirmed with the
-              kitchen before live ordering.
-            </li>
-            <li>No payment is collected in this demo.</li>
-          </ul>
-        </div>
-
-        <div>
-          <h2 className={styles.columnTitle}>Explore Soul Bites</h2>
-          <ul className={styles.list}>
-            <li>
-              <a href="#menu">Browse the menu</a>
-            </li>
-            <li>
-              Delivery locations and opening hours will be published before
-              launch.
-            </li>
-            <li>Support and business details are being confirmed.</li>
-          </ul>
-        </div>
-      </div>
-
-      <div className={`container ${styles.bottomBar}`}>
-        <span>
-          © {new Date().getFullYear()} {APP_CONFIG.brandName}. All rights
-          reserved.
-        </span>
-        <span>Premium Cloud Kitchen Experience</span>
       </div>
     </footer>
   );
-};
+}

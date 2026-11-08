@@ -1,4 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
+import { HeroSides } from "../../landing/components/HeroSides";
 import { useAuth } from "../context/authContext";
 import { sendSignInLink, signOut } from "../services/authService";
 import styles from "./LoginPage.module.css";
@@ -66,12 +67,16 @@ export default function LoginPage() {
       <main className={styles.layout}>
         <div className={styles.editorial} aria-hidden="true">
           <p className={styles.label}>The Soul Bites kitchen</p>
-          <img
-            src="/images/landing/smash-stack-620.webp"
-            width={620}
-            height={620}
-            alt=""
-          />
+          <div className={styles.meal}>
+            <HeroSides still />
+            <img
+              className={styles.burger}
+              src="/images/landing/smash-stack-620.webp"
+              width={620}
+              height={620}
+              alt=""
+            />
+          </div>
           <p className={styles.posterTitle}>
             Big bites. <em>Big soul.</em>
           </p>

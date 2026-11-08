@@ -1,0 +1,106 @@
+.glass,
+.pouch {
+  --side-progress: var(--scene-progress, 1);
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+  filter: drop-shadow(0 14px 18px var(--color-overlay));
+}
+
+.glass {
+  right: 3%;
+  width: 19%;
+  transform: translateY(-43%) rotate(8deg);
+  --fill: clamp(0, calc((var(--side-progress) - 0.08) * 1.24), 1);
+  --fill-edge: calc(88.5% - 86% * var(--fill));
+  aspect-ratio: 410 / 800;
+}
+
+.glassBack,
+.glassFront,
+.glassInterior,
+.pouchBase,
+.pouchOpening,
+.packedFries,
+.liquid {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.glassFront {
+  color: var(--color-cream-white);
+}
+
+.glassInterior {
+  clip-path: url(#mojito-interior);
+}
+
+.liquid {
+  clip-path: inset(var(--fill-edge) 0 0);
+}
+
+.surface {
+  position: absolute;
+  inset: var(--fill-edge) 8% auto;
+  height: 3%;
+  opacity: clamp(0, calc(min(var(--fill), 1 - var(--fill)) * 12), 0.48);
+  border-radius: 50%;
+  transform: translateY(-50%);
+  background: linear-gradient(180deg, var(--color-cream-white), var(--color-success));
+  mix-blend-mode: screen;
+}
+
+.pour {
+  position: absolute;
+  top: -15%;
+  left: 48%;
+  width: 4%;
+  height: calc(103.5% - 86% * var(--fill));
+  opacity: clamp(0, calc(min(var(--fill), 1 - var(--fill)) * 8), 0.55);
+  background: linear-gradient(90deg, transparent, var(--color-cream-white), var(--color-success), transparent);
+  border-radius: 50% 50% 40% 40% / 9% 9% 3% 3%;
+  transform: rotate(-8deg);
+  transform-origin: center bottom;
+}
+
+.pouch {
+  left: 1%;
+  width: 26%;
+  transform: translateY(-35%) rotate(-10deg);
+  --packed: clamp(0, calc((var(--side-progress) - 0.86) * 7.15), 1);
+  aspect-ratio: 585 / 720;
+  height: auto;
+}
+
+.defs {
+  position: absolute;
+}
+
+.pouchOpening {
+  clip-path: url(#fries-opening);
+}
+
+.fry {
+  --rise: clamp(0, calc((var(--side-progress) - var(--start)) * 5), 1);
+  position: absolute;
+  width: auto;
+  max-width: none;
+  transform-origin: center 82%;
+  transform: translate(-50%, calc(92% * (1 - var(--rise))))
+    rotate(calc(var(--tilt) * var(--rise))) scaleX(1.13);
+  opacity: min(clamp(0, calc(var(--rise) * 5), 1), 1 - var(--packed));
+  filter: drop-shadow(1px 2px 2px var(--color-overlay));
+}
+
+.packedFries {
+  opacity: var(--packed);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glass,
+  .pouch {
+    --side-progress: 1;
+  }
+}

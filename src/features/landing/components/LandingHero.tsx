@@ -1,11 +1,13 @@
 import { useEffect, useRef } from "react";
 import type { MenuItem } from "../../menu/types/menuTypes";
 import { formatCurrency } from "../../../utils/formatters";
+import type { createBurgerScene } from "../services/burgerScene";
+import { HeroSides } from "./HeroSides";
 import styles from "./LandingHero.module.css";
 
-const STICKY_QUERY = "(min-width: 900px) and (min-height: 600px)";
+const STICKY_QUERY = "(min-width: 640px) and (min-height: 600px)";
 const ARTWORK_SIZES =
-  "(max-width: 639px) min(calc(78vw - 38px), 320px), (max-width: 899px) 44vw, min(46vw, 58svh, 650px)";
+  "(max-width: 639px) calc(53vw - 26px), (max-width: 899px) 24vw, min(27vw, 41svh, 409px)";
 const ARTWORK_SET =
   "/images/landing/smash-stack-500.webp 500w, /images/landing/smash-stack-620.webp 620w, /images/landing/smash-stack.webp 1040w";
 
@@ -31,7 +33,9 @@ export function LandingHero({
     const motion = window.matchMedia("(prefers-reduced-motion: no-preference)");
     const sticky = window.matchMedia(STICKY_QUERY);
     let revision = 0;
-    let stop = () => {};
+    let scene: ReturnType<typeof createBurgerScene> = null;
+    let frame = 0;
+    let lastProgress = -1;
 
     // Keep a deep-linked section aligned when the sticky track changes height.
     function setLayout(layout?: "sticky" | "compact") {
@@ -49,87 +53,85 @@ export function LandingHero({
       if (pinnedToAnchor) anchor.scrollIntoView({ behavior: "instant" });
     }
 
-    async function setup() {
+    const draw = () => {
+      frame = 0;
+      if (!motion.matches || document.hidden) return;
+
+      const rect = track.getBoundingClientRect();
+      const navHeight = parseFloat(
+        getComputedStyle(track).getPropertyValue("--nav-height"),
+      );
+      const pinned = track.dataset.layout === "sticky";
+      const range = pinned
+        ? track.offsetHeight - stage.offsetHeight
+        : Math.min(track.offsetHeight * 0.42, window.innerHeight * 0.38);
+      if (
+        rect.bottom <= navHeight ||
+        rect.top >= window.innerHeight ||
+        range <= 0
+      )
+        return;
+
+      const progress = Math.max(0, Math.min(1, (navHeight - rect.top) / range));
+      if (Math.abs(lastProgress - progress) < 0.0001) return;
+      lastProgress = progress;
+
+      stage.style.setProperty("--scene-progress", progress.toFixed(4));
+      if (pinned)
+        stage.dataset.chapter = progress < 0.38 ? "1" : progress < 0.72 ? "2" : "3";
+
+      if (!scene || !canvas.clientWidth || !canvas.clientHeight) return;
+      scene.draw(
+        progress,
+        canvas.clientWidth,
+        canvas.clientHeight,
+        artwork.clientWidth,
+      );
+      track.dataset.motion = "webgl";
+    };
+
+    const schedule = () => {
+      if (!frame) frame = window.requestAnimationFrame(draw);
+    };
+    const redraw = () => {
+      lastProgress = -1;
+      schedule();
+    };
+    const clearScene = () => {
+      scene?.dispose();
+      scene = null;
+      delete track.dataset.motion;
+      delete stage.dataset.chapter;
+      setLayout();
+    };
+    const showStill = () => {
+      clearScene();
+      track.dataset.motion = "still";
+      redraw();
+    };
+
+    const setup = async () => {
       const current = ++revision;
-      if (!motion.matches || !track || !stage || !canvas || !artwork) return;
+      if (!motion.matches) return;
 
       try {
         await artwork.decode();
         if (current !== revision) return;
         const { createBurgerScene } = await import("../services/burgerScene");
         if (current !== revision) return;
-        const scene = createBurgerScene(canvas, artwork);
-        if (!scene) return;
+        scene = createBurgerScene(canvas, artwork);
+        if (!scene) {
+          showStill();
+          return;
+        }
 
-        const pinned = sticky.matches;
-        let frame = 0;
-        let lastProgress = -1;
-        const draw = () => {
-          frame = 0;
-          if (document.hidden) return;
-          const rect = track.getBoundingClientRect();
-          const navHeight = parseFloat(
-            getComputedStyle(track).getPropertyValue("--nav-height"),
-          );
-          const range = pinned
-            ? track.offsetHeight - stage.offsetHeight
-            : Math.min(track.offsetHeight * 0.7, window.innerHeight * 0.65);
-          if (
-            rect.bottom <= navHeight ||
-            rect.top >= window.innerHeight ||
-            range <= 0
-          )
-            return;
-          const progress = Math.max(
-            0,
-            Math.min(1, (navHeight - rect.top) / range),
-          );
-          if (Math.abs(lastProgress - progress) < 0.0001) return;
-          lastProgress = progress;
-
-          const width = canvas.clientWidth;
-          const height = canvas.clientHeight;
-          if (!width || !height) return;
-          scene.draw(progress, width, height, artwork.clientWidth);
-          stage.style.setProperty("--scene-progress", progress.toFixed(4));
-          if (pinned)
-            stage.dataset.chapter =
-              progress < 0.38 ? "1" : progress < 0.72 ? "2" : "3";
-          track.dataset.motion = "webgl";
-        };
-        const schedule = () => {
-          if (!frame) frame = window.requestAnimationFrame(draw);
-        };
-        const observer = new ResizeObserver(() => {
-          lastProgress = -1;
-          schedule();
-        });
-        const contextLost = () => stop();
-
-        stop = () => {
-          window.cancelAnimationFrame(frame);
-          observer.disconnect();
-          window.removeEventListener("scroll", schedule);
-          document.removeEventListener("visibilitychange", schedule);
-          canvas.removeEventListener("webglcontextlost", contextLost);
-          scene.dispose();
-          delete track.dataset.motion;
-          setLayout();
-          delete stage.dataset.chapter;
-          stage.style.removeProperty("--scene-progress");
-        };
-
-        // Lay out the scroll track only after texture upload succeeds.
-        setLayout(pinned ? "sticky" : "compact");
-        observer.observe(canvas);
-        window.addEventListener("scroll", schedule, { passive: true });
-        document.addEventListener("visibilitychange", schedule);
-        canvas.addEventListener("webglcontextlost", contextLost);
-        draw();
+        // Pin the hero only when its WebGL texture is ready.
+        setLayout(sticky.matches ? "sticky" : "compact");
+        redraw();
       } catch {
-        stop();
+        showStill();
       }
-    }
+    };
 
     const startCompactScene = () => {
       const bounds = track.getBoundingClientRect();
@@ -140,21 +142,34 @@ export function LandingHero({
 
     const applyPreferences = () => {
       revision++;
-      stop();
-      stop = () => {};
+      clearScene();
       window.removeEventListener("scroll", startCompactScene);
+      stage.style.removeProperty("--scene-progress");
       if (!motion.matches) return;
+
       if (sticky.matches) void setup();
       else window.addEventListener("scroll", startCompactScene, { passive: true });
+      redraw();
     };
 
-    applyPreferences();
+    const observer = new ResizeObserver(redraw);
+    observer.observe(canvas);
+    window.addEventListener("scroll", schedule, { passive: true });
+    document.addEventListener("visibilitychange", schedule);
+    canvas.addEventListener("webglcontextlost", showStill);
     motion.addEventListener("change", applyPreferences);
     sticky.addEventListener("change", applyPreferences);
+    applyPreferences();
+
     return () => {
       revision++;
-      stop();
+      window.cancelAnimationFrame(frame);
+      observer.disconnect();
+      clearScene();
+      window.removeEventListener("scroll", schedule);
       window.removeEventListener("scroll", startCompactScene);
+      document.removeEventListener("visibilitychange", schedule);
+      canvas.removeEventListener("webglcontextlost", showStill);
       motion.removeEventListener("change", applyPreferences);
       sticky.removeEventListener("change", applyPreferences);
     };
@@ -220,22 +235,25 @@ export function LandingHero({
               <div className={styles.wordmark} aria-hidden="true">
                 SMASH
               </div>
-              <img
-                ref={artworkRef}
-                className={styles.poster}
-                src="/images/landing/smash-stack.webp"
-                srcSet={ARTWORK_SET}
-                sizes={ARTWORK_SIZES}
-                width={1040}
-                height={1040}
-                alt="Double smash burger with melted cheese and a toasted sesame bun"
-                {...{ fetchpriority: "high" }}
-              />
-              <canvas
-                ref={canvasRef}
-                className={styles.canvas}
-                aria-hidden="true"
-              />
+              <div className={styles.platter}>
+                <HeroSides />
+                <img
+                  ref={artworkRef}
+                  className={styles.poster}
+                  src="/images/landing/smash-stack.webp"
+                  srcSet={ARTWORK_SET}
+                  sizes={ARTWORK_SIZES}
+                  width={1040}
+                  height={1040}
+                  alt="Double smash burger with melted cheese and a toasted sesame bun"
+                  {...{ fetchpriority: "high" }}
+                />
+                <canvas
+                  ref={canvasRef}
+                  className={styles.canvas}
+                  aria-hidden="true"
+                />
+              </div>
               <div className={styles.stamp} aria-hidden="true">
                 <svg viewBox="0 0 120 120">
                   <defs>
@@ -267,8 +285,7 @@ export function LandingHero({
         <div className={styles.bottom}>
           <a href="#featured" className={styles.skip}>
             <span aria-hidden="true">↓</span>
-            <span className={styles.staticLabel}>Discover featured dishes</span>
-            <span className={styles.motionLabel}>Skip to featured dishes</span>
+            <span>Discover featured dishes</span>
           </a>
           <div className={styles.progress} aria-hidden="true">
             <span className={styles.progressHint}>Scroll to build</span>
