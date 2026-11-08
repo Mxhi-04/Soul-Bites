@@ -1,0 +1,41 @@
+name: Attribute README commit to GitHub Actions
+
+on:
+  push:
+    branches:
+      - codex/bot-readme-attribution
+
+permissions:
+  contents: write
+
+jobs:
+  replace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Recreate the approved commit as the Actions bot
+        env:
+          ORIGINAL_COMMIT: 57c76216267056c0615ea28f24c184c926b2e2bf
+          EXPECTED_PARENT: 681d0476ed2d4ee885e3253e5933ab2b04f39d97
+          EXPECTED_TREE: fbddbc480edd033bac5f94bf4450f1666e584fd2
+          GIT_AUTHOR_NAME: github-actions[bot]
+          GIT_AUTHOR_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+          GIT_COMMITTER_NAME: github-actions[bot]
+          GIT_COMMITTER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git ls-remote origin refs/heads/main | cut -f1)" = "$ORIGINAL_COMMIT"
+          test "$(git rev-parse "$ORIGINAL_COMMIT^")" = "$EXPECTED_PARENT"
+          test "$(git rev-parse "$ORIGINAL_COMMIT^{tree}")" = "$EXPECTED_TREE"
+
+          message=$(mktemp)
+          git show -s --format=%B "$ORIGINAL_COMMIT" > "$message"
+          replacement=$(git commit-tree "$EXPECTED_TREE" -p "$EXPECTED_PARENT" -F "$message")
+          git diff --exit-code "$ORIGINAL_COMMIT" "$replacement" --
+          git push "--force-with-lease=refs/heads/main:$ORIGINAL_COMMIT" origin "$replacement:refs/heads/main"
+
+          printf 'Replacement commit: %s\n' "$replacement" >> "$GITHUB_STEP_SUMMARY"
