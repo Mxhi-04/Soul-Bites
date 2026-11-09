@@ -31,11 +31,11 @@ import { DietaryTag } from "./types";
 import { MAX_ITEM_QUANTITY } from "./features/cart/services/cartService";
 import styles from "./App.module.css";
 
-const kitchenPicks = ["sb-01", "sb-05", "sb-03"].flatMap((id) => {
+const kitchenPicks = ["sb-aloo-tikki", "sb-05", "sb-03"].flatMap((id) => {
   const item = menuService.getItemById(id);
   return item ? [item] : [];
 });
-const smashBurger = menuService.getItemById("sb-01");
+const alooBurger = menuService.getItemById("sb-aloo-tikki");
 const LoginPage = lazy(() => import("./features/auth/components/LoginPage"));
 
 const MainContent: React.FC<{ accountId?: string }> = ({ accountId }) => {
@@ -146,10 +146,10 @@ const MainContent: React.FC<{ accountId?: string }> = ({ accountId }) => {
           </section>
         )}
 
-        {smashBurger && (
+        {alooBurger && (
           <LandingHero
-            item={smashBurger}
-            onAdd={() => handleAddToCart(smashBurger)}
+            item={alooBurger}
+            onAdd={() => handleAddToCart(alooBurger)}
           />
         )}
         <section

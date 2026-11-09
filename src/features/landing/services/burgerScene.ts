@@ -5,7 +5,7 @@ const vertexSource = `
 
 const fragmentSource = `
   precision mediump float;
-  uniform sampler2D uBurger;
+  uniform sampler2D uIngredients;
   uniform vec2 uResolution;
   uniform float uSize;
   uniform float uProgress;
@@ -17,54 +17,24 @@ const fragmentSource = `
     return vec4(rgb / max(a, 0.001), a);
   }
 
-  float heelSeam(float x) {
-    float center = x - 0.46;
-    return 0.848 - 0.34 * center * center;
-  }
-
-  float lowerPattySeam(float x) {
-    float center = x - 0.51;
-    return 0.711 - 0.19 * center * center + 0.004 * sin(x * 83.0);
-  }
-
-  float upperPattySeam(float x) {
-    float center = x - 0.52;
-    return 0.589 - 0.17 * center * center + 0.006 * sin(x * 64.0);
-  }
-
-  vec4 sampleSlice(vec2 uv, float from, float to) {
-    if (uv.x < 0.0 || uv.x > 1.0 || uv.y < from || uv.y >= to)
+  vec4 ingredient(vec2 uv, vec2 atlasRow, vec4 destination) {
+    vec2 local = (uv - destination.xy) / destination.zw;
+    if (any(lessThan(local, vec2(0.0))) || any(greaterThan(local, vec2(1.0))))
       return vec4(0.0);
-    return texture2D(uBurger, uv);
+    vec2 atlas = (vec2(4.0, atlasRow.x) + local * vec2(640.0, atlasRow.y)) / vec2(648.0, 1081.0);
+    return texture2D(uIngredients, atlas);
   }
 
-  vec4 fallingLayer(vec2 uv, float arrival, vec2 drift, int layer) {
+  vec4 falling(vec2 uv, vec2 atlasRow, vec4 destination, vec2 timing, float drift) {
+    float arrival = clamp((uProgress - timing.x) / (timing.y - timing.x), 0.0, 1.0);
     if (arrival <= 0.0) return vec4(0.0);
 
-    uv += (1.0 - arrival) * drift;
-    vec4 slice;
-    if (layer == 0) {
-      slice = sampleSlice(uv, lowerPattySeam(uv.x), heelSeam(uv.x));
-    } else if (layer == 1) {
-      slice = sampleSlice(uv, upperPattySeam(uv.x), lowerPattySeam(uv.x));
-    } else if (layer == 2) {
-      slice = sampleSlice(uv, 0.38, upperPattySeam(uv.x));
-    } else {
-      // Close the gap between the crown and toppings in the source image.
-      uv.y -= 0.058 * arrival;
-      slice = sampleSlice(uv, 0.0, 0.38);
-    }
-    slice.a *= smoothstep(0.0, 0.28, arrival);
-    return slice;
-  }
-
-  vec4 toastedFace(vec2 uv, float covering) {
-    // Reuse the photographed crumb on the underside of the crown.
-    vec2 face = (uv - vec2(0.496, 0.806)) / vec2(0.409, 0.044);
-    float edge = length(face);
-    if (edge > 1.02 || covering >= 1.0) return vec4(0.0);
-    vec3 crumb = texture2D(uBurger, vec2(0.5, 0.346) + face * vec2(0.36, 0.012)).rgb;
-    return vec4(crumb * 1.05, (1.0 - smoothstep(0.97, 1.02, edge)) * (1.0 - covering));
+    // Ingredients enter above the artwork and accelerate toward their place in the stack.
+    float remaining = 1.0 - arrival * arrival * (2.0 - arrival);
+    uv += vec2(drift, destination.y + 0.56) * remaining;
+    vec4 layer = ingredient(uv, atlasRow, destination);
+    layer.a *= smoothstep(0.0, 0.16, arrival);
+    return layer;
   }
 
   float hash(vec2 p) {
@@ -77,17 +47,14 @@ const fragmentSource = `
     vec2 pixel = vec2(gl_FragCoord.x, uResolution.y - gl_FragCoord.y);
     vec2 p = (pixel - uResolution * 0.5) / uSize;
     vec2 uv = p + 0.5;
-    float firstPatty = smoothstep(0.05, 0.34, uProgress);
-    float secondPatty = smoothstep(0.23, 0.55, uProgress);
-    float toppings = smoothstep(0.43, 0.75, uProgress);
-    float crown = smoothstep(0.66, 0.99, uProgress);
-
-    vec4 food = sampleSlice(uv, heelSeam(uv.x), 1.0);
-    food = over(toastedFace(uv, smoothstep(0.66, 1.0, firstPatty)), food);
-    food = over(fallingLayer(uv, firstPatty, vec2(-0.08, 0.37), 0), food);
-    food = over(fallingLayer(uv, secondPatty, vec2(0.07, 0.39), 1), food);
-    food = over(fallingLayer(uv, toppings, vec2(-0.055, 0.34), 2), food);
-    food = over(fallingLayer(uv, crown, vec2(0.04, 0.24), 3), food);
+    // Atlas rows give the source y and height in pixels, ordered from heel to crown.
+    vec4 food = ingredient(uv, vec2(4.0, 192.0), vec4(0.075, 0.700, 0.850, 0.255));
+    food = over(falling(uv, vec2(204.0, 122.0), vec4(0.020, 0.624, 0.960, 0.183), vec2(0.04, 0.26), -0.050), food);
+    food = over(falling(uv, vec2(334.0, 157.0), vec4(0.054, 0.515, 0.892, 0.219), vec2(0.16, 0.40), 0.045), food);
+    food = over(falling(uv, vec2(499.0, 104.0), vec4(0.063, 0.469, 0.874, 0.142), vec2(0.30, 0.53), -0.042), food);
+    food = over(falling(uv, vec2(611.0, 106.0), vec4(0.098, 0.403, 0.804, 0.133), vec2(0.43, 0.65), 0.040), food);
+    food = over(falling(uv, vec2(725.0, 111.0), vec4(0.066, 0.330, 0.868, 0.150), vec2(0.55, 0.78), -0.035), food);
+    food = over(falling(uv, vec2(844.0, 233.0), vec4(0.068, 0.059, 0.864, 0.315), vec2(0.70, 0.99), 0.015), food);
 
     // Embers sit at two depths and travel at different speeds during the reveal.
     vec2 dust = p * vec2(14.0, 12.0) + vec2(-uProgress, uProgress * 2.0);
@@ -115,7 +82,7 @@ function compile(gl: WebGLRenderingContext, kind: number, source: string) {
 
 export function createBurgerScene(
   canvas: HTMLCanvasElement,
-  artwork: HTMLImageElement,
+  ingredients: HTMLImageElement,
 ) {
   const gl = canvas.getContext("webgl", {
     alpha: true,
@@ -172,7 +139,7 @@ export function createBurgerScene(
       gl.RGBA,
       gl.RGBA,
       gl.UNSIGNED_BYTE,
-      artwork,
+      ingredients,
     );
   } catch {
     dispose();
@@ -182,7 +149,7 @@ export function createBurgerScene(
     dispose();
     return null;
   }
-  gl.uniform1i(gl.getUniformLocation(program, "uBurger"), 0);
+  gl.uniform1i(gl.getUniformLocation(program, "uIngredients"), 0);
   const gold = getComputedStyle(canvas)
     .getPropertyValue("--color-golden-yellow")
     .trim();

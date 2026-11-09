@@ -8,7 +8,7 @@ export function Footer() {
         <div className={styles.masthead}>
           <div>
             <p className={styles.brandName}>
-              {APP_CONFIG.brandName} · Cloud kitchen
+              {APP_CONFIG.brandName} · Vegetarian kitchen
             </p>
             <h2 className={styles.title}>
               Come hungry. <em>Leave happy.</em>

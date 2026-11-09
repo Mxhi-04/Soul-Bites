@@ -16,10 +16,13 @@ describe("cart boundary and pricing", () => {
   ])("recovers from malformed storage: %j", (value) => {
     expect(hydrateCart(value)).toEqual([]);
   });
-  it("migrates old carts and discards a forged name and negative price", () => {
+  it("migrates old carts while dropping retired dishes and forged prices", () => {
     const items = hydrateCart([
+      { item: { id: "sb-01" }, quantity: 2 },
+      { itemId: "sb-02", quantity: 1 },
       { item: { id: "sb-07", name: "Forged", price: -100 }, quantity: 1 },
     ]);
+    expect(items).toHaveLength(1);
     expect(items[0].item.price).toBe(119);
     expect(items[0].item.name).not.toBe("Forged");
     expect(calculatePricing(items).total).toBe(159.95);
@@ -32,8 +35,8 @@ describe("cart boundary and pricing", () => {
     const items = hydrateCart([
       { itemId: "sb-07", quantity: 2 },
       { itemId: "sb-07", quantity: 1000 },
-      { itemId: "sb-01", quantity: -1 },
-      { itemId: "sb-02", quantity: 1.5 },
+      { itemId: "sb-aloo-tikki", quantity: -1 },
+      { itemId: "sb-hot-honey-paneer", quantity: 1.5 },
       { itemId: "sb-05", quantity: "2" },
     ]);
     expect(items).toHaveLength(1);

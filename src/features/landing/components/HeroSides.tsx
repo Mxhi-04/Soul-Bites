@@ -4,7 +4,13 @@ import styles from "./HeroSides.module.css";
 function Mojito() {
   return (
     <div className={styles.glass} role="img" aria-label="Lime and mint mojito">
-      <div className={styles.pour} />
+      <div className={styles.pour} aria-hidden="true">
+        <div className={styles.stream} />
+        <span className={styles.drop} />
+        <span className={styles.drop} />
+        <span className={styles.drop} />
+        <span className={styles.drop} />
+      </div>
       <svg viewBox="0 0 410 800" className={styles.glassBack}>
         <defs>
           <linearGradient id="mojito-reflection">
@@ -102,7 +108,7 @@ function Fries({ still }: { still: boolean }) {
       <svg width="0" height="0" className={styles.defs}>
         <defs>
           <clipPath id="fries-opening" clipPathUnits="objectBoundingBox">
-            <path d="M0 0H1V.318L.949 .324Q.908 .351 .86 .389C.75 .484 .65 .536 .5 .536C.35 .536 .24 .487 .133 .387Q.078 .345 .04 .325L0 .318Z" />
+            <path d="M0 -1H1V.318L.949 .324Q.908 .351 .86 .389C.75 .484 .65 .536 .5 .536C.35 .536 .24 .487 .133 .387Q.078 .345 .04 .325L0 .318Z" />
           </clipPath>
         </defs>
       </svg>

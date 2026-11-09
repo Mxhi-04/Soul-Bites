@@ -11,8 +11,9 @@
   right: 3%;
   width: 19%;
   transform: translateY(-43%) rotate(8deg);
-  --fill: clamp(0, calc((var(--side-progress) - 0.08) * 1.24), 1);
+  --fill: clamp(0, calc((var(--side-progress) - 0.16) * 1.28), 1);
   --fill-edge: calc(88.5% - 86% * var(--fill));
+  --water-highlight: color-mix(in srgb, var(--color-success) 25%, var(--color-cream-white));
   aspect-ratio: 410 / 800;
 }
 
@@ -54,15 +55,55 @@
 
 .pour {
   position: absolute;
-  top: -15%;
+  top: -43%;
   left: 48%;
-  width: 4%;
-  height: calc(103.5% - 86% * var(--fill));
-  opacity: clamp(0, calc(min(var(--fill), 1 - var(--fill)) * 8), 0.55);
-  background: linear-gradient(90deg, transparent, var(--color-cream-white), var(--color-success), transparent);
-  border-radius: 50% 50% 40% 40% / 9% 9% 3% 3%;
+  width: max(2px, 4%);
+  height: calc(43% + var(--fill-edge));
   transform: rotate(-8deg);
   transform-origin: center bottom;
+}
+
+.stream {
+  position: absolute;
+  inset: 0;
+  opacity: clamp(0, calc(min(var(--fill), 1 - var(--fill)) * 8), 0.44);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-cream-white),
+    var(--water-highlight),
+    transparent
+  );
+  border-radius: var(--radius-full);
+}
+
+.drop {
+  --drop-progress: clamp(0, calc((var(--side-progress) - var(--drop-start)) * 3.8), 1);
+  position: absolute;
+  top: calc(93% * var(--drop-progress));
+  left: 50%;
+  width: max(3px, 160%);
+  height: 10%;
+  border-radius: 75% 75% 95% 95%;
+  transform: translateX(-50%);
+  opacity: clamp(0, calc(min(var(--drop-progress), 1 - var(--drop-progress)) * 8), 0.95);
+  background: linear-gradient(90deg, var(--water-highlight), var(--color-cream-white));
+}
+
+.drop:nth-of-type(1) {
+  --drop-start: 0.03;
+}
+
+.drop:nth-of-type(2) {
+  --drop-start: 0.23;
+}
+
+.drop:nth-of-type(3) {
+  --drop-start: 0.43;
+}
+
+.drop:nth-of-type(4) {
+  --drop-start: 0.63;
 }
 
 .pouch {
@@ -83,14 +124,14 @@
 }
 
 .fry {
-  --rise: clamp(0, calc((var(--side-progress) - var(--start)) * 5), 1);
+  --fall: clamp(0, calc((var(--side-progress) - var(--start)) * 5), 1);
   position: absolute;
   width: auto;
   max-width: none;
   transform-origin: center 82%;
-  transform: translate(-50%, calc(92% * (1 - var(--rise))))
-    rotate(calc(var(--tilt) * var(--rise))) scaleX(1.13);
-  opacity: min(clamp(0, calc(var(--rise) * 5), 1), 1 - var(--packed));
+  transform: translate(-50%, calc(-185% * (1 - var(--fall))))
+    rotate(calc(var(--tilt) * var(--fall))) scaleX(1.13);
+  opacity: min(clamp(0, calc(var(--fall) * 5), 1), 1 - var(--packed));
   filter: drop-shadow(1px 2px 2px var(--color-overlay));
 }
 

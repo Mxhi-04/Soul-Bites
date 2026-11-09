@@ -66,7 +66,7 @@ test("corrupt cart recovers and forged stored prices are ignored", async ({
 
 test("featured dish can be added with Enter and Space", async ({ page }) => {
   const button = page.getByRole("button", {
-    name: /^Add to cart: Soul Fire Smash Burger/,
+    name: /^Add to cart: Soul Fire Aloo Tikki Burger/,
   });
   await button.focus();
   await page.keyboard.press("Enter");
@@ -223,16 +223,20 @@ test("simultaneous additions in two tabs are both retained", async ({
   }
 });
 
-test("dietary filtering includes vegan items in vegetarian results", async ({
+test("the vegetarian catalog includes vegan dishes and filters by dietary preference", async ({
   page,
 }) => {
   await page.getByLabel("Dietary preference").selectOption("veg");
-  await expect(page.locator("[class*=menuGrid]")).not.toContainText(
-    "Soul Fire Smash Burger",
-  );
-  await expect(page.locator("[class*=menuGrid]")).toContainText(
-    "Golden Harvest Soul Bowl",
-  );
+  const menu = page.locator("#menu");
+  await expect(menu.getByRole("option", { name: "Non-vegetarian", exact: true })).toHaveCount(0);
+  await expect(menu).toContainText("Soul Fire Aloo Tikki Burger");
+  await expect(menu).toContainText("Crispy Hot Honey Paneer Burger");
+  await expect(menu).toContainText("Golden Harvest Soul Bowl");
+  await expect(menu).not.toContainText(/chicken|beef/i);
+
+  await page.getByLabel("Dietary preference").selectOption("vegan");
+  await expect(menu).not.toContainText("Soul Fire Aloo Tikki Burger");
+  await expect(menu).toContainText("Golden Harvest Soul Bowl");
   await page.getByRole("textbox", { name: "Search menu" }).fill("not-a-dish");
   await expect(page.getByText("No bites match your criteria")).toBeVisible();
   await page.getByRole("button", { name: "Clear search" }).click();
@@ -278,7 +282,7 @@ test("reduced motion uses the still hero and keeps menu navigation available", a
     "data-motion",
     "webgl",
   );
-  await expect(page.getByAltText(/Double smash burger/)).toBeVisible();
+  await expect(page.getByAltText(/Aloo tikki burger with lettuce/)).toBeVisible();
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,
@@ -290,7 +294,7 @@ test("featured dishes follow the combined hero and advance and rewind with nativ
   page,
 }) => {
   const hero = page.locator("#top");
-  await expect(hero.getByAltText(/Double smash burger/)).toBeVisible();
+  await expect(hero.getByAltText(/Aloo tikki burger with lettuce/)).toBeVisible();
   await expect(hero.getByRole("img", { name: "Lime and mint mojito" })).toBeVisible();
   await expect(hero.getByRole("img", { name: "Charcoal truffle fries" })).toBeVisible();
   await expect(page.locator("#top + #featured")).toHaveCount(1);

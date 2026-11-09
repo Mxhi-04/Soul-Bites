@@ -6,7 +6,7 @@
 
 **Big bites. Big soul.**
 
-A cloud-kitchen storefront preview. Build a burger with a scroll, find your next bite, and try the menu-to-cart experience.
+A vegetarian cloud-kitchen storefront preview. Build a burger with a scroll, find your next bite, and try the menu-to-cart experience.
 
 [![Checks](https://github.com/Mxhi-04/Soul-Bites/actions/workflows/ci.yml/badge.svg)](https://github.com/Mxhi-04/Soul-Bites/actions/workflows/ci.yml)
 ![React 18](https://img.shields.io/badge/React-18-262626?logo=react&logoColor=F5B700)
@@ -18,16 +18,16 @@ A cloud-kitchen storefront preview. Build a burger with a scroll, find your next
 
 <picture>
   <source media="(prefers-reduced-motion: reduce)" srcset="docs/showcase/home.webp">
-  <img src="docs/showcase/meal-assembly.gif" width="100%" alt="Soul Bites scroll animation showing a smash burger assembling, fries filling their pouch, and a mojito pouring alongside">
+  <img src="docs/showcase/meal-assembly.gif" width="100%" alt="Soul Bites scroll animation showing aloo tikki burger ingredients and fries falling into place as a mojito fills">
 </picture>
 
-<sub>The landing scene follows your scroll. The burger stacks, the mojito fills, and the fries rise into the pouch.</sub>
+<sub>The landing scene follows your scroll. The burger ingredients drop into place, fries fall into the pouch, and the mojito fills from above.</sub>
 
 </div>
 
 ## What you can try
 
-- **Build the meal.** Scroll to assemble the WebGL burger alongside the mojito and fries, then continue into the featured dish carousel.
+- **Build the meal.** Scroll to assemble the WebGL aloo tikki burger alongside the mojito and fries, then continue into the featured dish carousel.
 - **Find your bite.** Search the sample catalog by dish or ingredient and narrow it by category and dietary preference.
 - **Try checkout as a guest.** Add a dish, review the INR totals, and save a sample order to the current browser tab.
 - **Explore email sign-in.** A configured Supabase project enables one-time email links. This browser keeps guest and account carts separate.

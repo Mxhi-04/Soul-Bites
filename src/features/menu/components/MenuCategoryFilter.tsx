@@ -65,7 +65,6 @@ export const MenuCategoryFilter: React.FC<MenuCategoryFilterProps> = ({
           <option value="all">All preferences</option>
           <option value="veg">Vegetarian (including vegan)</option>
           <option value="vegan">Vegan</option>
-          <option value="non-veg">Non-vegetarian</option>
           <option value="gluten-free">Gluten-free</option>
         </select>
       </label>

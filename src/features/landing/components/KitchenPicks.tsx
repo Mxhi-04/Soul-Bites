@@ -12,7 +12,7 @@ export function KitchenPicks({
   return (
     <>
       <div className={styles.ribbon} aria-hidden="true">
-        <span>Smash burgers</span>
+        <span>Veg burgers</span>
         <span>✷</span>
         <span>Loaded fries</span>
         <span>✷</span>
@@ -34,8 +34,8 @@ export function KitchenPicks({
               </h2>
             </div>
             <p>
-              Start with a double smash, bring something crispy to the table, or
-              build your meal around a grain bowl.
+              Start with a crispy aloo tikki burger, share a plate of loaded
+              fries, or build your meal around a grain bowl.
             </p>
           </header>
           <div className={styles.grid}>

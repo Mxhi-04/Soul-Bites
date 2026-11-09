@@ -25,17 +25,17 @@ const POSTER_METAS: Record<string, PosterItemMeta> = {
     line2: "PIZZA",
     watermarkWords: ["PIZZA", "PANEER", "PANEER"],
   },
-  "sb-01": {
-    line1: "DOUBLE",
-    scriptLine: "Smash",
+  "sb-aloo-tikki": {
+    line1: "ALOO",
+    scriptLine: "Tikki",
     line2: "BURGER",
-    watermarkWords: ["BURGER", "SMASH", "SMASH"],
+    watermarkWords: ["BURGER", "ALOO", "TIKKI"],
   },
-  "sb-02": {
+  "sb-hot-honey-paneer": {
     line1: "CRISPY",
     scriptLine: "Hot Honey",
-    line2: "CHICKEN",
-    watermarkWords: ["CRISPY", "HONEY", "HONEY"],
+    line2: "PANEER",
+    watermarkWords: ["PANEER", "HONEY", "CRISPY"],
   },
   "sb-05": {
     line1: "LOADED",

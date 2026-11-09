@@ -9,7 +9,7 @@ const STICKY_QUERY = "(min-width: 640px) and (min-height: 600px)";
 const ARTWORK_SIZES =
   "(max-width: 639px) calc(53vw - 26px), (max-width: 899px) 24vw, min(27vw, 41svh, 409px)";
 const ARTWORK_SET =
-  "/images/landing/smash-stack-500.webp 500w, /images/landing/smash-stack-620.webp 620w, /images/landing/smash-stack.webp 1040w";
+  "/images/landing/aloo-burger-500.webp 500w, /images/landing/aloo-burger-720.webp 720w, /images/landing/aloo-burger.webp 1000w";
 
 export function LandingHero({
   item,
@@ -115,11 +115,14 @@ export function LandingHero({
       if (!motion.matches) return;
 
       try {
-        await artwork.decode();
+        const ingredients = new Image();
+        ingredients.src = "/images/landing/aloo-ingredients.webp";
+        const [{ createBurgerScene }] = await Promise.all([
+          import("../services/burgerScene"),
+          ingredients.decode(),
+        ]);
         if (current !== revision) return;
-        const { createBurgerScene } = await import("../services/burgerScene");
-        if (current !== revision) return;
-        scene = createBurgerScene(canvas, artwork);
+        scene = createBurgerScene(canvas, ingredients);
         if (!scene) {
           showStill();
           return;
@@ -193,8 +196,8 @@ export function LandingHero({
                 Big bites. <em>Big soul.</em>
               </h1>
               <p className={styles.description}>
-                Smash burgers, loaded fries, and vibrant bowls. Find your kind
-                of comfort food.
+                Aloo tikki burgers, loaded fries, and vibrant bowls from our
+                vegetarian kitchen.
               </p>
               <div className={styles.actions}>
                 <a className={styles.primary} href="#menu">
@@ -213,17 +216,16 @@ export function LandingHero({
             <div className={styles.chapter} aria-hidden="true">
               <div className={styles.second}>
                 <p className={styles.eyebrow}>02 / From the griddle</p>
-                <p className={styles.chapterTitle}>THE SEAR.</p>
+                <p className={styles.chapterTitle}>THE CRUNCH.</p>
                 <p className={styles.description}>
-                  Two smashed patties. Crisp edges. Melted cheddar.
+                  Golden potato and pea tikki, crisp lettuce, and vegetarian cheddar.
                 </p>
               </div>
               <div className={styles.third}>
                 <p className={styles.eyebrow}>03 / The finishing touch</p>
                 <p className={styles.chapterTitle}>THE STACK.</p>
                 <p className={styles.description}>
-                  Caramelized onions and house aioli under a toasted brioche
-                  bun.
+                  Fresh tomato and red onion under a toasted sesame bun.
                 </p>
               </div>
             </div>
@@ -233,19 +235,27 @@ export function LandingHero({
             <div className={styles.art}>
               <div className={styles.halo} aria-hidden="true" />
               <div className={styles.wordmark} aria-hidden="true">
-                SMASH
+                TIKKI
               </div>
               <div className={styles.platter}>
                 <HeroSides />
                 <img
+                  className={styles.heel}
+                  src="/images/landing/aloo-bun.webp"
+                  width={500}
+                  height={500}
+                  alt=""
+                  aria-hidden="true"
+                />
+                <img
                   ref={artworkRef}
                   className={styles.poster}
-                  src="/images/landing/smash-stack.webp"
+                  src="/images/landing/aloo-burger.webp"
                   srcSet={ARTWORK_SET}
                   sizes={ARTWORK_SIZES}
-                  width={1040}
-                  height={1040}
-                  alt="Double smash burger with melted cheese and a toasted sesame bun"
+                  width={1000}
+                  height={1000}
+                  alt="Aloo tikki burger with lettuce, tomato, red onion, and vegetarian cheddar"
                   {...{ fetchpriority: "high" }}
                 />
                 <canvas
@@ -266,7 +276,7 @@ export function LandingHero({
                   <circle cx="60" cy="60" r="33" />
                   <text>
                     <textPath href="#soul-stamp-ring" textLength="255">
-                      SOUL BITES · THE SMASH EDIT ·{" "}
+                      SOUL BITES · THE TIKKI EDIT ·{" "}
                     </textPath>
                   </text>
                   <path

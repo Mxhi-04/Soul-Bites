@@ -10,7 +10,6 @@ export interface BadgeProps {
 
 const DEFAULT_LABELS: Record<DietaryTag, string> = {
   veg: 'Veg',
-  'non-veg': 'Non-Veg',
   vegan: 'Vegan',
   'gluten-free': 'Gluten Free',
   'chef-special': "Chef's Special",
@@ -20,8 +19,6 @@ export const Badge: React.FC<BadgeProps> = ({ variant, label, className = '' }) 
   const variantClass =
     variant === 'veg'
       ? styles.veg
-      : variant === 'non-veg'
-      ? styles.nonVeg
       : variant === 'vegan'
       ? styles.vegan
       : variant === 'chef-special'

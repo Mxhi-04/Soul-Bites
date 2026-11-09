@@ -273,7 +273,9 @@
   height: 100%;
 }
 
-.poster {
+.poster,
+.heel {
+  grid-area: 1 / 1;
   z-index: 2;
   display: block;
   width: 53%;
@@ -291,13 +293,17 @@
   opacity: 0;
   pointer-events: none;
 }
+.heel {
+  display: none;
+}
+
 @media (prefers-reduced-motion: no-preference) {
-  /* Match the heel while the first WebGL frame is loading. */
+  .track:not([data-motion]) .heel {
+    display: block;
+  }
+
   .track:not([data-motion]) .poster {
-    clip-path: polygon(
-      0 78%, 12% 80%, 25% 83%, 46% 85%, 66% 83%, 86% 80%, 100% 75%,
-      100% 100%, 0 100%
-    );
+    opacity: 0;
   }
 }
 

@@ -71,9 +71,9 @@ export default function LoginPage() {
             <HeroSides still />
             <img
               className={styles.burger}
-              src="/images/landing/smash-stack-620.webp"
-              width={620}
-              height={620}
+              src="/images/landing/aloo-burger-720.webp"
+              width={720}
+              height={720}
               alt=""
             />
           </div>

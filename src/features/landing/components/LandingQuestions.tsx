@@ -9,7 +9,7 @@ const QUESTIONS = [
   {
     question: "How do I find a dish that fits my diet?",
     answer:
-      "Use the dietary filter in the menu and open Dish details for ingredients. Check allergens with the kitchen before placing a live order.",
+      "The menu is vegetarian. Use the dietary filter to find vegan or gluten-free options, and open Dish details for ingredients. Check allergens with the kitchen before placing a live order.",
   },
   {
     question: "Where will Soul Bites deliver?",
