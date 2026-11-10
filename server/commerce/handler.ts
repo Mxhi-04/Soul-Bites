@@ -315,12 +315,17 @@ export async function handleCommerce(
   request: Request,
   env: CommerceEnv = process.env,
   repository = createOrderRepository,
+  allowPreview = false,
 ): Promise<Response> {
   try {
     const action = new URL(request.url).searchParams.get("action") ?? "config";
     const config = loadCommerceConfig(env);
+    if (!config) {
+      if (allowPreview && request.method === "GET" && action === "config")
+        return json({ mode: "preview" });
+      throw new CommerceError(503, "Online ordering is currently unavailable.");
+    }
     if (request.method === "GET" && action === "config") {
-      if (!config) return json({ mode: "preview" });
       return json({
         mode: config.mode,
         acceptingOrders: await repository(config).acceptingOrders(),
@@ -332,7 +337,6 @@ export async function handleCommerce(
         } }),
       });
     }
-    if (!config) throw new CommerceError(503, "Ordering is in preview mode.");
     if (request.method !== "POST") throw new CommerceError(405, "Method not allowed.");
     if (action !== "webhook" && request.headers.get("origin") !== config.origin)
       throw new CommerceError(403, "Request origin is not allowed.");

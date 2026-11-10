@@ -177,7 +177,7 @@ export default function AdminOrdersPage() {
   }
 
   return (
-    <OrderPageShell label="Soul Bites / Staff only" title="Kitchen console.">
+    <OrderPageShell label="Soul Bites / Staff only" title="Kitchen console." menuLabel="Order food">
       {status === "loading" && <p role="status">Checking your sign-in…</p>}
       {status === "unavailable" && <p className={styles.alert}>Staff sign-in is unavailable.</p>}
       {status === "ready" && !user && <a className={styles.linkButton} href="/login?next=admin">Sign in as staff</a>}

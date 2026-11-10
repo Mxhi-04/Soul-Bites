@@ -54,7 +54,7 @@ This project map links every business feature directly to its responsible files,
 - **Checkout Type Contracts**: [checkoutTypes.ts](../src/features/checkout/types/checkoutTypes.ts)
 
 ### 6. Orders, tracking and kitchen console
-- **Live/test ordering**: [API entry](../api/commerce.ts), [server handler](../server/commerce/handler.ts), and [Supabase ordering migration](../supabase/migrations/202611100001_commerce.sql).
+- **Live/test ordering**: [Hostinger server](../server/start.mjs), [Vercel API entry](../api/commerce.ts), [shared commerce handler](../server/commerce/handler.ts), and [Supabase ordering migration](../supabase/migrations/202611100001_commerce.sql).
 - **Delivery eligibility**: [server PIN and distance checks](../server/commerce/deliveryArea.ts) and [lookup rate-limit migration](../supabase/migrations/202611100002_delivery_radius.sql).
 - **Staff queue**: [AdminOrdersPage.tsx](../src/features/orders/components/AdminOrdersPage.tsx).
 - **Private customer tracking**: [TrackOrderPage.tsx](../src/features/orders/components/TrackOrderPage.tsx).

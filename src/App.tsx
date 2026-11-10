@@ -47,6 +47,7 @@ const MainContent: React.FC<{ accountId?: string }> = ({ accountId }) => {
   const { pricing, addItem, openCart, isCartOpen, items: cartItems } = useCart();
   const [commerce, setCommerce] = useState<CommerceAvailability | null>(null);
   const ordering = Boolean(commerce && commerce.mode !== "preview");
+  const preview = commerce?.mode === "preview";
 
   useEffect(() => {
     const controller = new AbortController();
@@ -137,14 +138,14 @@ const MainContent: React.FC<{ accountId?: string }> = ({ accountId }) => {
         cartItemCount={pricing.itemCount}
         signedIn={Boolean(accountId)}
         onOpenCart={openCart}
-        hasActiveOrder={Boolean(activeOrder) && !ordering}
+        hasActiveOrder={Boolean(activeOrder) && preview}
         showOrderTracking={ordering}
         onOpenTracking={() => setIsTrackerOpen(true)}
       />
 
       <main className={styles.main}>
         {/* Saved order preview */}
-        {activeOrder && isTrackerOpen && !ordering && (
+        {activeOrder && isTrackerOpen && preview && (
           <section
             style={{
               padding: "var(--space-xl) 0",
@@ -202,7 +203,9 @@ const MainContent: React.FC<{ accountId?: string }> = ({ accountId }) => {
                 <p className={styles.sectionDesc}>
                   {ordering
                     ? "Browse vegetarian dishes, check the ingredients, and build your order."
-                    : "Browse sample dishes, check the ingredients and build an order preview."}
+                    : preview
+                      ? "Browse sample dishes, check the ingredients and build an order preview."
+                      : "Browse the vegetarian menu and check the ingredients."}
                 </p>
               </div>
             </div>
@@ -236,7 +239,7 @@ const MainContent: React.FC<{ accountId?: string }> = ({ accountId }) => {
             )}
           </div>
         </section>
-        <LandingQuestions ordering={ordering} />
+        <LandingQuestions ordering={ordering} preview={preview} />
       </main>
 
       <Footer />

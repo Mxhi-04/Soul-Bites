@@ -31,6 +31,26 @@ test.beforeEach(async ({ page }) => {
   await page.goto("/");
 });
 
+test("an unavailable order API keeps the cart and blocks checkout", async ({ page }) => {
+  await page.route("**/api/commerce?*", (route) => route.fulfill({
+    status: 503, json: { error: "Online ordering is currently unavailable." },
+  }));
+  await page.reload();
+  await addPizza(page);
+  await page.getByRole("button", { name: /Open shopping cart/ }).click();
+  await expect(page.getByRole("button", { name: "Ordering currently unavailable" })).toBeDisabled();
+  await expect(page.getByRole("dialog")).toContainText("Artisanal Woodfired Paneer Tikka Pizza");
+  await expect(page.getByRole("dialog")).not.toContainText("Estimated Tax");
+  await expect(page.getByRole("button", { name: "Save order preview" })).toHaveCount(0);
+});
+
+test("the kitchen console links directly to the customer menu", async ({ page }) => {
+  await page.goto("/admin");
+  await page.getByRole("link", { name: "Order food" }).click();
+  await expect(page).toHaveURL(/\/#menu$/);
+  await expect(page.getByRole("heading", { name: "Find your bite." })).toBeVisible();
+});
+
 test("corrupt cart recovers and forged stored prices are ignored", async ({
   page,
 }) => {

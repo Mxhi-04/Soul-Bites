@@ -305,7 +305,7 @@ export function LandingHero({
             <span className={styles.progressRail} />
             <span>03</span>
           </div>
-          <span className={styles.preview}>Menu preview</span>
+          <span className={styles.preview}>Vegetarian kitchen</span>
         </div>
       </div>
     </section>

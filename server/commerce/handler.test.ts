@@ -122,9 +122,11 @@ function fixture() {
 afterEach(() => vi.unstubAllGlobals());
 
 describe("commerce API", () => {
-  it("defaults to preview and refuses live checkout with test keys", async () => {
+  it("only exposes sample checkout on the local server and refuses live checkout with test keys", async () => {
     const request = new Request(`${origin}/api/commerce?action=config`);
-    expect(await (await handleCommerce(request, {})).json()).toEqual({ mode: "preview" });
+    expect((await handleCommerce(request, {})).status).toBe(503);
+    expect((await handleCommerce(request, { COMMERCE_MODE: "preview" })).status).toBe(503);
+    expect(await (await handleCommerce(request, {}, undefined, true)).json()).toEqual({ mode: "preview" });
     expect((await handleCommerce(request, { ...env, COMMERCE_MODE: "live" })).status).toBe(503);
   });
 

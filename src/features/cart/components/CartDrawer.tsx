@@ -88,24 +88,22 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               <span>Subtotal</span>
               <span>{formatCurrency(pricing.subtotal)}</span>
             </div>
-            <div className={styles.priceRow}>
-              <span>Delivery Fee</span>
-              <span>
-                {fee === 0
-                  ? "FREE"
-                  : formatCurrency(fee)}
-              </span>
-            </div>
-            <div className={styles.priceRow}>
-              <span>{live ? "Tax" : "Estimated Tax"}</span>
-              <span>{formatCurrency(tax)}</span>
-            </div>
-            <div className={styles.totalRow}>
-              <span>Total Amount</span>
-              <span className={styles.totalValue}>
-                {formatCurrency(total)}
-              </span>
-            </div>
+            {commerce && (
+              <>
+                <div className={styles.priceRow}>
+                  <span>Delivery Fee</span>
+                  <span>{fee === 0 ? "FREE" : formatCurrency(fee)}</span>
+                </div>
+                <div className={styles.priceRow}>
+                  <span>{live ? "Tax" : "Estimated Tax"}</span>
+                  <span>{formatCurrency(tax)}</span>
+                </div>
+                <div className={styles.totalRow}>
+                  <span>Total Amount</span>
+                  <span className={styles.totalValue}>{formatCurrency(total)}</span>
+                </div>
+              </>
+            )}
 
             <Button
               variant="primary"
@@ -119,12 +117,12 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 onProceedToCheckout();
               }}
             >
-              Review Order • {formatCurrency(total)}
+              {commerce ? `Review Order • ${formatCurrency(total)}` : "Ordering currently unavailable"}
             </Button>
             {(!commerce || (live && !live.acceptingOrders)) && (
-              <p role="status">{commerce ? "The kitchen is paused for new orders." : "Ordering availability is currently unknown."}</p>
+              <p role="status">{commerce ? "The kitchen is paused for new orders." : "Your cart is saved. Check back shortly to order."}</p>
             )}
-            {pricing.subtotal < minimum && (
+            {commerce && pricing.subtotal < minimum && (
               <p role="status">
                 Add{" "}
                 {formatCurrency(

@@ -4,7 +4,7 @@ const QUESTIONS = [
   {
     question: "Can I place an order yet?",
     answer:
-      "You can build a cart and save a sample order. Live ordering and payments are coming later.",
+      "Online ordering is currently unavailable. You can still browse the menu.",
   },
   {
     question: "How do I find a dish that fits my diet?",
@@ -18,7 +18,7 @@ const QUESTIONS = [
   },
 ];
 
-export function LandingQuestions({ ordering = false }: { ordering?: boolean }) {
+export function LandingQuestions({ ordering, preview }: { ordering: boolean; preview: boolean }) {
   return (
     <section
       className={styles.section}
@@ -44,7 +44,9 @@ export function LandingQuestions({ ordering = false }: { ordering?: boolean }) {
                 {question}
                 <span aria-hidden="true">+</span>
               </summary>
-              <p>{ordering && index === 0
+              <p>{preview && index === 0
+                ? "You can build a cart and save a sample order."
+                : ordering && index === 0
                 ? "Checkout shows the available payment methods. The kitchen confirms your order and posts updates to your private tracking link."
                 : ordering && index === 2
                   ? "Enter your full address and PIN code at checkout to check whether we deliver there."
