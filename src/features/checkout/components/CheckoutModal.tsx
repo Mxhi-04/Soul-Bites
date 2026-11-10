@@ -10,11 +10,16 @@ import {
 } from "../types/checkoutTypes";
 import { validateCheckoutForm } from "../validation/checkoutValidation";
 import { createOrderPreview } from "../services/checkoutService";
+import { checkoutAttempt, clearCheckoutAttempt, orderLink, orderRequest, saveOrderLink } from "../../orders/services/orderApi";
+import { orderLines, priceOrder } from "../../orders/services/orderPricing";
+import type { CommerceAvailability, OrderResponse, PaymentMethod } from "../../orders/types/orderTypes";
 import { formatCurrency } from "../../../utils/formatters";
 import styles from "./CheckoutModal.module.css";
 
 interface CheckoutModalProps {
   storageKey?: string;
+  accountId?: string;
+  commerce?: CommerceAvailability;
   isOpen: boolean;
   onClose: () => void;
   onPreviewSaved: (order: OrderPreview) => void;
@@ -93,8 +98,20 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   onClose,
   onPreviewSaved,
   storageKey,
+  accountId,
+  commerce,
 }) => {
   const { items, pricing, completeCheckout } = useCart();
+  const live = commerce && commerce.mode !== "preview" ? commerce : null;
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(null);
+  const method = live && (paymentMethod && live.methods.includes(paymentMethod) ? paymentMethod : live.methods[0]);
+  const lines = orderLines(items);
+  const livePrice = live ? priceOrder(lines, live.pricing) : null;
+  const total = livePrice ? livePrice.totalPaise / 100 : pricing.total;
+  const fee = livePrice ? livePrice.deliveryPaise / 100 : pricing.deliveryFee;
+  const tax = livePrice ? livePrice.taxPaise / 100 : pricing.tax;
+  const minimum = live ? live.pricing.minimumPaise / 100 : APP_CONFIG.delivery.minimumOrderAmount;
+
   const [details, setDetails] = useState<DeliveryDetails>(EMPTY_DETAILS);
   const [errors, setErrors] = useState<CheckoutFormErrors>({});
   const [failure, setFailure] = useState("");
@@ -136,6 +153,21 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     controller.current = pending;
     setIsSubmitting(true);
     try {
+      if (live && method && livePrice) {
+        const draft = {
+          details,
+          items: lines.map(({ itemId, quantity }) => ({ itemId, quantity })),
+          paymentMethod: method,
+          expectedTotalPaise: livePrice.totalPaise,
+        };
+        const requestKey = await checkoutAttempt(draft, accountId);
+        const result = await orderRequest<OrderResponse>("create", { ...draft, requestKey });
+        saveOrderLink(result.access, accountId);
+        await completeCheckout(items);
+        clearCheckoutAttempt(accountId);
+        window.location.assign(orderLink(result.access));
+        return;
+      }
       const order = await createOrderPreview(
         details,
         items,
@@ -143,7 +175,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
         storageKey,
       );
       if (pending.signal.aborted) return;
-      completeCheckout(order.items);
+      await completeCheckout(order.items);
       onPreviewSaved(order);
       setDetails(EMPTY_DETAILS);
       setErrors({});
@@ -153,7 +185,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
         setFailure(
           error instanceof Error
             ? error.message
-            : "Could not save the preview. Try again.",
+            : live ? "Could not send the order. Try again." : "Could not save the preview. Try again.",
         );
     } finally {
       if (controller.current === pending) {
@@ -163,7 +195,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     }
   };
   return (
-    <Modal isOpen={isOpen} onClose={close} title="Review your order">
+    <Modal isOpen={isOpen} onClose={live && isSubmitting ? () => {} : close} title="Review your order">
       <form
         ref={formRef}
         className={styles.form}
@@ -172,11 +204,21 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
         aria-busy={isSubmitting}
       >
         <p className={styles.notice}>
-          This is an order preview. No payment is collected and nothing is sent
-          to a kitchen. Use sample details.
+          {live?.mode === "test"
+            ? "Test ordering is enabled. Use sample delivery details."
+            : live
+              ? "The kitchen confirms each order and provides an arrival estimate."
+              : "This is an order preview. No payment is collected and nothing is sent to a kitchen. Use sample details."}
         </p>
         <fieldset className={styles.fields} disabled={isSubmitting}>
           <legend className={styles.sectionTitle}>Delivery details</legend>
+          {live?.deliveryArea && (
+            <p className={styles.notice}>
+              We deliver under {live.deliveryArea.radiusMetres / 1_000} km from the kitchen
+              {live.deliveryArea.postalCodes.length ? ` in ${live.deliveryArea.postalCodes.join(", ")}` : ""}.
+              {" "}We use Google Maps to verify your street address, city and PIN.
+            </p>
+          )}
           {FIELDS.map(
             ({ name, label, placeholder, autoComplete, maxLength, type }) => (
               <div key={name} className={styles.field}>
@@ -216,6 +258,26 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
             ),
           )}
         </fieldset>
+        {live && (
+          <fieldset className={styles.fields} disabled={isSubmitting}>
+            <legend className={styles.sectionTitle}>Payment method</legend>
+            {live.methods.map((option) => (
+              <label className={styles.paymentOption} key={option}>
+                <input
+                  type="radio"
+                  name="payment"
+                  value={option}
+                  checked={method === option}
+                  onChange={() => setPaymentMethod(option)}
+                />
+                <span>
+                  <strong>{option === "cod" ? "Cash on delivery" : "Pay online with Razorpay"}</strong>
+                  <small>{option === "cod" ? "Pay the driver when the order arrives." : "Continue to secure checkout after confirming these details."}</small>
+                </span>
+              </label>
+            ))}
+          </fieldset>
+        )}
         <div className={styles.summary}>
           {items.map(({ item, quantity }) => (
             <div key={item.id} className={styles.summaryRow}>
@@ -228,18 +290,18 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
           <div className={styles.summaryRow}>
             <span>Delivery</span>
             <span>
-              {pricing.deliveryFee
-                ? formatCurrency(pricing.deliveryFee)
+              {fee
+                ? formatCurrency(fee)
                 : "Free"}
             </span>
           </div>
           <div className={styles.summaryRow}>
-            <span>Estimated tax</span>
-            <span>{formatCurrency(pricing.tax)}</span>
+            <span>{live ? "Tax" : "Estimated tax"}</span>
+            <span>{formatCurrency(tax)}</span>
           </div>
           <div className={styles.summaryRow}>
-            <strong>Preview total</strong>
-            <strong>{formatCurrency(pricing.total)}</strong>
+            <strong>{live ? "Total" : "Preview total"}</strong>
+            <strong>{formatCurrency(total)}</strong>
           </div>
         </div>
         {failure && (
@@ -248,7 +310,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
           </p>
         )}
         <div className={styles.actions}>
-          <Button type="button" variant="ghost" fullWidth onClick={close}>
+          <Button type="button" variant="ghost" fullWidth onClick={close} disabled={Boolean(live && isSubmitting)}>
             Back
           </Button>
           <Button
@@ -256,15 +318,19 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
             fullWidth
             disabled={
               isSubmitting ||
-              pricing.subtotal < APP_CONFIG.delivery.minimumOrderAmount
+              pricing.subtotal < minimum ||
+              Boolean(live && !live.acceptingOrders)
             }
           >
-            {isSubmitting ? "Saving preview…" : "Save order preview"}
+            {live
+              ? isSubmitting ? "Submitting…" : method === "cod" ? "Place cash order" : "Continue to payment"
+              : isSubmitting ? "Saving preview…" : "Save order preview"}
           </Button>
         </div>
         <p className={styles.notice}>
-          Your latest preview stays in this tab until you close it or clear the
-          preview. Delivery availability has not been checked.
+          {live
+            ? live.acceptingOrders ? "Your private tracking link appears after checkout." : "The kitchen is paused for new orders."
+            : "Your latest preview stays in this tab until you close it or clear the preview. Delivery availability has not been checked."}
         </p>
       </form>
     </Modal>

@@ -351,3 +351,104 @@ test("the sign-in page offers a guest route", async ({
     page.getByRole("heading", { name: "Find your bite." }),
   ).toBeVisible();
 });
+
+const testOrderId = "5826ee44-5237-4dc0-985d-074a693fbb28";
+const testOrderAccess = { id: testOrderId, token: "a".repeat(64) };
+const testOrderPath = `/track/${testOrderId}#${testOrderAccess.token}`;
+const testPlacedAt = "2026-11-10T09:30:00.000Z";
+const testOrder = {
+  id: testOrderId,
+  mode: "test",
+  lines: [{ itemId: "sb-pizza-01", name: "Artisanal Woodfired Paneer Tikka Pizza", quantity: 1, unitPaise: 26900 }],
+  amounts: { subtotalPaise: 26900, deliveryPaise: 3500, taxPaise: 1345, totalPaise: 31745 },
+  createdAt: testPlacedAt,
+  declineReason: null,
+};
+
+test("cash checkout moves to a private tracking link with kitchen acceptance and an ETA", async ({ page }) => {
+  let accepted = false;
+  await page.route("**/api/commerce?*", async (route) => {
+    const action = new URL(route.request().url()).searchParams.get("action");
+    if (action === "config") {
+      return route.fulfill({ json: {
+        mode: "test", acceptingOrders: true, methods: ["cod", "razorpay"],
+        pricing: { minimumPaise: 14900, deliveryPaise: 3500, freeDeliveryPaise: 49900, taxBps: 500 },
+        deliveryArea: { postalCodes: [], radiusMetres: 5000 },
+      } });
+    }
+    const order = {
+      ...testOrder, status: accepted ? "accepted" : "pending", paymentMethod: "cod", paymentState: "cash_due",
+      prepMinutes: accepted ? 20 : null, deliveryMinutes: accepted ? 15 : null,
+      etaAt: accepted ? "2026-11-10T10:05:00.000Z" : null,
+      events: accepted ? [{ status: "pending", at: testPlacedAt }, { status: "accepted", at: testPlacedAt }]
+        : [{ status: "pending", at: testPlacedAt }],
+    };
+    if (action === "create") {
+      const draft = route.request().postDataJSON();
+      if (draft.details.postalCode !== "302026")
+        return route.fulfill({ status: 422, json: { error: "We couldn’t verify this address." } });
+      expect(draft).toMatchObject({
+        paymentMethod: "cod", expectedTotalPaise: 31745,
+        items: [{ itemId: "sb-pizza-01", quantity: 1 }],
+      });
+      return route.fulfill({ status: 201, json: { order, access: testOrderAccess } });
+    }
+    expect(action).toBe("track");
+    expect(route.request().postDataJSON()).toEqual(testOrderAccess);
+    return route.fulfill({ json: { order } });
+  });
+  await page.reload();
+  await openReview(page);
+  await expect(page.getByRole("radio", { name: /Pay online with Razorpay/ })).toBeVisible();
+  await expect(page.getByText(/We deliver under 5 km from the kitchen\./)).toBeVisible();
+  await fillDetails(page);
+  await page.getByRole("button", { name: "Place cash order" }).click();
+  await expect(page.getByText("We couldn’t verify this address.")).toBeVisible();
+  await page.getByLabel("PIN code").fill("302026");
+  await page.getByRole("button", { name: "Place cash order" }).click();
+  await expect(page).toHaveURL((url) => url.pathname + url.hash === testOrderPath);
+  await expect(page.getByRole("heading", { name: "Waiting for kitchen acceptance" })).toBeVisible();
+  await expect(page.getByText("Kitchen estimate", { exact: false })).toHaveCount(0);
+  accepted = true;
+  await page.reload();
+  await expect(page.getByRole("heading", { name: "Accepted", exact: true })).toBeVisible();
+  await expect(page.getByText("Kitchen estimate · IST")).toBeVisible();
+  await page.goto("/");
+  await expect(page.getByRole("button", { name: "Open shopping cart with 0 items" })).toBeVisible();
+  await page.goto("/track");
+  await expect(page.getByRole("link", { name: "Open latest order" })).toHaveAttribute("href", testOrderPath);
+});
+
+test("Razorpay callback waits for a verified server response before showing payment as paid", async ({ page }) => {
+  let paid = false;
+  const providerOrderId = "order_BrowserFixture";
+  await page.route("https://checkout.razorpay.com/v1/checkout.js", (route) => route.fulfill({
+    contentType: "application/javascript",
+    body: `window.Razorpay = class {
+      constructor(options) { this.options = options; }
+      open() { this.options.handler({ razorpay_payment_id: 'pay_BrowserFixture',
+        razorpay_order_id: this.options.order_id, razorpay_signature: 'fixture-signature' }); }
+    }`,
+  }));
+  await page.route("**/api/commerce?*", async (route) => {
+    const action = new URL(route.request().url()).searchParams.get("action");
+    if (action === "verify") {
+      expect(route.request().postDataJSON()).toMatchObject({ ...testOrderAccess, razorpay_order_id: providerOrderId });
+      paid = true;
+    }
+    const order = {
+      ...testOrder, status: paid ? "pending" : "unpaid", paymentMethod: "razorpay",
+      paymentState: paid ? "paid" : "awaiting_payment",
+      prepMinutes: null, deliveryMinutes: null, etaAt: null,
+      events: [{ status: "unpaid", at: testPlacedAt }, ...(paid ? [{ status: "pending", at: testPlacedAt }] : [])],
+    };
+    return route.fulfill({ json: action === "payment"
+      ? { order, access: testOrderAccess, checkout: { keyId: "rzp_test_fixture", providerOrderId, amount: 31745 } }
+      : { order } });
+  });
+  await page.goto(testOrderPath);
+  await expect(page.getByRole("heading", { name: "Awaiting payment" })).toBeVisible();
+  await page.getByRole("button", { name: /^Pay ₹317.45/ }).click();
+  await expect(page.getByText("Paid online", { exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Waiting for kitchen acceptance" })).toBeVisible();
+});

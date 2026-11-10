@@ -18,7 +18,7 @@ const QUESTIONS = [
   },
 ];
 
-export function LandingQuestions() {
+export function LandingQuestions({ ordering = false }: { ordering?: boolean }) {
   return (
     <section
       className={styles.section}
@@ -38,13 +38,17 @@ export function LandingQuestions() {
           </a>
         </div>
         <div className={styles.list}>
-          {QUESTIONS.map(({ question, answer }) => (
+          {QUESTIONS.map(({ question, answer }, index) => (
             <details key={question}>
               <summary>
                 {question}
                 <span aria-hidden="true">+</span>
               </summary>
-              <p>{answer}</p>
+              <p>{ordering && index === 0
+                ? "Checkout shows the available payment methods. The kitchen confirms your order and posts updates to your private tracking link."
+                : ordering && index === 2
+                  ? "Enter your full address and PIN code at checkout to check whether we deliver there."
+                  : answer}</p>
             </details>
           ))}
         </div>

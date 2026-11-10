@@ -1,4 +1,4 @@
-import { DeliveryDetails, CheckoutFormErrors } from "../types/checkoutTypes";
+import type { DeliveryDetails, CheckoutFormErrors } from "../types/checkoutTypes.ts";
 
 export function normalizePhone(phone: string): string {
   const compact = phone.trim().replace(/[\s()-]/g, "");

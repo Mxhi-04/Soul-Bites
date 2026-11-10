@@ -1,5 +1,5 @@
-import { MenuItem, MenuFilterOptions } from "../types/menuTypes";
-import { DietaryTag } from "../../../types";
+import type { MenuItem, MenuFilterOptions } from "../types/menuTypes.ts";
+import type { DietaryTag } from "../../../types/index.ts";
 
 export const INITIAL_MENU_ITEMS: MenuItem[] = [
   {

@@ -53,7 +53,13 @@ This project map links every business feature directly to its responsible files,
 - **Form Validation**: [checkoutValidation.ts](../src/features/checkout/validation/checkoutValidation.ts)
 - **Checkout Type Contracts**: [checkoutTypes.ts](../src/features/checkout/types/checkoutTypes.ts)
 
-### 6. Order Tracking & Kitchen Simulation
+### 6. Orders, tracking and kitchen console
+- **Live/test ordering**: [API entry](../api/commerce.ts), [server handler](../server/commerce/handler.ts), and [Supabase ordering migration](../supabase/migrations/202611100001_commerce.sql).
+- **Delivery eligibility**: [server PIN and distance checks](../server/commerce/deliveryArea.ts) and [lookup rate-limit migration](../supabase/migrations/202611100002_delivery_radius.sql).
+- **Staff queue**: [AdminOrdersPage.tsx](../src/features/orders/components/AdminOrdersPage.tsx).
+- **Private customer tracking**: [TrackOrderPage.tsx](../src/features/orders/components/TrackOrderPage.tsx).
+- **Setup and research**: [Ordering and launch guide](ORDERING.md).
+
 - **Order Tracker Component**: [OrderTracker.tsx](../src/features/tracking/components/OrderTracker.tsx)
 - **Tracker Styling**: [OrderTracker.module.css](../src/features/tracking/components/OrderTracker.module.css)
 - **Tracking Type Contracts**: [trackingTypes.ts](../src/features/tracking/types/trackingTypes.ts)
@@ -86,6 +92,6 @@ This project map links every business feature directly to its responsible files,
 - Cart context value: `src/features/cart/context/cartState.ts`; consumer hook: `src/features/cart/hooks/useCart.ts`.
 - Local preview creation, cancellation, recovery and deletion: `src/features/checkout/services/checkoutService.ts`.
 - Both cart and review use the shared native dialog in `src/components/ui/Modal/Modal.tsx`.
-- `OrderTracker.tsx` currently displays the latest local preview; live fulfillment is not implemented.
+- `OrderTracker.tsx` displays the local preview. Configured test and live orders use the separate server-backed tracking and kitchen routes.
 - Unit tests live beside services and validation. Browser regressions: `tests/ordering.spec.ts`.
 - Setup and verification commands: `README.md`; current remediation status: `docs/FIXES.md`.

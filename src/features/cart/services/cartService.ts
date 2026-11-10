@@ -1,6 +1,6 @@
-import { APP_CONFIG } from "../../../constants/config";
-import { menuService } from "../../menu/services/menuService";
-import { CartItem, CartPricingSummary } from "../types/cartTypes";
+import { APP_CONFIG } from "../../../constants/config.ts";
+import { menuService } from "../../menu/services/menuService.ts";
+import type { CartItem, CartPricingSummary } from "../types/cartTypes.ts";
 
 export const CART_STORAGE_KEY = "soul_bites_cart";
 export const MAX_ITEM_QUANTITY = APP_CONFIG.cart.maxItemQuantity;

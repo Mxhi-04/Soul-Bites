@@ -26,7 +26,8 @@ async function connectAuth() {
       const { error } = await client.auth.exchangeCodeForSession(code);
       callbackFailed = Boolean(error);
     }
-    if (code || callbackFailed) window.history.replaceState(null, "", "/login");
+    if (code || callbackFailed)
+      window.history.replaceState(null, "", url.searchParams.get("next") === "admin" ? "/login?next=admin" : "/login");
   }
   return { client, callbackFailed };
 }
@@ -41,12 +42,12 @@ export function loadAuth() {
   return connection;
 }
 
-export async function sendSignInLink(email: string) {
+export async function sendSignInLink(email: string, staff = false) {
   const { client } = await loadAuth();
   const { error } = await client.auth.signInWithOtp({
     email,
     options: {
-      emailRedirectTo: new URL("/login", window.location.origin).href,
+      emailRedirectTo: new URL(staff ? "/login?next=admin" : "/login", window.location.origin).href,
     },
   });
   if (error) {

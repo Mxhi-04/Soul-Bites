@@ -27,6 +27,8 @@ import {
   PREVIEW_STORAGE_KEY,
   clearOrderPreview,
 } from "./features/checkout/services/checkoutService";
+import { getCommerceAvailability } from "./features/orders/services/orderApi";
+import type { CommerceAvailability } from "./features/orders/types/orderTypes";
 import { DietaryTag } from "./types";
 import { MAX_ITEM_QUANTITY } from "./features/cart/services/cartService";
 import styles from "./App.module.css";
@@ -37,10 +39,26 @@ const kitchenPicks = ["sb-aloo-tikki", "sb-05", "sb-03"].flatMap((id) => {
 });
 const alooBurger = menuService.getItemById("sb-aloo-tikki");
 const LoginPage = lazy(() => import("./features/auth/components/LoginPage"));
+const AdminOrdersPage = lazy(() => import("./features/orders/components/AdminOrdersPage"));
+const TrackOrderPage = lazy(() => import("./features/orders/components/TrackOrderPage"));
 
 const MainContent: React.FC<{ accountId?: string }> = ({ accountId }) => {
   const previewKey = accountStorageKey(PREVIEW_STORAGE_KEY, accountId);
-  const { pricing, addItem, openCart, items: cartItems } = useCart();
+  const { pricing, addItem, openCart, isCartOpen, items: cartItems } = useCart();
+  const [commerce, setCommerce] = useState<CommerceAvailability | null>(null);
+  const ordering = Boolean(commerce && commerce.mode !== "preview");
+
+  useEffect(() => {
+    const controller = new AbortController();
+    void getCommerceAvailability(controller.signal)
+      .then((availability) => {
+        if (!controller.signal.aborted) setCommerce(availability);
+      })
+      .catch(() => {
+        if (!controller.signal.aborted) setCommerce(null);
+      });
+    return () => controller.abort();
+  }, [isCartOpen]);
 
   useEffect(() => {
     const target = document.getElementById(window.location.hash.slice(1));
@@ -119,13 +137,14 @@ const MainContent: React.FC<{ accountId?: string }> = ({ accountId }) => {
         cartItemCount={pricing.itemCount}
         signedIn={Boolean(accountId)}
         onOpenCart={openCart}
-        hasActiveOrder={Boolean(activeOrder)}
+        hasActiveOrder={Boolean(activeOrder) && !ordering}
+        showOrderTracking={ordering}
         onOpenTracking={() => setIsTrackerOpen(true)}
       />
 
       <main className={styles.main}>
         {/* Saved order preview */}
-        {activeOrder && isTrackerOpen && (
+        {activeOrder && isTrackerOpen && !ordering && (
           <section
             style={{
               padding: "var(--space-xl) 0",
@@ -181,8 +200,9 @@ const MainContent: React.FC<{ accountId?: string }> = ({ accountId }) => {
                 <p className={styles.sectionLabel}>02 / The full menu</p>
                 <h2 className={styles.sectionTitle}>Find your bite.</h2>
                 <p className={styles.sectionDesc}>
-                  Browse sample dishes, check the ingredients and build an order
-                  preview.
+                  {ordering
+                    ? "Browse vegetarian dishes, check the ingredients, and build your order."
+                    : "Browse sample dishes, check the ingredients and build an order preview."}
                 </p>
               </div>
             </div>
@@ -216,20 +236,24 @@ const MainContent: React.FC<{ accountId?: string }> = ({ accountId }) => {
             )}
           </div>
         </section>
-        <LandingQuestions />
+        <LandingQuestions ordering={ordering} />
       </main>
 
       <Footer />
 
       {/* Cart & Checkout */}
-      <CartDrawer onProceedToCheckout={() => setIsCheckoutOpen(true)} />
+      <CartDrawer commerce={commerce} onProceedToCheckout={() => setIsCheckoutOpen(true)} />
 
-      <CheckoutModal
-        isOpen={isCheckoutOpen}
-        onClose={() => setIsCheckoutOpen(false)}
-        onPreviewSaved={handlePreviewSaved}
-        storageKey={previewKey}
-      />
+      {commerce && (
+        <CheckoutModal
+          isOpen={isCheckoutOpen}
+          onClose={() => setIsCheckoutOpen(false)}
+          onPreviewSaved={handlePreviewSaved}
+          storageKey={previewKey}
+          accountId={accountId}
+          commerce={commerce}
+        />
+      )}
 
       {/* Toast Alert */}
       <div role="status" aria-live="polite" aria-atomic="true">
@@ -262,7 +286,13 @@ export const App: React.FC = () => {
       </Suspense>
     );
   }
+  if (/^\/admin\/?$/.test(window.location.pathname)) {
+    return <Suspense fallback={waiting}><AdminOrdersPage key={user?.id ?? "guest"} /></Suspense>;
+  }
   if (status === "loading") return waiting;
+  if (/^\/track(?:\/[^/]+)?\/?$/.test(window.location.pathname)) {
+    return <Suspense fallback={waiting}><TrackOrderPage accountId={user?.id} /></Suspense>;
+  }
 
   const cartKey = accountStorageKey(CART_STORAGE_KEY, user?.id);
   return (

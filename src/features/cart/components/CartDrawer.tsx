@@ -4,17 +4,28 @@ import { Modal } from "../../../components/ui/Modal/Modal";
 import { APP_CONFIG } from "../../../constants/config";
 import { MAX_ITEM_QUANTITY } from "../services/cartService";
 import { Button } from "../../../components/ui/Button/Button";
+import { orderLines, priceOrder } from "../../orders/services/orderPricing";
+import type { CommerceAvailability } from "../../orders/types/orderTypes";
 import { formatCurrency } from "../../../utils/formatters";
 import styles from "./CartDrawer.module.css";
 
 export interface CartDrawerProps {
   onProceedToCheckout: () => void;
+  commerce: CommerceAvailability | null;
 }
 
 export const CartDrawer: React.FC<CartDrawerProps> = ({
   onProceedToCheckout,
+  commerce,
 }) => {
   const { items, pricing, isCartOpen, closeCart, updateQuantity } = useCart();
+
+  const live = commerce && commerce.mode !== "preview" ? commerce : null;
+  const amounts = live ? priceOrder(orderLines(items), live.pricing) : null;
+  const fee = amounts ? amounts.deliveryPaise / 100 : pricing.deliveryFee;
+  const tax = amounts ? amounts.taxPaise / 100 : pricing.tax;
+  const total = amounts ? amounts.totalPaise / 100 : pricing.total;
+  const minimum = live ? live.pricing.minimumPaise / 100 : APP_CONFIG.delivery.minimumOrderAmount;
 
   return (
     <Modal
@@ -80,19 +91,19 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
             <div className={styles.priceRow}>
               <span>Delivery Fee</span>
               <span>
-                {pricing.deliveryFee === 0
+                {fee === 0
                   ? "FREE"
-                  : formatCurrency(pricing.deliveryFee)}
+                  : formatCurrency(fee)}
               </span>
             </div>
             <div className={styles.priceRow}>
-              <span>Estimated Tax</span>
-              <span>{formatCurrency(pricing.tax)}</span>
+              <span>{live ? "Tax" : "Estimated Tax"}</span>
+              <span>{formatCurrency(tax)}</span>
             </div>
             <div className={styles.totalRow}>
               <span>Total Amount</span>
               <span className={styles.totalValue}>
-                {formatCurrency(pricing.total)}
+                {formatCurrency(total)}
               </span>
             </div>
 
@@ -101,23 +112,26 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               fullWidth
               size="lg"
               disabled={
-                pricing.subtotal < APP_CONFIG.delivery.minimumOrderAmount
+                !commerce || Boolean(live && !live.acceptingOrders) || pricing.subtotal < minimum
               }
               onClick={() => {
                 closeCart();
                 onProceedToCheckout();
               }}
             >
-              Review Order • {formatCurrency(pricing.total)}
+              Review Order • {formatCurrency(total)}
             </Button>
-            {pricing.subtotal < APP_CONFIG.delivery.minimumOrderAmount && (
+            {(!commerce || (live && !live.acceptingOrders)) && (
+              <p role="status">{commerce ? "The kitchen is paused for new orders." : "Ordering availability is currently unknown."}</p>
+            )}
+            {pricing.subtotal < minimum && (
               <p role="status">
                 Add{" "}
                 {formatCurrency(
-                  APP_CONFIG.delivery.minimumOrderAmount - pricing.subtotal,
+                  minimum - pricing.subtotal,
                 )}{" "}
                 more to reach the{" "}
-                {formatCurrency(APP_CONFIG.delivery.minimumOrderAmount)} minimum
+                {formatCurrency(minimum)} minimum
                 before fees.
               </p>
             )}

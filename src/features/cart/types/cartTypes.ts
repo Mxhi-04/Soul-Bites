@@ -22,7 +22,7 @@ export interface CartContextValue {
   removeItem: (itemId: string) => void;
   updateQuantity: (itemId: string, delta: number) => void;
   clearCart: () => void;
-  completeCheckout: (snapshot: CartItem[]) => void;
+  completeCheckout: (snapshot: CartItem[]) => Promise<void>;
   isCartOpen: boolean;
   openCart: () => void;
   closeCart: () => void;

@@ -9,6 +9,7 @@ export interface NavbarProps {
   onOpenCart: () => void;
   onOpenTracking?: () => void;
   hasActiveOrder?: boolean;
+  showOrderTracking?: boolean;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -17,6 +18,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenCart,
   onOpenTracking,
   hasActiveOrder = false,
+  showOrderTracking = false,
 }) => {
   return (
     <header className={styles.header}>
@@ -40,6 +42,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <a href="#featured">Featured</a>
           <a href="#menu">Menu</a>
           <a href="#questions">FAQ</a>
+          {showOrderTracking && <a href="/track">Track order</a>}
         </nav>
 
         <div className={styles.actions}>

@@ -14,7 +14,7 @@ A vegetarian cloud-kitchen storefront preview. Build a burger with a scroll, fin
 ![Vite](https://img.shields.io/badge/Vite-262626?logo=vite&logoColor=F5B700)
 [![MIT License](https://img.shields.io/badge/License-MIT-262626)](LICENSE)
 
-[Try Soul Bites](https://soul-bites.vercel.app/) · [Watch the demo](#watch-the-demo) · [Run locally](#quick-start) · [Project map](docs/PROJECT_MAP.md)
+[Try Soul Bites](https://soul-bites.vercel.app/) · [Watch the demo](#watch-the-demo) · [Run locally](#quick-start) · [Launch plan](#launch-on-hostinger)
 
 <picture>
   <source media="(prefers-reduced-motion: reduce)" srcset="docs/showcase/home.webp">
@@ -33,7 +33,7 @@ A vegetarian cloud-kitchen storefront preview. Build a burger with a scroll, fin
 - **Explore email sign-in.** A configured Supabase project enables one-time email links. This browser keeps guest and account carts separate.
 
 > [!NOTE]
-> Soul Bites is an interactive storefront preview. Checkout saves a sample locally without placing an order or collecting payment.
+> The default setup runs as a storefront preview. To enable cash on delivery, Razorpay, and the kitchen console, follow the [ordering and launch guide](docs/ORDERING.md).
 
 ## Watch the demo
 
@@ -105,6 +105,22 @@ npm audit
 Run `npm run preview` after the production build to serve it locally. Browser checks cover keyboard ordering, dialog accessibility, validation, preview cancellation and recovery, and cart updates across tabs. Set `PLAYWRIGHT_CHROME_PATH` to an absolute Chrome executable path to use an installed browser.
 
 </details>
+
+## Kitchen operations
+
+With ordering configured, staff use `/admin` to accept orders, set preparation and delivery estimates, update status, and reconcile cash or online refunds. Customers receive a private `/track` link at checkout. See the [ordering and launch guide](docs/ORDERING.md) for configuration, payment testing, and go-live checks.
+
+<img src="docs/showcase/kitchen-console.png" width="100%" alt="Soul Bites kitchen console preview showing a cash order awaiting acceptance and a paid order in preparation">
+
+## Launch on Hostinger
+
+**Choose Hostinger Business Web Hosting if Hostinger will run the whole app.** Premium can serve the built storefront, but the kitchen console, customer tracking, checkout, and payment webhooks require the Node.js API. Hostinger lists managed Node.js apps on Business and Cloud plans. [Hostinger Node.js plans](https://www.hostinger.com/support/how-to-deploy-a-nodejs-website-in-hostinger/)
+
+1. **Register `soulbites.in`.** Check availability and renewal pricing in Hostinger, then purchase the domain and a Node.js-capable plan. Use a staging hostname first.
+2. **Prepare the Hostinger entry point.** The current deployment uses Vercel's function adapter. Add and test a production Node.js server that calls the existing commerce handler at `/api/commerce`, passes through the raw Razorpay webhook body, serves `dist/`, and preserves SPA routing and security headers. In hPanel, create a **Node.js Web App** from the GitHub repository's `main` branch, select Node.js 24, set `npm run build`, and select the production server entry file. [Hostinger deployment guide](https://www.hostinger.com/support/how-to-deploy-a-nodejs-website-in-hostinger/)
+3. **Connect Supabase and delivery.** Apply both migrations, configure magic-link email and redirect URLs, and grant the verified owner access to `/admin`. In hPanel, set the build and runtime variables from [the environment template](.env.example). Use the private kitchen coordinates, a 5,000 m radius, and a restricted Google Geocoding key. Confirm actual fees, tax treatment, and service hours before launch. [Ordering guide](docs/ORDERING.md) · [Hostinger environment variables](https://www.hostinger.com/support/how-to-add-environment-variables-during-node-js-application-deployment/)
+4. **Test an entire shift in staging.** Keep `COMMERCE_MODE=test`. Place a COD order and a Razorpay test order. Verify payment capture, a full refund, kitchen acceptance, ETA, and cash collection. Try real addresses inside and outside the delivery radius and verify that opening, pausing, and refreshing the kitchen works on a phone.
+5. **Connect the production domain and open orders.** Use the DNS records shown in hPanel, verify HTTPS, and set `COMMERCE_ORIGIN=https://soulbites.in` with matching Supabase redirects and the production Razorpay webhook. Publish the confirmed business, delivery, privacy, and refund details. Start live with the kitchen paused, smoke-test, then open from `/admin`.
 
 ## Under the hood
 

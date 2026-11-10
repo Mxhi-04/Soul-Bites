@@ -6,6 +6,7 @@ import styles from "./LoginPage.module.css";
 
 export default function LoginPage() {
   const { status, user, callbackFailed } = useAuth();
+  const staff = new URLSearchParams(window.location.search).get("next") === "admin";
   const [email, setEmail] = useState("");
   const [sentTo, setSentTo] = useState("");
   const [busy, setBusy] = useState(false);
@@ -22,7 +23,7 @@ export default function LoginPage() {
     setError("");
     try {
       const address = email.trim();
-      await sendSignInLink(address);
+      await sendSignInLink(address, staff);
       setSentTo(address);
     } catch (failure) {
       setError(
@@ -105,8 +106,8 @@ export default function LoginPage() {
                   Signed in as{" "}
                   <strong>{user.email ?? "a Soul Bites member"}</strong>.
                 </p>
-                <a className={styles.primary} href="/#menu">
-                  Explore the menu <span aria-hidden="true">↗</span>
+                <a className={styles.primary} href={staff ? "/admin" : "/#menu"}>
+                  {staff ? "Open kitchen console" : "Explore the menu"} <span aria-hidden="true">↗</span>
                 </a>
                 <button
                   className={styles.secondary}

@@ -40,8 +40,9 @@ export const CartProvider: React.FC<{
       };
       // Serialize mutations across tabs; incoming storage events never echo a write.
       if (navigator.locks)
-        void navigator.locks.request(storageKey, commit).catch(commit);
-      else commit();
+        return navigator.locks.request(storageKey, commit).catch(commit);
+      commit();
+      return Promise.resolve();
     },
     [storageKey],
   );
